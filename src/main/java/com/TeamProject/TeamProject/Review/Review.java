@@ -1,6 +1,6 @@
 package com.TeamProject.TeamProject.Review;
 
-import com.TeamProject.TeamProject.Model.Restaurant;
+import com.TeamProject.TeamProject.Restaurant.Restaurant;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
