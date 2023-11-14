@@ -16,6 +16,6 @@ public class RestaurantController {
     public String list(Model model){
         List<Restaurant> restaurantList = this.restaurantService.getRestaurant();
         model.addAttribute("restaurantList", restaurantList);
-        return "Rastaurant_list";
+        return "Restaurant_list";
     }
 }
