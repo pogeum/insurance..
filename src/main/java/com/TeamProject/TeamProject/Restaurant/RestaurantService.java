@@ -1,9 +1,8 @@
-package com.TeamProject.TeamProject.Model;
+package com.TeamProject.TeamProject.Restaurant;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;

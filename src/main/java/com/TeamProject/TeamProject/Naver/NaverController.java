@@ -1,11 +1,8 @@
 package com.TeamProject.TeamProject.Naver;
 
 import ch.qos.logback.classic.Logger;
-import com.TeamProject.TeamProject.Model.Restaurant;
-import com.TeamProject.TeamProject.Model.RestaurantRepository;
-import com.TeamProject.TeamProject.Model.RestaurantService;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.TeamProject.TeamProject.Restaurant.RestaurantRepository;
+import com.TeamProject.TeamProject.Restaurant.RestaurantService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.RequestEntity;

@@ -1,4 +1,4 @@
-package com.TeamProject.TeamProject.Model;
+package com.TeamProject.TeamProject.Restaurant;
 
 import jakarta.persistence.*;
 import lombok.Getter;
