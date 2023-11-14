@@ -1,4 +1,4 @@
-package com.TeamProject.TeamProject.Model;
+package com.TeamProject.TeamProject.Restaurant;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
