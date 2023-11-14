@@ -7,11 +7,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class RestaurantService {
     private final RestaurantRepository restaurantRepository;
+
+    public List<Restaurant> getRestaurant() {
+        return this.restaurantRepository.findAll();
+    }
 
     public void saveJsonToDatabase(String jsonData) {
         try {
