@@ -37,7 +37,7 @@ public class NaverController {
         URI uri = UriComponentsBuilder
                 .fromUriString("https://openapi.naver.com")
                 .path("/v1/search/local.json")
-                .queryParam("query","대전 서구 둔산동 맛집")
+                .queryParam("query","대전 서구 탄방동 맛집")
                 .queryParam("display", 100)
                 .queryParam("start", 1)
                 .queryParam("sort", "random")
