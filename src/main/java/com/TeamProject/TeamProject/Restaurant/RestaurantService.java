@@ -36,5 +36,8 @@ public class RestaurantService {
             e.fillInStackTrace();
         }
     }
-
+    public Restaurant getRestaurantById(Integer id) {
+        return restaurantRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Restaurant not found with id: " + id));
+    }
 }
