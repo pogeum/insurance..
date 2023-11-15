@@ -1,4 +1,4 @@
-package com.TeamProject.TeamProject.Controller;
+package com.TeamProject.TeamProject.Restaurant;
 
 import com.TeamProject.TeamProject.Restaurant.Restaurant;
 import com.TeamProject.TeamProject.Restaurant.RestaurantService;
