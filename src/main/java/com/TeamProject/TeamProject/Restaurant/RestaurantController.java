@@ -18,13 +18,13 @@ public class RestaurantController {
     private final RestaurantService restaurantService;
 
     @GetMapping("/list")
-    public String list(Model model){
+    public String list(Model model) {
         List<Restaurant> restaurantList = this.restaurantService.getRestaurant();
         model.addAttribute("restaurantList", restaurantList);
         return "Restaurant_list";
     }
     @GetMapping("/detail/{id}")
-    public String detail(Model model, @PathVariable("id") Integer id){
+    public String detail(Model model, @PathVariable("id") Integer id) {
         Restaurant restaurant = this.restaurantService.getRestaurantById(id);
         model.addAttribute("restaurant", restaurant);
         return "restaurant_detail";
