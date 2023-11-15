@@ -19,25 +19,6 @@ public class RestaurantService {
         return this.restaurantRepository.findAll();
     }
 
-//    public void saveJsonToDatabase(String jsonData) {
-//        try {
-//            ObjectMapper objectMapper = new ObjectMapper();
-//            JsonNode jsonNode = objectMapper.readTree(jsonData);
-//
-//            for (JsonNode item : jsonNode.get("items")) {
-//                Restaurant restaurant = new Restaurant();
-//                restaurant.setTitle(item.get("title").asText());
-//                restaurant.setCategory(item.get("category").asText());
-//                restaurant.setAddress(item.get("address").asText());
-//                restaurant.setRoadAddress(item.get("roadAddress").asText());
-//
-//                restaurantRepository.save(restaurant);
-//            }
-//
-//        } catch (IOException e) {
-//            e.fillInStackTrace();
-//        }
-//    }
     public Restaurant getRestaurantById(Integer id) {
         Optional<Restaurant> restaurant = this.restaurantRepository.findById(id);
         if (restaurant.isPresent()) {
