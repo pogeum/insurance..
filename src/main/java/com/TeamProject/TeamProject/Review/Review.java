@@ -20,9 +20,9 @@ public class Review {
   @Column(columnDefinition = "TEXT")
   private String content;
 
-  private int rating; //평점
+  private Integer rating; //평점
 
-  private int thumbsup; // 해당 리뷰가 받은 추천수
+  private Integer thumbsup; // 해당 리뷰가 받은 추천수
 
   @ManyToOne
   private Member author;
