@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
@@ -20,8 +21,10 @@ public class RestaurantController {
         model.addAttribute("restaurantList", restaurantList);
         return "Restaurant_list";
     }
-    @GetMapping("/detail")
-    public String detail(){
+    @GetMapping("/detail/{id}")
+    public String detail(Model model, @PathVariable("id") Integer id){
+        Restaurant restaurant = this.restaurantService.getRestaurantById(id);
+        model.addAttribute("restaurant", restaurant);
         return "restaurant_detail";
     }
 }
