@@ -22,8 +22,4 @@ public class Member {
 
     @Column(unique = true)
     private String email;
-
-    @CreatedDate
-    private LocalDateTime createDate; //가입일시
-
 }
