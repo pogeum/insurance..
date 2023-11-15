@@ -16,16 +16,13 @@ public class Review {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Integer id;
-//
-//  @Column(length = 200)
-//  private String title;
 
   @Column(columnDefinition = "TEXT")
   private String content;
 
   private int rating; //평점
-  private int thumbsup; // 해당 리뷰가 받은 추천수
 
+  private int thumbsup; // 해당 리뷰가 받은 추천수
 
   private Member author;
 
