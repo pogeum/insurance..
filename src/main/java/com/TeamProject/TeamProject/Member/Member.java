@@ -15,15 +15,10 @@ public class Member {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(unique = true)
-    private String membername; //아이디
+    @Column(unique = true)  // 중복 X
+    private String memberId; //아이디
 
     private String password; // 비번
 
-    @Column(unique = true)
     private String email;
-
-    @CreatedDate
-    private LocalDateTime createDate; //가입일시
-
 }
