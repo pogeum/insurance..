@@ -18,49 +18,41 @@ import java.util.List;
 @RequiredArgsConstructor
 @Controller
 public class ReviewController {
-  private final RestaurantService restaurantService;
-  private final ReviewService reviewService;
+    private final RestaurantService restaurantService;
+    private final ReviewService reviewService;
 
-  private final MemberRepository memberRepository; // ㅌㅔ스트용. 추후 삭제예정
-  private final ReviewRepository reviewRepository; // 테스트용. 추후 삭제예정
+    private final MemberRepository memberRepository; // ㅌㅔ스트용. 추후 삭제예정
+    private final ReviewRepository reviewRepository; // 테스트용. 추후 삭제예정
 
-  @PostMapping("/create/{id}")
-  public String createReview(Model model, @PathVariable("id")Integer id, @RequestParam String content,
-                              @RequestParam int rating, LocalDateTime localDateTime){
-    Restaurant restaurant = restaurantService.getRestaurantById(id);
-    reviewService.create(restaurant, content, rating, localDateTime);
+    @PostMapping("/create/{id}")
+    public String createReview(Model model, @PathVariable("id")Integer id, @RequestParam String content,
+                                @RequestParam int rating, LocalDateTime localDateTime){
+        Restaurant restaurant = restaurantService.getRestaurantById(id);
+        reviewService.create(restaurant, content, rating, localDateTime);
 
-    return String.format("redirect:/restaurant/home/%s", id);
-  }
+        return String.format("redirect:/restaurant/home/%s", id);
+    }
 
+    @GetMapping("/detail")
+    public String reviewdetail(Model model, Integer reviewid) {
 
+        Restaurant restaurant = new Restaurant();
 
+        Member member = new Member();
+        member.setMembername("김포도");
+        member.setEmail("test@test.com");
+        member.setPassword("password");
+        this.memberRepository.save(member);
 
-  @GetMapping("/detail")
-  public String reviewdetail(Model model, Integer reviewid) {
+        Review targetReview = new Review();
+        targetReview.setAuthor(member);
+        targetReview.setRating(4);
+        targetReview.setContent("테스트용");
+        targetReview.setRestaurant(restaurant);
+        targetReview.setThumbsup(3);
+        this.reviewRepository.save(targetReview);
 
-    Restaurant restaurant = new Restaurant();
-
-    Member member = new Member();
-    member.setMembername("김포도");
-    member.setEmail("test@test.com");
-    member.setPassword("password");
-    member.setCreateDate(LocalDateTime.now());
-    this.memberRepository.save(member);
-
-    Review targetReview = new Review();
-    targetReview.setAuthor(member);
-    targetReview.setRating(4);
-    targetReview.setContent("테스트용");
-    targetReview.setRestaurant(restaurant);
-    targetReview.setThumbsup(3);
-    this.reviewRepository.save(targetReview);
-
-
-//        Review targetReview = reviewService.findById(reviewid); 테스트삭제후 넣을 코드.
-
-    model.addAttribute("targetReview" , targetReview);
-    return "review_detail";
-  }
-
+        model.addAttribute("targetReview" , targetReview);
+        return "review_detail";
+    }
 }
