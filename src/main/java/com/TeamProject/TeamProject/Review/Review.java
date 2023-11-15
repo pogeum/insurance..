@@ -26,11 +26,9 @@ public class Review {
 
   private Member author;
 
-  @CreatedDate
   private LocalDateTime createDate;
 
   @ManyToOne
   private Restaurant restaurant;
-
 
 }
