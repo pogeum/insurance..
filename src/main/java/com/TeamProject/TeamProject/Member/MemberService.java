@@ -2,16 +2,17 @@ package com.TeamProject.TeamProject.Member;
 
 import com.TeamProject.TeamProject.DataNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
 public class MemberService {
 
     public final MemberRepository memberRepository;
+    public final PasswordEncoder passwordEncoder;
 
     public Member createMember(String memberId, String password, String email) {
         Member member = new Member();
