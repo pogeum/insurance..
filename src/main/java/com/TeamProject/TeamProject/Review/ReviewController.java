@@ -35,22 +35,22 @@ public class ReviewController {
 
     @GetMapping("/detail")
     public String reviewdetail(Model model, Integer reviewid) {
-
-        Restaurant restaurant = new Restaurant();
-
-        Member member = new Member();
-        member.setMemberId("김포도");
-        member.setEmail("test@test.com");
-        member.setPassword("password");
-        this.memberRepository.save(member);
-
         Review targetReview = new Review();
-        targetReview.setAuthor(member);
-        targetReview.setRating(4);
-        targetReview.setContent("테스트용");
-        targetReview.setRestaurant(restaurant);
-        targetReview.setThumbsup(3);
-        this.reviewRepository.save(targetReview);
+//        Restaurant restaurant = new Restaurant();
+//
+//        Member member = new Member();
+//        member.setMemberId("김포도");
+//        member.setEmail("test@test.com");
+//        member.setPassword("password");
+//        this.memberRepository.save(member);
+//
+//        Review targetReview = new Review();
+//        targetReview.setAuthor(member);
+//        targetReview.setRating(4);
+//        targetReview.setContent("테스트용");
+//        targetReview.setRestaurant(restaurant);
+//        targetReview.setThumbsup(3);
+//        this.reviewRepository.save(targetReview);
 
         model.addAttribute("targetReview" , targetReview);
         return "review_detail";
