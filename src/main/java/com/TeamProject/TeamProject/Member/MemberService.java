@@ -12,6 +12,7 @@ public class MemberService {
 
     public final MemberRepository memberRepository;
 
+
     public Member createMember(String membername, String password, String email) {
         Member member = new Member();
         member.setMembername(membername);

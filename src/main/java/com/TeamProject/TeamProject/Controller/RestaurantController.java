@@ -1,5 +1,7 @@
-package com.TeamProject.TeamProject.Restaurant;
+package com.TeamProject.TeamProject.Controller;
 
+import com.TeamProject.TeamProject.Restaurant.Restaurant;
+import com.TeamProject.TeamProject.Restaurant.RestaurantService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

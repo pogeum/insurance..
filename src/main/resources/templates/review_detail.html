@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div class="background-wrap">
+    <div>
+        <div class="restaurant">
+            <p th:text="${targetReview.restaurant}"></p>
+        </div>
+        <div class="thumbs-up">
+            <p th:text="${targetReview.thumbsup}"></p>
+        </div>
+        <div class="rating">
+            <p th:text="${targetReview.rating}"></p>
+        </div>
+    </div>
+    <div>
+        <div class="profile">???</div>
+        <div class="membername">
+            <p th:text="${targetReview.author}"></p>
+        </div>
+    </div>
+    <div>
+        <div class="pictures">
+            empty
+        </div>
+    </div>
+    <div>
+        <div class="review-content" >
+            <p th:text="${targetReview.content}">empty</p>
+        </div>
+
+    </div>
+
+</div>
+</body>
+</html>

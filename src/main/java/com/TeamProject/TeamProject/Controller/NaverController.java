@@ -1,4 +1,4 @@
-package com.TeamProject.TeamProject.Naver;
+package com.TeamProject.TeamProject.Controller;
 
 import ch.qos.logback.classic.Logger;
 import com.TeamProject.TeamProject.Restaurant.RestaurantRepository;
