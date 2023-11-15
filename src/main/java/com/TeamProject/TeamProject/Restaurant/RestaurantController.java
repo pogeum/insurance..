@@ -18,4 +18,6 @@ public class RestaurantController {
         model.addAttribute("restaurantList", restaurantList);
         return "Restaurant_list";
     }
+//    @GetMapping(value = "/restaurant/detail/{id}")
+//    public String detail(Model model, @PathVariable("id") Integer id)
 }

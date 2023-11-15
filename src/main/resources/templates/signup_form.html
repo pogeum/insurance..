@@ -1,0 +1,39 @@
+<html layout:decorate="~{layout}" xmlns:th="http://www.thymeleaf.org">
+<div class="my-3 border-bottom text-center" style="height: 40vh; display: flex; align-items: center; justify-content: center;
+background: white;">
+    <div style="position: fixed; top: 0; left: 0; margin-left: 30px; text-align: left; margin-right: 250px; font-size: 24px; font-weight: bold; color: black; background-color: #f8f9fa; padding: 10px; border-bottom: 2px solid black;border-bottom: 2px solid black; width: 100%;">
+        <div>맛집 커뮤니티</div>
+    </div>
+    <div style="margin-left: 35px;">
+        <img src="/img.png" alt="Your Image" style="max-width: 50%; height: auto;margin-left: 50px;margin-bottom:0px;">
+        <div style= "font-size: 25px; font-weight: bold; color: black;">커뮤니티에 오신 것을 환영합니다.</div>
+    </div>
+</div>
+<div class="container d-flex justify-content-center align-items-center my-3" style="height: 60vh;justify-content: center;display: flex;">
+    <div style="background-color: skyblue; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); padding: 20px; width: 500px;">
+        <div class="my-3 border-bottom" style="text-align: center;">
+            <h4>회원가입</h4>
+        </div>
+        <form th:action="@{/member/signup}" th:object="${memberCreateForm}" method="post" class="text-left">
+            <div th:replace="~{form_errors :: formErrorsFragment}"></div>
+            <div class="mb-3"style="text-align: center;">
+                <label for="membername" class="form-label"style="margin-right:10px;width: 500px;">ID</label>
+                <input type="text" th:field="*{membername}" class="form-control"style="width: 500px;height:5vh">
+            </div>
+            <div class="mb-3"style="text-align: center;">
+                <label for="password1" class="form-label"style="margin-right:10px;width: 500px;">비밀번호</label>
+                <input type="password" th:field="*{password1}" class="form-control"style="margin-right:48px;width:500px;height:5vh">
+            </div>
+            <div class="mb-3"style="text-align: center;">
+                <label for="password2" class="form-label"style="margin-right:10px;width: 500px;">비밀번호 확인</label>
+                <input type="password" th:field="*{password2}" class="form-control"style="margin-right:85px;width:500px;height:5vh">
+            </div>
+            <div class="mb-3"style="text-align: center;">
+                <label for="email" class="form-label"style="margin-right:15px;width: 500px;">이메일</label>
+                <input type="email" th:field="*{email}" class="form-control"style="margin-right:32px;width:500px;height:5vh">
+            </div>
+            <button type="submit" class="btn btn-primary"style="margin-top: 10%;margin-left:50px;font-size:1.5em;">확인</button>
+        </form>
+    </div>
+</div>
+</html>
