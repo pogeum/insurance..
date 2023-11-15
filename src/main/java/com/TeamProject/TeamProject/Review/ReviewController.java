@@ -39,7 +39,7 @@ public class ReviewController {
         Restaurant restaurant = new Restaurant();
 
         Member member = new Member();
-        member.setMembername("김포도");
+        member.setMemberId("김포도");
         member.setEmail("test@test.com");
         member.setPassword("password");
         this.memberRepository.save(member);
