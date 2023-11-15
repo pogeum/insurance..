@@ -24,6 +24,7 @@ public class Review {
 
   private int thumbsup; // 해당 리뷰가 받은 추천수
 
+  @ManyToOne
   private Member author;
 
   private LocalDateTime createDate;
