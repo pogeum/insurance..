@@ -1,5 +1,6 @@
 package com.TeamProject.TeamProject.Restaurant;
 
+import com.TeamProject.TeamProject.DataNotFoundException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -7,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -37,7 +39,11 @@ public class RestaurantService {
         }
     }
     public Restaurant getRestaurantById(Integer id) {
-        return restaurantRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Restaurant not found with id: " + id));
+        Optional<Restaurant> restaurant = this.restaurantRepository.findById(id);
+        if (restaurant.isPresent()) {
+            return restaurant.get();
+        } else {
+            throw new DataNotFoundException("restaurant not found");
+        }
     }
 }
