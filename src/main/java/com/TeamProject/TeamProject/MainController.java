@@ -6,20 +6,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class MainController {
-    @RequestMapping("/test")
-    @ResponseBody
+    @RequestMapping("/")
     public String test(){
-        return "test";
-    }
-    @RequestMapping("/main")
-    public String main(){
-        return "index";
-    }
-
-//    sdlkfjioewjflkjsda
-    @RequestMapping("/list")
-    @ResponseBody
-    public String list(){
-        return "list";
+        return "redirect:/restaurant/list";
     }
 }
