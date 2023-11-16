@@ -4,6 +4,9 @@ import com.TeamProject.TeamProject.DataNotFoundException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -17,6 +20,11 @@ public class RestaurantService {
 
     public List<Restaurant> getRestaurant() {
         return this.restaurantRepository.findAll();
+    }
+
+    public Page<Restaurant> getList(int page) {
+        Pageable pageable = PageRequest.of(page, 6);
+        return this.restaurantRepository.findAll(pageable);
     }
 
     public Restaurant getRestaurantById(Integer id) {

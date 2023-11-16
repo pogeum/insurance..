@@ -3,11 +3,13 @@ package com.TeamProject.TeamProject.Restaurant;
 import com.TeamProject.TeamProject.Restaurant.Restaurant;
 import com.TeamProject.TeamProject.Restaurant.RestaurantService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -18,9 +20,9 @@ public class RestaurantController {
     private final RestaurantService restaurantService;
 
     @GetMapping("/list")
-    public String list(Model model) {
-        List<Restaurant> restaurantList = this.restaurantService.getRestaurant();
-        model.addAttribute("restaurantList", restaurantList);
+    public String list(Model model, @RequestParam(value="page", defaultValue="0") int page) {
+        Page<Restaurant> paging = this.restaurantService.getList(page);
+        model.addAttribute("paging", paging);
         return "Restaurant_list";
     }
 
