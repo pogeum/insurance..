@@ -1,81 +1,64 @@
-<!doctype html>
-<html lang="ko" xmlns:th="" xmlns:sec="http://www.w3.org/1999/xhtml">
-<head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" type="text/css" th:href="@{/bootstrap.min.css}">
-    <title>title</title>
-</head>
-<body>
-<nav class="navbar bg-dark" style="margin-bottom:20px;">
-    <div class="container">
-        <a class="navbar-brand d-flex align-items-center" th:href="@{/restaurant/list}">
-            <img src="/food.png" style="width:40px; height:40px; border-radius: 50%;">
-            <span class="text-white ms-2">맛집리스트</span>
-        </a>
-    </div>
-</nav>
-<div class="container mh-100" style="display:flex;justify-content:space-between;">
-    <div class="subleft_cont mh-100" style="width:20%;">
-        <div class="map_wrap">
-            <input class="address" type="hidden" th:value="${restaurant.roadAddress}">
-            <div id="map" style="width:100%;height:300px; border:1px solid gray; border-radius: 10px;"></div>
+<html layout:decorate="~{layout}" xmlns:layout="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml">
+<div layout:fragment="content">
+    <div class="container" style="display:flex;justify-content:space-between;margin-top: 20px;">
+        <div class="subleft_cont" style="width:20%;">
+            <div class="map_wrap">
+                <input class="address" type="hidden" th:value="${restaurant.roadAddress}">
+                <div id="map" style="width:100%;height:300px; border:1px solid gray; border-radius: 10px;"></div>
+            </div>
+        </div>
+        <div class="subright_cont" style="width:75%; border:1px solid gray; border-radius: 10px;">
+            <div class="s-list pic-grade" style="padding :20px;">
+                <div th:text="${restaurant.title}" style="font-size: 30px; font-weight: bold;"></div>
+    <!--            <div th:text="${restaurant.category}" style="font-size: 16px;"></div>-->
+            </div>
+            <div class="s-list basic-info" style="padding :20px; border-top:2px solid gray">
+                <div th:text="${restaurant.roadAddress}" style="font-size: 16px;"></div>
+            </div>
         </div>
     </div>
-    <div class="subright_cont mh-100" style="width:75%; border:1px solid gray; border-radius: 10px;">
-        <div class="s-list pic-grade" style="padding :20px;">
-            <div th:text="${restaurant.title}" style="font-size: 30px; font-weight: bold;"></div>
-<!--            <div th:text="${restaurant.category}" style="font-size: 16px;"></div>-->
-        </div>
-        <div class="s-list basic-info" style="padding :20px; border-top:2px solid gray">
-            <div th:text="${restaurant.roadAddress}" style="font-size: 16px;"></div>
-        </div>
-    </div>
-</div>
-<script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=7ee6f5a5f71e859c2649a378e7750b51&libraries=services"></script>
-<script>
-    var addressInput = document.querySelector(".address");
-    console.log(addressInput);
+    <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=7ee6f5a5f71e859c2649a378e7750b51&libraries=services"></script>
+    <script>
+        var addressInput = document.querySelector(".address");
+        console.log(addressInput);
 
-    // 주소 데이터가 null 인 경우 배경색을 그레이로 변경
-    if (addressInput.value === "null") { // 주소 데이터가 문자열 "null" 인 경우
-        addressInput.style.backgroundColor = "gray";
-    }
-
-    var address = addressInput.value;
-    console.log(address);
-    var mapContainer = document.getElementById('map'), // 지도를 표시할 div
-    mapOption = {
-        center: new kakao.maps.LatLng(37.566826, 126.978656), // 서울 중심좌표
-        level: 3 // 지도의 확대 레벨
-    };
-
-    // 지도를 생성합니다
-    var map = new kakao.maps.Map(mapContainer, mapOption);
-
-    // 주소-좌표 변환 객체를 생성합니다
-    var geocoder = new kakao.maps.services.Geocoder();
-
-    // 주소로 좌표를 검색합니다
-    geocoder.addressSearch(address, function(result, status) {
-
-        // 정상적으로 검색이 완료됐으면
-         if (status === kakao.maps.services.Status.OK) {
-
-            var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
-
-            // 결과값으로 받은 위치를 마커로 표시합니다
-            var marker = new kakao.maps.Marker({
-                map: map,
-                position: coords
-            });
-
-            // 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
-            map.setCenter(coords);
+        // 주소 데이터가 null 인 경우 배경색을 그레이로 변경
+        if (addressInput.value === "null") { // 주소 데이터가 문자열 "null" 인 경우
+            addressInput.style.backgroundColor = "gray";
         }
-    });
-</script>
-</body>
+
+        var address = addressInput.value;
+        console.log(address);
+        var mapContainer = document.getElementById('map'), // 지도를 표시할 div
+        mapOption = {
+            center: new kakao.maps.LatLng(37.566826, 126.978656), // 서울 중심좌표
+            level: 3 // 지도의 확대 레벨
+        };
+
+        // 지도를 생성합니다
+        var map = new kakao.maps.Map(mapContainer, mapOption);
+
+        // 주소-좌표 변환 객체를 생성합니다
+        var geocoder = new kakao.maps.services.Geocoder();
+
+        // 주소로 좌표를 검색합니다
+        geocoder.addressSearch(address, function(result, status) {
+
+            // 정상적으로 검색이 완료됐으면
+             if (status === kakao.maps.services.Status.OK) {
+
+                var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+
+                // 결과값으로 받은 위치를 마커로 표시합니다
+                var marker = new kakao.maps.Marker({
+                    map: map,
+                    position: coords
+                });
+
+                // 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
+                map.setCenter(coords);
+            }
+        });
+    </script>
+</div>
 </html>

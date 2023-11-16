@@ -1,5 +1,5 @@
-<!doctype html>
-<html lang="ko" xmlns:th="">
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -8,15 +8,34 @@
     <link rel="stylesheet" type="text/css" th:href="@{/bootstrap.min.css}">
     <!-- sbb CSS -->
     <link rel="stylesheet" type="text/css" th:href="@{/style.css}">
-    <title>Hello, sbb!</title>
+    <title>???</title>
 </head>
 <body>
-<!-- 네비게이션바 -->
-<nav th:replace="~{navbar :: navbarFragment}"></nav>
-<!-- 기본 템플릿 안에 삽입될 내용 Start -->
-<th:block layout:fragment="content"></th:block>
-<!-- 기본 템플릿 안에 삽입될 내용 End -->
-<!-- Bootstrap JS -->
-<script th:src="@{/bootstrap.min.js}"></script>
+    <div class="navbar bg-dark">
+        <div class="container">
+            <div class="search" style="display: flex;">
+                <input type="text" class="form-control" style="margin-right: 20px;">
+                <button class="btn btn-sm btn-outline-light">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="mx-3" role="img" viewBox="0 0 24 24">
+                        <title>Search</title>
+                        <circle cx="10.5" cy="10.5" r="7.5"></circle>
+                        <path d="M21 21l-5.2-5.2"></path>
+                    </svg>
+                </button>
+            </div>
+            <a class="navbar-brand d-flex align-items-center" th:href="@{/restaurant/list}">
+                <img src="/food.png" style="width:40px; height:40px; border-radius: 50%;">
+                <span class="text-white ms-2">맛집리스트</span>
+            </a>
+            <div class="join">
+                <a class="btn btn-sm btn-light" sec:authorize="isAnonymous()" th:href="@{/member/login}">로그인</a>
+                <a class="btn btn-sm btn-light" sec:authorize="isAuthenticated()" th:href="@{/member/logout}">로그아웃</a>
+                <a class="btn btn-sm btn-light" th:href="@{/member/signup}">회원가입</a>
+            </div>
+        </div>
+    </div>
+    <!-- 기본 템플릿 안에 삽입될 내용 Start -->
+    <th:block layout:fragment="content"></th:block>
+    <!-- 기본 템플릿 안에 삽입될 내용 End -->
 </body>
 </html>
