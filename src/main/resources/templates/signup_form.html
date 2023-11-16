@@ -17,8 +17,8 @@ background: white;">
         <form th:action="@{/member/signup}" th:object="${memberCreateForm}" method="post" class="text-left">
             <div th:replace="~{form_errors :: formErrorsFragment}"></div>
             <div class="mb-3"style="text-align: center;">
-                <label for="membername" class="form-label"style="margin-right:10px;width: 500px;">ID</label>
-                <input type="text" th:field="*{membername}" class="form-control"style="width: 500px;height:5vh">
+                <label for="memberId" class="form-label"style="margin-right:10px;width: 500px;">ID</label>
+                <input type="text" th:field="*{memberId}" class="form-control"style="width: 500px;height:5vh">
             </div>
             <div class="mb-3"style="text-align: center;">
                 <label for="password1" class="form-label"style="margin-right:10px;width: 500px;">비밀번호</label>
