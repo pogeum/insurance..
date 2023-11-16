@@ -6,6 +6,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -14,11 +15,11 @@ public class MemberService {
     public final MemberRepository memberRepository;
     public final PasswordEncoder passwordEncoder;
 
-    public Member createMember(String memberId, String password, String email) {
+    public Member create(String memberId, String password1, String email) {
         Member member = new Member();
         member.setMemberId(memberId);
         member.setEmail(email);
-        member.setPassword(password);
+        member.setPassword(password1);
         this.memberRepository.save(member);
         return member;
     }

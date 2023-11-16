@@ -18,21 +18,25 @@ import java.util.Optional;
 @Service
 public class MemberSecurityService implements UserDetailsService{
 
-  private final MemberRepository memberRepository;
+    private final MemberRepository memberRepository;
 
-  @Override
-  public UserDetails loadUserByUsername(String membername) throws UsernameNotFoundException {
-    Optional<Member> _member = this.memberRepository.findBymembername(membername);
-    if (_member.isEmpty()) {
-      throw new UsernameNotFoundException("사용자를 찾을수 없습니다.");
+    @Override
+    public UserDetails loadUserByUsername(String memberId) throws UsernameNotFoundException {
+        Optional<Member> _member = this.memberRepository.findByMemberId(memberId);
+
+        if (_member.isEmpty()) {
+            throw new UsernameNotFoundException("사용자를 찾을수 없습니다.");
+        }
+
+        Member member = _member.get();
+
+        List<GrantedAuthority> authorities = new ArrayList<>();
+
+        if ("admin".equals(memberId)) {
+            authorities.add(new SimpleGrantedAuthority(MemberRole.ADMIN.getValue()));
+        } else {
+            authorities.add(new SimpleGrantedAuthority(MemberRole.MEMBER.getValue()));
+        }
+        return new User(member.getMemberId(), member.getPassword(), authorities);
     }
-    Member member = _member.get();
-    List<GrantedAuthority> authorities = new ArrayList<>();
-    if ("admin".equals(membername)) {
-      authorities.add(new SimpleGrantedAuthority(MemberRole.ADMIN.getValue()));
-    } else {
-      authorities.add(new SimpleGrantedAuthority(MemberRole.MEMBER.getValue()));
-    }
-    return new User(member.getMembername(), member.getPassword(), authorities);
-  }
 }
