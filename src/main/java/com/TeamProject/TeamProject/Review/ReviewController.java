@@ -32,19 +32,17 @@ public class ReviewController {
     @PostMapping("/create") //사용자가 get으로 받은 위 페이지에, 데이터 입력후 "저장하기" 버튼 클릭하면 실행할 메서드.
     public String createReview(Model model, @Valid ReviewForm reviewForm, BindingResult bindingResult){
         // 사용자가 보낸 데이터 reviewForm 형식으로 받아옴
+
         if (bindingResult.hasErrors()) {
             return "createReview_form";
         }
 
-//        Restaurant restaurant = restaurantService.getRestaurantById(id); // 해당 식당 아이디 찾아서 반환
-        Restaurant restaurant = restaurantService.getRestaurantById(reviewForm.getRestaurantId());
+//        reviewForm.setCreateDate(LocalDateTime.now());//
+//        reviewForm.setRestaurantId(3);//  ----------> db에 저장되는지만 확인하기 위한 테스트용 코드. 지워도됨.
 
-//        reviewService.create(restaurant, content, rating, localDateTime);
-        reviewService.create(restaurant,reviewForm.getContent(),reviewForm.getRating(),reviewForm.getCreateDate());
-
+        Restaurant restaurant = restaurantService.getRestaurantById(reviewForm.getRestaurantId()); // 해당 식당 아이디 찾아서 반환
+        reviewService.create(restaurant, reviewForm.getContent(),reviewForm.getRating(),reviewForm.getCreateDate());
         model.addAttribute("restaurant",restaurant);
-
-//        return String.format("redirect:/restaurant/home/%s", id);
         return String.format("redirect:/restaurant/detail/%s", reviewForm.getRestaurantId());
     }
 
