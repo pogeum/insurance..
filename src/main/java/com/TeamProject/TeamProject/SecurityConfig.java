@@ -18,20 +18,20 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-              .authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests
-                      .requestMatchers(new AntPathRequestMatcher("/**")).permitAll())
-              .headers((headers) -> headers
-                      .addHeaderWriter(new XFrameOptionsHeaderWriter(
+                .authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests
+                        .requestMatchers(new AntPathRequestMatcher("/**")).permitAll())
+                .headers((headers) -> headers
+                        .addHeaderWriter(new XFrameOptionsHeaderWriter(
                               XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN)))
-              .formLogin((formLogin) -> formLogin
-                      .loginPage("/member/login")
-                      .defaultSuccessUrl("/"))
-              .logout((logout) -> logout
-                      .logoutRequestMatcher(new AntPathRequestMatcher("/member/logout"))
-                      .logoutSuccessUrl("/")
-                      .invalidateHttpSession(true))
+                .formLogin((formLogin) -> formLogin
+                        .loginPage("/member/login")
+                        .defaultSuccessUrl("/"))
+                .logout((logout) -> logout
+                       .logoutRequestMatcher(new AntPathRequestMatcher("/member/logout"))
+                       .logoutSuccessUrl("/")
+                       .invalidateHttpSession(true))
         ;
-      return http.build();
+        return http.build();
     }
 
     @Bean
