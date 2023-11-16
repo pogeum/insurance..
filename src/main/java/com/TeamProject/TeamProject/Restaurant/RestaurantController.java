@@ -23,6 +23,7 @@ public class RestaurantController {
         model.addAttribute("restaurantList", restaurantList);
         return "Restaurant_list";
     }
+
     @GetMapping("/detail/{id}")
     public String detail(Model model, @PathVariable("id") Integer id) {
         Restaurant restaurant = this.restaurantService.getRestaurantById(id);
