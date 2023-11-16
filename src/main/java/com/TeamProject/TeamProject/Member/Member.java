@@ -18,6 +18,9 @@ public class Member {
     @Column(unique = true)  // 중복 X
     private String memberId; //아이디
 
+    @Column(unique = true)
+    private String nickname;
+
     private String password; // 비번
 
     private String email;

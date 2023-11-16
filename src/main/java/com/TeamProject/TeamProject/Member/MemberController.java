@@ -32,8 +32,7 @@ public class MemberController {
             return "redirect:/";
         }
         try {
-            this.memberService.create(memberCreateForm.getMemberId(),
-                     memberCreateForm.getPassword1(),memberCreateForm.getEmail());
+            this.memberService.create(memberCreateForm.getMemberId(), memberCreateForm.getPassword1(), memberCreateForm.getNickname() , memberCreateForm.getEmail());
         } catch (DataIntegrityViolationException e) {
             e.printStackTrace();
             bindingResult.reject("signupFailed", "이미 등록된 사용자입니다.");
@@ -43,7 +42,7 @@ public class MemberController {
             bindingResult.reject("signupFailed", e.getMessage());
             return "signup_form";
         }
-        return "redirect:/list";
+        return "redirect:/";
     }
     @GetMapping("/login")
     private String login(){

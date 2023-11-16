@@ -1,6 +1,7 @@
 package com.TeamProject.TeamProject.Member;
 
 
+import com.TeamProject.TeamProject.CustomUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -27,16 +28,17 @@ public class MemberSecurityService implements UserDetailsService{
         if (_member.isEmpty()) {
             throw new UsernameNotFoundException("사용자를 찾을수 없습니다.");
         }
-
         Member member = _member.get();
 
         List<GrantedAuthority> authorities = new ArrayList<>();
-
         if ("admin".equals(memberId)) {
             authorities.add(new SimpleGrantedAuthority(MemberRole.ADMIN.getValue()));
         } else {
             authorities.add(new SimpleGrantedAuthority(MemberRole.MEMBER.getValue()));
         }
-        return new User(member.getMemberId(), member.getPassword(), authorities);
+
+        CustomUser customUser = new CustomUser(member.getMemberId(), member.getPassword(), authorities);
+        customUser.setNickname(member.getNickname());
+        return customUser;
     }
 }

@@ -23,7 +23,7 @@ public class RestaurantService {
     }
 
     public Page<Restaurant> getList(int page) {
-        Pageable pageable = PageRequest.of(page, 6);
+        Pageable pageable = PageRequest.of(page, 3);
         return this.restaurantRepository.findAll(pageable);
     }
 
