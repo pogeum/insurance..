@@ -3,10 +3,12 @@ package com.TeamProject.TeamProject.Restaurant;
 import com.TeamProject.TeamProject.DataNotFoundException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.persistence.criteria.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -22,9 +24,10 @@ public class RestaurantService {
         return this.restaurantRepository.findAll();
     }
 
-    public Page<Restaurant> getList(int page) {
+    public Page<Restaurant> getList(int page, String kw) {
         Pageable pageable = PageRequest.of(page, 3);
-        return this.restaurantRepository.findAll(pageable);
+        Specification<Restaurant> spec = search(kw);
+        return this.restaurantRepository.findAll(spec, pageable);
     }
 
     public Restaurant getRestaurantById(Integer id) {
@@ -34,5 +37,20 @@ public class RestaurantService {
         } else {
             throw new DataNotFoundException("restaurant not found");
         }
+    }
+
+    private Specification<Restaurant> search(String kw) {
+        return new Specification<>() {
+            private static final long serialVersionUID = 1L;
+            @Override
+            public Predicate toPredicate(Root<Restaurant> q, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                query.distinct(true);  // 중복을 제거
+
+                return cb.or(
+                        cb.like(q.get("title"), "%" + kw + "%"), // 제목
+                        cb.like(q.get("address"), "%" + kw + "%") // 도로 주소
+                );
+            }
+        };
     }
 }
