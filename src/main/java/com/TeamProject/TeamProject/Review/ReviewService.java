@@ -5,13 +5,16 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
 public class ReviewService {
     private final ReviewRepository reviewRepository;
 
-
+    public List<Review> getreviewList() {
+        return this.reviewRepository.findAll();
+    }
     public Review findById(Integer reviewid) {
         return this.reviewRepository.findById(reviewid).get();
     }

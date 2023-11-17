@@ -46,6 +46,14 @@ public class ReviewController {
         return String.format("redirect:/restaurant/detail/%s", reviewForm.getRestaurantId());
     }
 
+    @GetMapping("/list")
+    public String reviewlist(Model model) {
+        List<Review> reviewList = reviewService.getreviewList();
+        model.addAttribute("reviewList" , reviewList);
+        return "review_list";
+    }
+
+
     @GetMapping("/detail")
     public String reviewdetail(Model model, Integer reviewid) {
         Review targetReview = new Review();
