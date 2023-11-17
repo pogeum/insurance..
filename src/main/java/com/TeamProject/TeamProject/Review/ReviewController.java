@@ -56,24 +56,8 @@ public class ReviewController {
 
 
     @GetMapping("/detail/{reviewid}")
-    public String reviewdetail(Model model, Integer reviewid) {
-        Review targetReview = new Review();
-//        Restaurant restaurant = new Restaurant();
-//
-//        Member member = new Member();
-//        member.setMemberId("김포도");
-//        member.setEmail("test@test.com");
-//        member.setPassword("password");
-//        this.memberRepository.save(member);
-//
-//        Review targetReview = new Review();
-//        targetReview.setAuthor(member);
-//        targetReview.setRating(4);
-//        targetReview.setContent("테스트용");
-//        targetReview.setRestaurant(restaurant);
-//        targetReview.setThumbsup(3);
-//        this.reviewRepository.save(targetReview);
-
+    public String reviewdetail(Model model, @PathVariable("reviewid")Integer reviewid) {
+        Review targetReview = reviewService.findById(reviewid);
         model.addAttribute("targetReview" , targetReview);
         return "review_detail";
     }

@@ -1,40 +1,24 @@
 <html layout:decorate="~{layout}" xmlns:layout="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml">
 <div layout:fragment="content" class="container my-3">
-    <div class="row my-3">
 
-        <div class="col-6">
-            <div class="restaurant">
-                <p> restaurant name </p>
-                <p th:unless="${targetReview == null}" th:text="${targetReview.restaurant}"></p>
-            </div>
-            <div class="thumbs-up">
-                thumbs-up
-                <p th:unless="${targetReview == null}" th:text="${targetReview.thumbsup}"></p>
-            </div>
-            <div class="rating">
-                rating
-                <p th:unless="${targetReview == null}" th:text="${targetReview.rating}"></p>
-            </div>
-        </div>
-        <div>
-            <div class="profile">???</div>
-            <div class="membername">
-                -membername-
-                <p th:unless="${targetReview == null}" th:text="${targetReview.author}"></p>
-            </div>
-        </div>
-        <div>
-            <div class="pictures">
-                empty/추후수정할예정
-            </div>
-        </div>
-        <div>
-            <div class="review-content">
-                내용없음
-                <p th:unless="${targetReview == null}" th:text="${targetReview.content}">empty</p>
+
+    <div >
+
+        <div class="row my-3">
+            <div class="card w-50" style="width: 18rem; height: 800px;">
+                <img src="..." class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 th:text="${targetReview.rating}" class="card-title" ></h5>
+                    <td th:if="${targetReview.author == null}" th:text="비회원"></td>
+                    <td th:unless="${targetReview.author == null}" th:text="${targetReview.author}"></td>
+                    <p class="card-text"  th:text="${targetReview.content}"></p>
+
+                    <a href="/review/list" class="btn btn-light btn-sm">목록</a>
+                </div>
             </div>
         </div>
     </div>
+
 
 </div>
 </html>
