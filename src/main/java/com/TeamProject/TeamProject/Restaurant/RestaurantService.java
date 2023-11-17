@@ -31,6 +31,7 @@ public class RestaurantService {
     }
 
     public Restaurant getRestaurantById(Integer id) {
+
         Optional<Restaurant> restaurant = this.restaurantRepository.findById(id);
         if (restaurant.isPresent()) {
             return restaurant.get();
@@ -38,7 +39,21 @@ public class RestaurantService {
             throw new DataNotFoundException("restaurant not found");
         }
     }
+//------------------------------------------------------------------------------------------------------------------
+    public Restaurant getRestaurantByIdforReview(Integer id) { // 황선영이 추가. 식당정보없이 일단 리뷰작성되는지 확인하기 위해서 작성한 메서드. 추후 수정예정.
+        Optional<Restaurant> restaurant = Optional.ofNullable(id)
+                .flatMap(this.restaurantRepository::findById);
 
+        return restaurant.orElseGet(() -> {
+            Restaurant unknownRestaurant = new Restaurant();
+            unknownRestaurant.setTitle("Unknown Restaurant");
+            unknownRestaurant.setAddress("");
+            unknownRestaurant.setCategory("");
+            unknownRestaurant.setRoadAddress("");
+            return restaurantRepository.save(unknownRestaurant);
+        });
+    }
+//------------------------------------------------------------------------------------------------------------------
     private Specification<Restaurant> search(String kw) {
         return new Specification<>() {
             private static final long serialVersionUID = 1L;

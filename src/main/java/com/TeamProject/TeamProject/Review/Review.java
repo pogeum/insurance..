@@ -22,7 +22,7 @@ public class Review {
 
   private double rating; //평점
 
-  private Integer thumbsup; // 해당 리뷰가 받은 추천수
+//  private Integer thumbsup; // 해당 리뷰가 받은 추천수
 
   @ManyToOne
   private Member author;

@@ -13,6 +13,7 @@ import java.util.List;
 public class ReviewForm {
 
     private Integer restaurantId;
+    private String memberId;
 
     private double rating;
 

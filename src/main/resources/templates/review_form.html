@@ -20,16 +20,16 @@
                         <label for="starpoint_8" class="label_star" title="4"><span class="blind">4점</span></label>
                         <label for="starpoint_9" class="label_star" title="4.5"><span class="blind">4.5점</span></label>
                         <label for="starpoint_10" class="label_star" title="5"><span class="blind">5점</span></label>
-                        <input type="radio" th:field="*{rating}" th:id="starpoint_1" th:value="0.5" class="star_radio">
-                        <input type="radio" th:field="*{rating}" th:id="starpoint_2" th:value="1.0" class="star_radio">
-                        <input type="radio" th:field="*{rating}" th:id="starpoint_3" th:value="1.5" class="star_radio">
-                        <input type="radio" th:field="*{rating}" th:id="starpoint_4" th:value="2.0" class="star_radio">
-                        <input type="radio" th:field="*{rating}" th:id="starpoint_5" th:value="2.5" class="star_radio">
-                        <input type="radio" th:field="*{rating}" th:id="starpoint_6" th:value="3.0" class="star_radio">
-                        <input type="radio" th:field="*{rating}" th:id="starpoint_7" th:value="3.5" class="star_radio">
-                        <input type="radio" th:field="*{rating}" th:id="starpoint_8" th:value="4.0" class="star_radio">
-                        <input type="radio" th:field="*{rating}" th:id="starpoint_9" th:value="4.5" class="star_radio">
-                        <input type="radio" th:field="*{rating}" th:id="starpoint_10" th:value="5.0" class="star_radio">
+                        <input type="radio" name="rating" th:field="*{rating}" th:id="starpoint_1" th:value="0.5" class="star_radio">
+                        <input type="radio" name="rating" th:field="*{rating}" th:id="starpoint_2" th:value="1.0" class="star_radio">
+                        <input type="radio" name="rating" th:field="*{rating}" th:id="starpoint_3" th:value="1.5" class="star_radio">
+                        <input type="radio" name="rating" th:field="*{rating}" th:id="starpoint_4" th:value="2.0" class="star_radio">
+                        <input type="radio" name="rating" th:field="*{rating}" th:id="starpoint_5" th:value="2.5" class="star_radio">
+                        <input type="radio" name="rating" th:field="*{rating}" th:id="starpoint_6" th:value="3.0" class="star_radio">
+                        <input type="radio" name="rating" th:field="*{rating}" th:id="starpoint_7" th:value="3.5" class="star_radio">
+                        <input type="radio" name="rating" th:field="*{rating}" th:id="starpoint_8" th:value="4.0" class="star_radio">
+                        <input type="radio" name="rating" th:field="*{rating}" th:id="starpoint_9" th:value="4.5" class="star_radio">
+                        <input type="radio" name="rating" th:field="*{rating}" th:id="starpoint_10" th:value="5.0" class="star_radio">
                         <span class="starpoint_bg"></span>
                     </div>
                 </div>
@@ -38,6 +38,7 @@
                 <label for="content" class="form-label">내용</label>
                 <textarea th:field="*{content}" class="form-control" rows="10"></textarea>
             </div>
+            <input type="hidden" name="restaurantId" value="1" >
             <input type="submit" value="저장하기" class="btn btn-primary my-2">
         </form>
     </div>
