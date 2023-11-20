@@ -1,12 +1,15 @@
 package com.webProject.webProject.Review;
 
+import com.webProject.webProject.Review_tag.Review_tag;
 import com.webProject.webProject.Store.Store;
+import com.webProject.webProject.Tag.Tag;
 import com.webProject.webProject.User.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Getter
@@ -21,8 +24,8 @@ public class Review {
 
     private double rating; //글쓴이가 등록한 별점
 
-    @Column(columnDefinition = "TEXT")
-    private String tag;
+    @OneToMany(mappedBy = "review")
+    private List<Review_tag> reviewTags;
 
     @ManyToOne
     private Store store; // 음식점 이름
