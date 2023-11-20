@@ -2,6 +2,8 @@ package com.TeamProject.TeamProject.Restaurant;
 
 import com.TeamProject.TeamProject.Restaurant.Restaurant;
 import com.TeamProject.TeamProject.Restaurant.RestaurantService;
+import com.TeamProject.TeamProject.Review.Review;
+import com.TeamProject.TeamProject.Review.ReviewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -18,6 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class RestaurantController {
     private final RestaurantService restaurantService;
+    private final ReviewService reviewService;
 
     @GetMapping("/list")
     public String list(Model model, @RequestParam(value="page", defaultValue="0") int page,
@@ -31,7 +34,10 @@ public class RestaurantController {
     @GetMapping("/detail/{id}")
     public String detail(Model model, @PathVariable("id") Integer id) {
         Restaurant restaurant = this.restaurantService.getRestaurantById(id);
+        List<Review> reviews = this.reviewService.getReviewByRestaurantId(id); // 해당 레스토랑의 모든 리뷰 가져오기
         model.addAttribute("restaurant", restaurant);
+        model.addAttribute("reviews", reviews); // 리뷰 리스트를 모델에 추가
+
         return "restaurant_detail";
     }
 }

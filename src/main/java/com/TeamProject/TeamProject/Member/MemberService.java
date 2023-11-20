@@ -28,6 +28,7 @@ public class MemberService {
         return member;
     }
     //------------------------------------------------------------------------------------------------------------------
+    // 비회원은 리뷰를 남길수 없도록 해주셨으면 좋겠습니다.
     public Member getMemberforreview(String memberId) {
         // 황선영이 추가. 회원정보없이 일단 리뷰작성되는지 확인하기 위해서 작성한 메서드. 추후 수정예정.
         Optional<Member> member = Optional.ofNullable(memberId)
