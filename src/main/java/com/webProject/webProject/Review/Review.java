@@ -8,6 +8,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -19,16 +20,18 @@ public class Review {
     private Integer id;
 
     @Column(columnDefinition = "TEXT")
-    private String content;    // 음식점 이름
+    private String content;   //리뷰내용
 
-    private double rating;
+    private double rating; //글쓴이가 등록한 별점
 
     @OneToMany(mappedBy = "review")
     private List<Review_tag> reviewTags;
 
     @ManyToOne
-    private Store store;
+    private Store store; // 음식점 이름
 
     @ManyToOne
-    private User author;
+    private User author; //작성자
+
+    private LocalDateTime createDate;
 }
