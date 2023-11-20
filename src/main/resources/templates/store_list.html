@@ -1,10 +1,27 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>title</title>
+    <!-- 부트스트랩 CSS -->
+    <link rel="stylesheet" type="text/css" th:href="@{/bootstrap.min.css}">
+    <!-- sbb CSS -->
+    <link rel="stylesheet" type="text/css" th:href="@{/style.css}">
 </head>
 <body>
-
+<nav class="navbar bg-body-tertiary" style="background:navy;">
+    <div class="container-fluid">
+        <a class="navbar-brand" style="font-size: 2rem; color:white;" th:href="@{|/store/list|}">맛집</a>
+    </div>
+</nav>
+<div class="content-area" style="height:100%;">
+    <div class="d-flex flex-column" style="height:100%;">
+        <div style="height:5%;">
+            <input class="btn btn-sm btn-outline-secondary" style="flex: 1;" value="상세위치 검색">
+            <input class="btn btn-sm btn-outline-secondary" style="flex: 1; margin-left: 10px;" value="내 위치 검색">
+        </div>
+        <div style="height:95%; background-color: gray;"></div>
+    </div>
+</div>
 </body>
 </html>

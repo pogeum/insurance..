@@ -19,8 +19,4 @@ public class Tag {
 
     @Column(columnDefinition = "TEXT")
     private String tageName;
-
-    @OneToMany(mappedBy = "tag")
-    private List<Review_tag> reviewTags;
-
 }
