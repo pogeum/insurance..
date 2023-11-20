@@ -6,10 +6,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class MainController {
-    @RequestMapping("/test")
-    @ResponseBody
-    public String test(){
-        return "test";
+    @RequestMapping("/")
+    public String root(){
+        return "redirect:/store/list";
     }
 
 }

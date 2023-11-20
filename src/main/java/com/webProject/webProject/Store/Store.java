@@ -6,6 +6,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.awt.*;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -28,11 +30,11 @@ public class Store {
     @Column(columnDefinition = "TEXT")
     private String roadAddress;
 
-    @Column(columnDefinition = "TEXT")
-    private String menu;
+    private LocalDateTime createDate;
 
     @OneToMany(mappedBy = "store")
     private List<Review> reviewList;
+    private List<Menu> menuList;
 
     @ManyToOne
     private User author;
