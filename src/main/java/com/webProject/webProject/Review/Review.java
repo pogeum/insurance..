@@ -24,7 +24,7 @@ public class Review {
 
     @ManyToOne
     private Store store;
-    
+
     @ManyToOne
     private User author;
 }
