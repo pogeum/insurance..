@@ -12,8 +12,8 @@ import java.util.List;
 @Setter
 public class ReviewForm {
 
-    private Integer restaurantId;
-    private String memberId;
+//    private Integer restaurantId;
+//    private String memberId;
 
     private double rating;
 
