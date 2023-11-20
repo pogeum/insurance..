@@ -34,7 +34,6 @@ public class Store {
 
     @OneToMany(mappedBy = "store")
     private List<Review> reviewList;
-    private List<Menu> menuList;
 
     @ManyToOne
     private User author;

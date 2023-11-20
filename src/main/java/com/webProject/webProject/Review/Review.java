@@ -24,9 +24,6 @@ public class Review {
 
     private double rating; //글쓴이가 등록한 별점
 
-    @OneToMany(mappedBy = "review")
-    private List<Review_tag> reviewTags;
-
     @ManyToOne
     private Store store; // 음식점 이름
 

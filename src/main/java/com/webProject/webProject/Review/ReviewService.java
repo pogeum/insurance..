@@ -26,7 +26,8 @@ public class ReviewService {
 
         Review review = new Review();
         review.setStore(store);
-        review.setAuthor(user);        review.setContent(content);
+        review.setAuthor(user);
+        review.setContent(content);
         review.setRating(rating)
         ;
         review.setCreateDate(localDateTime);
