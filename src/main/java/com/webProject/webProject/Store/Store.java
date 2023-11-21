@@ -37,4 +37,7 @@ public class Store {
 
     @ManyToOne
     private User author;
+
+    @Lob
+    private List<byte[]> imagefiles; //가게 사장이 첨부한 사진 등록할 필드
 }

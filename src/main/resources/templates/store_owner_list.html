@@ -1,0 +1,52 @@
+<!--<html layout:decorate="~{layout}" xmlns:layout="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml">-->
+
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>title</title>
+    <!-- 부트스트랩 CSS -->
+    <link rel="stylesheet" type="text/css" th:href="@{/bootstrap.min.css}">
+    <!-- sbb CSS -->
+    <link rel="stylesheet" type="text/css" th:href="@{/style.css}">
+</head>
+<body>
+<nav class="navbar bg-body-tertiary" style="background:navy;">
+    <div class="container-fluid">
+        <a class="navbar-brand" style="font-size: 2rem; color:white;" th:href="@{|/store/list|}">맛집</a>
+    </div>
+    <li class="nav-item">
+        <a class="nav-link" style="color:white;" th:href="@{/user/login}">Sign In</a>
+    </li>
+</nav>
+<div class="container my-3">
+    <div class="col-6">
+        <a class="btn btn-sm btn-light" th:href="@{/store/create}">가게 등록</a>
+    </div>
+    <table class="table">-
+        <thead class="table-dark">
+<!--        <tr class="text-center">-->
+<!--            <th style="width:50%">내용</th>-->
+<!--            <th>글쓴이</th>-->
+<!--            <th>작성일시</th>-->
+<!--        </tr>-->
+<!--        </thead>-->
+        <tbody>
+        <tr class="text-center" th:each="store : ${ownerStoreList}">
+<!--            <td th:text="${store.author.getnickname}"></td>-->
+            <td th:text="${store.name}"></td>
+            <td th:text="${store.category}"></td>
+            <td th:text="${store.content}"></td>
+            <td>
+                <a th:href="@{|#|}" th:text="수정"></a>
+            </td>
+            <td>
+                <a th:href="@{|#|}" th:text="삭제"></a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+</body>
+
