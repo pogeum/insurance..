@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="ko" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>title</title>
@@ -9,19 +9,163 @@
     <link rel="stylesheet" type="text/css" th:href="@{/style.css}">
 </head>
 <body>
-<nav class="navbar bg-body-tertiary" style="background:navy;">
-    <div class="container-fluid">
-        <a class="navbar-brand" style="font-size: 2rem; color:white;" th:href="@{|/store/list|}">맛집</a>
+<nav class="navbar bg-body-tertiary" style="background:gray; padding:15px 0 15px 0;">
+    <div class="d-flex justify-content-between align-items-center">
+        <div class="container-fluid">
+            <a class="d-flex align-items-center" th:href="@{/restaurant/list}">
+                <img src="/restaurant.png" style="width:40px; height:40px; border-radius: 50%;">
+                <span class="text-white ms-2 fw-bold fs-4">Store List</span>
+            </a>
+        </div>
     </div>
 </nav>
-<div class="content-area" style="height:100%;">
+<div class="content-area" style="height:90%;">
     <div class="d-flex flex-column" style="height:100%;">
-        <div style="height:5%;">
-            <input class="btn btn-sm btn-outline-secondary" style="flex: 1;" value="상세위치 검색">
-            <input class="btn btn-sm btn-outline-secondary" style="flex: 1; margin-left: 10px;" value="내 위치 검색">
+        <div style="height:5%; margin:10px; display: flex; justify-content: flex-start;">
+            <a href="#">
+                <input class="btn btn-outline-secondary" value="상세위치 검색">
+            </a>
+<!--            <button onclick="location.href='#';" class="btn btn-outline-secondary">-->
+<!--                상세위치 검색-->
+<!--            </button>-->
+            <a th:href="@{|/store/mylocation|}">
+                <input class="btn btn-outline-secondary" style="margin-left: 20px;" value="내 위치 검색">
+            </a>
+<!--            <button onclick="getLocation()" class="btn btn-outline-secondary" style="margin-left: 20px;">-->
+<!--                내 위치 검색-->
+<!--            </button>-->
+            <input type="text" th:value="${location}" style="margin-left: 20px;">
         </div>
-        <div style="height:95%; background-color: gray;"></div>
+        <div style="height:90%;">
+            <div class="d-flex" style="height:100%;width:100%;">
+                <div style="width:60%;">
+                    <div style="padding:0 10px 0 10px;width:100%; height:100%;">
+                        <div id="map" style="width:100%;height:100%;border:3px solid black;"></div>
+                    </div>
+                </div>
+                <div style="width:40%;">
+                    <div style="width:99%;height:100%; border:3px solid black; overflow-y:scroll;">
+                        <div th:each="store : ${storeList}">
+                            <div class="card" style="margin:10px; width:95%;height:100%;">
+                                <div class="card-body d-flex flex-column" style="width:100%; height:100%;">
+                                    <h2 class="card-title" th:text="${store.name}"></h2>
+                                    <h5 class="card-text" th:text="${store.category}"></h5>
+                                    <p class="text-secondary small address" th:text="${store.roadAddress}"></p>
+                                    <a href="#" class="btn btn-outline-secondary">보러가기</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div style="height:5%;">
+<!--            아무것도 아님-->
+        </div>
     </div>
 </div>
+<script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=7ee6f5a5f71e859c2649a378e7750b51&libraries=services"></script>
+<script>
+    var mapContainer = document.getElementById('map');
+    var mapOption = {
+        center: new kakao.maps.LatLng(37.566826, 126.978656), // 서울 중심좌표
+        level: 3 // 지도의 확대 레벨
+    };
+
+    var map = new kakao.maps.Map(mapContainer, mapOption);
+
+    var geocoder = new kakao.maps.services.Geocoder();
+
+    var addressElements = document.querySelectorAll(".address");
+    console.log(addressElements);
+    addressElements.forEach(function(element) {
+        var address = element.textContent;
+        var infowindow = new kakao.maps.InfoWindow({
+            content: element.parentElement.querySelector('.card-title').innerText // 가게 이름 설정
+        });
+
+        geocoder.addressSearch(address, function(result, status) {
+            if (status === kakao.maps.services.Status.OK) {
+                var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+
+                var marker = new kakao.maps.Marker({
+                    map: map,
+                    position: coords
+                });
+
+                kakao.maps.event.addListener(marker, 'click', function() {
+                    var current_status = infowindow.getMap(); // 인포윈도우의 현재 상태를 가져옵니다.
+
+                    if (current_status) {
+                        infowindow.close(); // 인포윈도우가 열려있다면 닫습니다.
+                    } else {
+                        infowindow.open(map, marker); // 인포윈도우가 닫혀있다면 엽니다.
+                    }
+                });
+
+                map.setCenter(coords);
+            }
+        });
+    });
+
+    function getLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(showPosition);
+        } else {
+            alert("Geolocation is not supported by this browser.");
+        }
+    }
+
+<!--    function showPosition(position) {-->
+<!--        var mapContainer = document.getElementById('map');-->
+<!--        var mapOption = {-->
+<!--            center: new kakao.maps.LatLng(position.coords.latitude, position.coords.longitude), // 현재 위치로 지도 중심 설정-->
+<!--            level: 2 // 지도의 확대 레벨-->
+<!--        };-->
+
+<!--        var map = new kakao.maps.Map(mapContainer, mapOption);-->
+
+<!--        var markerPosition = new kakao.maps.LatLng(position.coords.latitude, position.coords.longitude);-->
+
+<!--        var marker = new kakao.maps.Marker({-->
+<!--            position: markerPosition-->
+<!--        });-->
+
+<!--        marker.setMap(map);-->
+<!--    }-->
+
+    kakao.maps.load(function () {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function (position) {
+                var latitude = position.coords.latitude;
+                var longitude = position.coords.longitude;
+
+                // 위도와 경도를 JSON 형식으로 만들기
+                var data = {
+                    latitude: latitude,
+                    longitude: longitude
+                };
+
+                // 서버로 데이터 전송 (fetch API 사용)
+                fetch('/mylocation', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                })
+                .then(response => {
+                    // 서버 응답 처리
+                    console.log('데이터가 성공적으로 전송되었습니다.');
+                })
+                .catch(error => {
+                    console.error('데이터 전송 중 오류가 발생했습니다:', error);
+                });
+            });
+        } else {
+            console.log("브라우저가 Geolocation을 지원하지 않습니다.");
+        }
+    });
+</script>
 </body>
 </html>
