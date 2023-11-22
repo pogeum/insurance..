@@ -23,5 +23,15 @@ import java.util.List;
 @RequiredArgsConstructor
 @Controller
 public class ReviewController {
-    
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/create/{id}")
+    private String create(ReviewForm reviewForm) {
+        return "review_form";
+    }
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/create/{id}")
+    private String create(@PathVariable("id") Integer id){
+        return "redirect:/store/detail/%s" + id;
+    }
 }

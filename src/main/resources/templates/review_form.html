@@ -1,7 +1,53 @@
 <html layout:decorate="~{layout}" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:layout="http://www.w3.org/1999/xhtml">
-<div layout:fragment="content">
-    <div>
-        ㅎㅇ
+<div layout:fragment="content" class="content-area" style="height:90%;">
+    <div class="d-flex flex-column m-3" style="height:100%; border: 2px solid black; border-radius: 10px;">
+        <div class="d-flex align-items-center p-2" style="height:5%; padding:10px;margin: 20px 10px 0 10px;">
+            <h4 class="fw-bold" style="flex:6;margin: 0 10px 0 10px;"th:text="리뷰작성">
+            </h4>
+            <a href="#" class="btn btn-sm btn-dark" style="flex:1;">저장하기</a>
+        </div>
+        <div style="height:95%;">
+            <form th:object="${reviewForm}" method="post" enctype="multipart/form-data">
+                <div class="m-3">
+                    <div style="background: white; box-shadow:0px 0px 10px rgba(0,0,0,0.2);border-radius: 10px; padding : 10px; margin-bottom:20px;">
+                        <textarea th:field="*{content}" class="form-control" rows="15"></textarea>
+                    </div>
+                </div>
+                <div class="m-3" style="display: flex;">
+                    <div class="d-flex flex-column" style="width:50%; flex:2; background: white; box-shadow:0px 0px 10px rgba(0,0,0,0.2);border-radius: 10px; padding : 10px; margin-right:20px;">
+                        <label class="form-label">평점</label>
+                        <div class="starpoint_wrap" style="display: flex;justify-content: center;">
+                            <div class="starpoint_box">
+                                <label for="starpoint_1" class="label_star" title="0.5"><span class="blind">0.5점</span></label>
+                                <label for="starpoint_2" class="label_star" title="1"><span class="blind">1점</span></label>
+                                <label for="starpoint_3" class="label_star" title="1.5"><span class="blind">1.5점</span></label>
+                                <label for="starpoint_4" class="label_star" title="2"><span class="blind">2점</span></label>
+                                <label for="starpoint_5" class="label_star" title="2.5"><span class="blind">2.5점</span></label>
+                                <label for="starpoint_6" class="label_star" title="3"><span class="blind">3점</span></label>
+                                <label for="starpoint_7" class="label_star" title="3.5"><span class="blind">3.5점</span></label>
+                                <label for="starpoint_8" class="label_star" title="4"><span class="blind">4점</span></label>
+                                <label for="starpoint_9" class="label_star" title="4.5"><span class="blind">4.5점</span></label>
+                                <label for="starpoint_10" class="label_star" title="5"><span class="blind">5점</span></label>
+                                <input type="radio" name="rating" th:field="*{rating}" th:id="starpoint_1" th:value="0.5" class="star_radio">
+                                <input type="radio" name="rating" th:field="*{rating}" th:id="starpoint_2" th:value="1.0" class="star_radio">
+                                <input type="radio" name="rating" th:field="*{rating}" th:id="starpoint_3" th:value="1.5" class="star_radio">
+                                <input type="radio" name="rating" th:field="*{rating}" th:id="starpoint_4" th:value="2.0" class="star_radio">
+                                <input type="radio" name="rating" th:field="*{rating}" th:id="starpoint_5" th:value="2.5" class="star_radio">
+                                <input type="radio" name="rating" th:field="*{rating}" th:id="starpoint_6" th:value="3.0" class="star_radio">
+                                <input type="radio" name="rating" th:field="*{rating}" th:id="starpoint_7" th:value="3.5" class="star_radio">
+                                <input type="radio" name="rating" th:field="*{rating}" th:id="starpoint_8" th:value="4.0" class="star_radio">
+                                <input type="radio" name="rating" th:field="*{rating}" th:id="starpoint_9" th:value="4.5" class="star_radio">
+                                <input type="radio" name="rating" th:field="*{rating}" th:id="starpoint_10" th:value="5.0" class="star_radio">
+                                <span class="starpoint_bg"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="display: flex; justify-content: center; align-items: center; flex:7; background: white; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2); border-radius: 10px; padding: 10px;">
+                        <input type="file" name="file">
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 </html>

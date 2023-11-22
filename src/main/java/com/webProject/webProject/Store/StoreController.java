@@ -40,17 +40,23 @@ public class StoreController {
         Store store = this.storeService.getStore(id);
         List<Review> reviewList = this.reviewService.getreviewList(store);
 
-        for (Review review : reviewList) {
-            List<Review_tag> tagList = review.getReviewTagList();
-            review.setReviewTagList(tagList);
+        if (!reviewList.isEmpty()) {
+            for (Review review : reviewList) {
+                List<Review_tag> tagList = review.getReviewTagList();
+                review.setReviewTagList(tagList);
+            }
+            Review firstReview = reviewList.get(0);
+            model.addAttribute("review", firstReview);
+        } else {
+            Review emptyReview = new Review();
+            model.addAttribute("review", emptyReview);
         }
-        Review firstReview = reviewList.get(0);
 
-        model.addAttribute("review", firstReview);
         model.addAttribute("reviewList", reviewList);
         model.addAttribute("store", store);
         return "store_detail";
     }
+
     @PostMapping("/mylocation") // POST 요청을 처리하기 위한 애노테이션 추가
     public String getMyLocation(Model model, @RequestParam("latitude") String latitude, @RequestParam("longitude") String longitude) {
         // 클라이언트의 위치 정보를 가져오는 메서드 호출 (이 부분은 getLocationFromCoordinates 메서드를 호출하는 것으로 가정)
