@@ -2,7 +2,6 @@ package com.webProject.webProject.Review;
 
 import com.webProject.webProject.Review_tag.Review_tag;
 import com.webProject.webProject.Store.Store;
-import com.webProject.webProject.Tag.Tag;
 import com.webProject.webProject.User.User;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -29,6 +28,9 @@ public class Review {
 
     @ManyToOne
     private User author; //작성자
+
+    @OneToMany(mappedBy = "review")
+    private List<Review_tag> reviewTagList;
 
     private LocalDateTime createDate;
 }

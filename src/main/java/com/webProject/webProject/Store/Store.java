@@ -1,12 +1,12 @@
 package com.webProject.webProject.Store;
 
+import com.webProject.webProject.Menu.Menu;
 import com.webProject.webProject.Review.Review;
 import com.webProject.webProject.User.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.awt.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -34,6 +34,9 @@ public class Store {
 
     @OneToMany(mappedBy = "store")
     private List<Review> reviewList;
+
+    @OneToMany(mappedBy = "store")
+    private List<Menu> menuList;
 
     @ManyToOne
     private User author;
