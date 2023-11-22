@@ -72,4 +72,8 @@ public class StoreService {
 
         return location;
     }
+    public Store findstoreById(Integer id) {
+        return this.storeRepository.findById(id).get();
+    }
+
 }
