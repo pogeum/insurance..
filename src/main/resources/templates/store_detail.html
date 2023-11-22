@@ -2,12 +2,17 @@
 <div layout:fragment="content">
     <div class="content-area" style="height:100%;">
         <div class="d-flex flex-column" style="height:100%;">
+            <td th:text="${targetStore.name}"></td>
             <div style="height:90%;">
                 <div class="d-flex" style="width:100%;height:100%;">
+                    <td th:text="${targetStore.category}"></td>
+
                     <div style="width:60%;">
                         <div style="width:100%;height:100%; background : red;"></div>
                     </div>
                     <div style="width:40%;">
+                        <td th:text="${targetStore.content}"></td>
+
                         <div style="width:100%;height:100%; background : green;"></div>
                     </div>
                 </div>
