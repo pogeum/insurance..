@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="ko" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -8,17 +8,28 @@
     <link rel="stylesheet" type="text/css" th:href="@{/bootstrap.min.css}">
     <!-- sbb CSS -->
     <link rel="stylesheet" type="text/css" th:href="@{/style.css}">
-    <title>Hello, sbb!</title>
+    <!-- kakao Map API -->
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=7ee6f5a5f71e859c2649a378e7750b51&libraries=services"></script>
+    <title>맛집!</title>
 </head>
 <body>
 <!-- 네비게이션바 -->
-<nav th:replace="~{navbar :: navbarFragment}"></nav>
-
+<nav class="navbar bg-body-tertiary" style="background:gray; padding:15px 0 15px 0;">
+    <div class="container-fluid d-flex justify-content-between align-items-center">
+        <a class="d-flex align-items-center" th:href="@{/restaurant/list}">
+            <img src="/restaurant.png" style="width:40px; height:40px; border-radius: 50%;">
+            <span class="text-white ms-2 fw-bold fs-4">Store List</span>
+        </a>
+        <div>
+            <a class="btn btn-sm btn-dark" sec:authorize="isAnonymous()" th:href="@{/user/login}" style="margin: 3px;">Sign in</a>
+            <a class="btn btn-sm btn-dark" sec:authorize="isAuthenticated()" th:href="@{/user/logout}" style="margin: 3px;">Sign out</a>
+            <a class="btn btn-sm btn-dark" th:href="@{/user/signup}" style="margin: 3px;">Sign up</a>
+        </div>
+    </div>
+</nav>
 <!-- 기본 템플릿 안에 삽입될 내용 Start -->
 <th:block layout:fragment="content"></th:block>
 <!-- 기본 템플릿 안에 삽입될 내용 End -->
-<!-- Bootstrap JS -->
-<script th:src="@{/bootstrap.min.js}"></script>
 <!-- 자바스크립트 Start -->
 <th:block layout:fragment="script"></th:block>
 <!-- 자바스크립트 End -->

@@ -51,10 +51,6 @@ public class StoreController {
             this.storeService.createStore(storeForm.getName(),storeForm.getContent(),storeForm.getCategory(),storeForm.getRoadAddress());
         }
 
-
-
-
-
         return "redirect:/store/owner/list";
     }
 
