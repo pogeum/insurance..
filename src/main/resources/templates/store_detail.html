@@ -35,7 +35,7 @@
                                     <h5 class="fw-bold" style="flex:4;margin: 0 10px 0 10px;"
                                         th:text="|${#lists.size(store.reviewList)}개의 답변이 있습니다.|">
                                     </h5>
-                                    <a href="#" class="btn btn-sm btn-dark" style="flex:1;">평가하기</a>
+                                    <a th:href="@{|/review/create/${store.id}|}" class="btn btn-sm btn-dark" style="flex:1;" onclick="evaluate(event)">평가하기</a>
                                 </div>
                             </div>
                             <div style="height:90%;">
@@ -55,7 +55,7 @@
                                             <div class="row">
                                                 <div th:each="reviewTag, iterationStat : ${review.reviewTagList}" class="col-3" style="padding-left: 5px;padding-right: 5px;">
                                                     <div class="text-dark fw-bold"
-                                                         style="text-align:center; font-size:12px; padding:5px; margin:5px; border-radius:4px; box-shadow:0 4px 8px rgba(0, 0, 0, 0.4); background-color: #ffffff;"
+                                                         style="text-align:center; font-size:12px; padding:5px; margin:5px; border-radius:10px; box-shadow:0 4px 8px rgba(0, 0, 0, 0.4); background-color: #ffffff;"
                                                          th:text="${reviewTag.tag.tagName}"></div>
                                                     <!-- 매 4번째 태그마다 행을 바꿉니다 -->
                                                     <div th:if="${iterationStat.index % 4 == 3}" class="w-100"></div>
@@ -76,11 +76,9 @@
     </div>
 </div>
 <script layout:fragment="script" type='text/javascript'>
-    // This will retrieve all elements with class 'address'
     var addressInputs = document.querySelectorAll(".address");
     console.log(addressInputs);
 
-    // Iterating through the NodeList to retrieve the value from each element
     addressInputs.forEach(function(addressInput) {
         var address = addressInput.textContent.trim();
         console.log(address);
@@ -114,5 +112,16 @@
             }
         });
     });
+
+    function evaluate(event) {
+        var isAuthenticated = [[${#authorization.expression('isAuthenticated()')}]];
+
+        if (!isAuthenticated) {
+            event.preventDefault();
+            alert('로그인이 필요합니다!');
+            return;
+        }
+        window.location.href = '/review/create/${store.id}';
+    }
 </script>
 </html>
