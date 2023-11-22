@@ -1,5 +1,6 @@
 package com.webProject.webProject.Store;
 
+import com.webProject.webProject.DataNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -9,6 +10,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -41,7 +43,6 @@ public class StoreService {
         store.setCategory(category);
         store.setRoadAddress(roadAddress);
         store.setCreateDate(LocalDateTime.now());
-
         try {
             if (this.files !=null && ! this.files.isEmpty()) {
                 store.setImagefiles(this.convertMultipartFIleToByteArray());
@@ -49,12 +50,18 @@ public class StoreService {
         } catch (IOException e) {
             System.out.println(e.toString());
         }
-
-
         this.storeRepository.save(store);
     }
 
 
+    public Store getStore(Integer id) {
+        Optional<Store> store = this.storeRepository.findById(id);
+        if (store.isPresent()) {
+            return store.get();
+        } else {
+            throw new DataNotFoundException("question not found");
+        }
+    }
 
     public String getLocationFromCoordinates(String latitude, String longitude) {
         // 여기서는 가정적으로 위도와 경도를 사용하여 위치 정보를 반환하는 방식을 작성합니다.
@@ -65,5 +72,4 @@ public class StoreService {
 
         return location;
     }
-
 }

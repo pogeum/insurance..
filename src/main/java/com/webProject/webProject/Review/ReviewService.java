@@ -13,8 +13,8 @@ import java.util.List;
 public class ReviewService {
     private final ReviewRepository reviewRepository;
 
-    public List<Review> getreviewList() {
-        return this.reviewRepository.findAll();
+    public List<Review> getreviewList(Store store) {
+        return this.reviewRepository.findAllByStore(store);
     }
     public Review findById(Integer reviewid) {
         return this.reviewRepository.findById(reviewid).get();
