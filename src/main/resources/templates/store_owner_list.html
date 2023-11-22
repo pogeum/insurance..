@@ -1,24 +1,5 @@
-<!--<html layout:decorate="~{layout}" xmlns:layout="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml">-->
-
-<!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.w3.org/1999/xhtml">
-<head>
-    <meta charset="UTF-8">
-    <title>title</title>
-    <!-- 부트스트랩 CSS -->
-    <link rel="stylesheet" type="text/css" th:href="@{/bootstrap.min.css}">
-    <!-- sbb CSS -->
-    <link rel="stylesheet" type="text/css" th:href="@{/style.css}">
-</head>
-<body>
-<nav class="navbar bg-body-tertiary" style="background:navy;">
-    <div class="container-fluid">
-        <a class="navbar-brand" style="font-size: 2rem; color:white;" th:href="@{|/store/list|}">맛집</a>
-    </div>
-    <li class="nav-item">
-        <a class="nav-link" style="color:white;" th:href="@{/user/login}">Sign In</a>
-    </li>
-</nav>
+<html layout:decorate="~{layout}" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:layout="http://www.w3.org/1999/xhtml">
+<div layout:fragment="content">
 <div class="container my-3">
     <div class="col-6">
         <a class="btn btn-sm btn-light" th:href="@{/store/create}">가게 등록</a>
@@ -47,6 +28,5 @@
         </tbody>
     </table>
 </div>
-
-</body>
-
+</div>
+</html>

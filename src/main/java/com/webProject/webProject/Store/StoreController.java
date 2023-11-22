@@ -39,6 +39,11 @@ public class StoreController {
         return "store_list";
     }
 
+    @GetMapping("/detail")
+    public String detail(){
+        return "store_detail";
+    }
+
     @GetMapping("/create")
     public String createStore(StoreForm storeForm){
         return "store_form";
