@@ -59,7 +59,7 @@ public class StoreService {
         if (store.isPresent()) {
             return store.get();
         } else {
-            throw new DataNotFoundException("question not found");
+            throw new DataNotFoundException("store not found");
         }
     }
 

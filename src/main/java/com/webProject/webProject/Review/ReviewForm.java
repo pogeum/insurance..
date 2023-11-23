@@ -1,10 +1,11 @@
 package com.webProject.webProject.Review;
 
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -12,8 +13,8 @@ class ReviewForm {
     @NotEmpty(message = "내용을 입력하세요.")
     private String content;
 
-    @NotEmpty(message = "평점을 입력하세요.")
-    private double rating;
+    @NotNull(message = "평점을 입력하세요.")
+    private Double rating; // double 대신 Double 사용
 
-//    private List<MultipartFile> images; //댓글 등록할때 이미지 첨부 받아오는 속성.. 추후수정예정 잘 몰라서 ㅠㅜ
+    private List<Integer> tagList; // 컬렉션의 빈 여부만을 검증하는 @NotEmpty
 }

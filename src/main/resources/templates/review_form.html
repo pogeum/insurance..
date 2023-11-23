@@ -1,20 +1,23 @@
 <html layout:decorate="~{layout}" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:layout="http://www.w3.org/1999/xhtml">
 <div layout:fragment="content" class="content-area" style="height:90%;">
-    <div class="d-flex flex-column m-3" style="height:100%; border: 2px solid black; border-radius: 10px;">
-        <div class="d-flex align-items-center p-2" style="height:5%; padding:10px;margin: 20px 10px 0 10px;">
-            <h4 class="fw-bold" style="flex:6;margin: 0 10px 0 10px;"th:text="리뷰작성">
-            </h4>
-            <a href="#" class="btn btn-sm btn-dark" style="flex:1;">저장하기</a>
-        </div>
-        <div style="height:95%;">
-            <form th:object="${reviewForm}" method="post" enctype="multipart/form-data">
+    <form th:object="${reviewForm}" method="post" enctype="multipart/form-data">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+        <div th:replace="~{form_errors :: formErrorsFragment}"></div>
+        <div class="d-flex flex-column m-3" style="height:100%; border: 2px solid black; border-radius: 10px;">
+            <div class="d-flex align-items-center p-2" style="height:5%; padding:10px;margin: 20px 10px 0 10px;">
+                <h4 class="fw-bold" style="flex:6;margin: 0 10px 0 10px;" th:text="리뷰작성"></h4>
+                <button type="submit" class="btn btn-sm btn-dark">저장하기</button>
+            </div>
+            <div style="height:95%;">
                 <div class="m-3">
                     <div style="background: white; box-shadow:0px 0px 10px rgba(0,0,0,0.2);border-radius: 10px; padding : 10px; margin-bottom:20px;">
+                        <label for="content" class="form-label">Review Content</label><br>
                         <textarea th:field="*{content}" class="form-control" rows="15"></textarea>
                     </div>
                 </div>
                 <div class="m-3" style="display: flex;">
                     <div class="d-flex flex-column" style="width:50%; flex:2; background: white; box-shadow:0px 0px 10px rgba(0,0,0,0.2);border-radius: 10px; padding : 10px; margin-right:20px;">
+                        <!-- 별점 관련 코드는 그대로 유지 -->
                         <label class="form-label">평점</label>
                         <div class="starpoint_wrap" style="display: flex;justify-content: center;">
                             <div class="starpoint_box">
@@ -43,11 +46,21 @@
                         </div>
                     </div>
                     <div style="display: flex; justify-content: center; align-items: center; flex:7; background: white; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2); border-radius: 10px; padding: 10px;">
-                        <input type="file" name="file">
+                        <input type="file" id="file" name="file">
                     </div>
                 </div>
-            </form>
+                <div class="m-3">
+                    <div style="display:flex; justify-content:space-around; background: white; box-shadow:0px 0px 10px rgba(0,0,0,0.2);border-radius: 10px; padding : 10px;">
+                        <div th:each="tag : ${allTags}">
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" th:field="*{tagList}" name="tagList" type="checkbox" th:value="${tag.id}" th:id="'defaultCheck' + ${tag.id}"/>
+                                <label class="form-check-label btn btn-outline-dark" th:text="${tag.tagName}" th:for="'defaultCheck' + ${tag.id}"></label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
+    </form>
 </div>
 </html>
