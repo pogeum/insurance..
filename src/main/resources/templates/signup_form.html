@@ -1,38 +1,48 @@
 <html layout:decorate="~{layout}" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:layout="http://www.w3.org/1999/xhtml">
-<div layout:fragment="content" class="container my-3">
-    <div class="my-3 border-bottom">
-        <div>
-            <h4>회원가입</h4>
+<div layout:fragment="content" class="content-area" style="height:90%;">
+    <div style="height:100%;background:lightgray;">
+        <div class="d-flex" style="width:100%; height:100%;">
+            <div style="width:70%;">
+            </div>
+            <div style="width:30%;margin:5% 15% 5% 5%;">
+                <div class="d-flex flex-column" style="border-radius: 10px;background:white;">
+                    <div style="height:10%">
+                        <div class="d-flex">
+                            <a class="btn btn-light" style="flex: 1;" th:href="@{/user/login}" role="button">로그인</a>
+                            <a class="btn btn-light" style="flex: 1;" th:href="@{/user/signup}" role="button">회원가입</a>
+                        </div>
+                    </div>
+                    <div style="height:90%; padding:20px;">
+                        <form th:action="@{/user/signup}" th:object="${userCreateForm}" method="post">
+                            <div class="alert alert-danger" role="alert" th:if="${#fields.hasAnyErrors()}">
+                                <div th:each="err : ${#fields.allErrors()}" th:text="${err}"></div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="userId" class="form-label">사용자ID</label>
+                                <input type="text" th:field="*{userId}" class="form-control" placeholder="ID" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="password1" class="form-label">비밀번호</label>
+                                <input type="password" th:field="*{password1}" class="form-control" placeholder="Password" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="password2" class="form-label">비밀번호 확인</label>
+                                <input type="password" th:field="*{password2}" class="form-control" placeholder="Password check" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="nickname" class="form-label">닉네임</label>
+                                <input type="text" th:field="*{nickname}" class="form-control" placeholder="NickName" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="email" class="form-label">이메일</label>
+                                <input type="email" th:field="*{email}" class="form-control" placeholder="e-mail" required>
+                            </div>
+                            <button class="btn btn-dark w-100 py-2" style="margin-top: 20px;" type="submit">회원가입</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
-    <div>
-        <h4>Sign_up</h4>
-        <form th:action="@{/user/signup}" th:object="${userCreateForm}" method="post">
-            <div class="alert alert-danger" role="alert" th:if="${#fields.hasAnyErrors()}">
-                <div th:each="err : ${#fields.allErrors()}" th:text="${err}"></div>
-            </div>
-            <div class="mb-3">
-                <label for="userId" class="form-label">ID</label>
-                <input type="text" th:field="*{userId}" class="form-control" placeholder="ID" required>
-            </div>
-            <div class="mb-3">
-                <label for="password1" class="form-label">Password</label>
-                <input type="password" th:field="*{password1}" class="form-control" placeholder="Password" required>
-            </div>
-            <div class="mb-3">
-                <label for="password2" class="form-label">Password check</label>
-                <input type="password" th:field="*{password2}" class="form-control" placeholder="Password check" required>
-            </div>
-            <div class="mb-3">
-                <label for="nickname" class="form-label">NickName</label>
-                <input type="text" th:field="*{nickname}" class="form-control" placeholder="NickName" required>
-            </div>
-            <div class="mb-3">
-                <label for="email" class="form-label">e-mail</label>
-                <input type="email" th:field="*{email}" class="form-control" placeholder="e-mail" required>
-            </div>
-            <button class="btn btn-dark w-100 py-2" style="margin-top: 20px;" type="submit">Sign in</button>
-        </form>
     </div>
 </div>
 </html>

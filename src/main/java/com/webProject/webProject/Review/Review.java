@@ -9,6 +9,7 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -21,7 +22,7 @@ public class Review {
     @Column(columnDefinition = "TEXT")
     private String content;   //리뷰내용
 
-    private double rating; //글쓴이가 등록한 별점
+    private Double rating; //글쓴이가 등록한 별점
 
     @ManyToOne
     private Store store; // 음식점 이름
@@ -33,4 +34,9 @@ public class Review {
     private List<Review_tag> reviewTagList;
 
     private LocalDateTime createDate;
+
+    private LocalDateTime modifyDate;
+
+    @ManyToMany
+    Set<User> voter;
 }
