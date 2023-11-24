@@ -9,6 +9,7 @@ import com.webProject.webProject.Tag.Tag;
 import com.webProject.webProject.User.User;
 import com.webProject.webProject.User.UserService;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -79,11 +80,11 @@ public class StoreController {
 
     @PostMapping("/create")
     public String createStore(Model model, StoreForm storeForm){
-        if (storeForm.getFiles()!=null&& !storeForm.getFiles().isEmpty()) {
-            storeService.setFiles(storeForm.getFiles());
-            this.storeService.createStore(storeForm.getName(),storeForm.getContent(),storeForm.getCategory(),storeForm.getRoadAddress());
-        }
-
+//        if (storeForm.getFiles()!=null&& !storeForm.getFiles().isEmpty()) {
+//            storeService.setFiles(storeForm.getFiles());
+//            this.storeService.createStore(storeForm.getName(),storeForm.getContent(),storeForm.getCategory(),storeForm.getRoadAddress());
+//        }
+        this.storeService.createStore(storeForm.getName(),storeForm.getContent(),storeForm.getCategory(),storeForm.getRoadAddress());
         return "redirect:/store/owner/list";
     }
 
@@ -105,4 +106,31 @@ public class StoreController {
 //        model.addAttribute("getstoreList_owner", this.storeService.getstoreList_owner());
         return "store_owner_list";
     }
+
+    @GetMapping("/modify/{storeid}")
+    public String modifystore(StoreForm storeForm, @PathVariable("storeid")Integer id) {
+        Store store = storeService.findstoreById(id);
+        storeForm.setName(store.getName());
+        storeForm.setContent(store.getContent());
+        storeForm.setCategory(store.getCategory());
+        storeForm.setRoadAddress(store.getRoadAddress());
+        return "store_form";
+    }
+
+    @PostMapping("/modify/{storeid}")
+    public String modifystore2(StoreForm storeForm, @PathVariable("storeid")Integer id) {
+        Store store = storeService.findstoreById(id);
+        this.storeService.modifyStore(store, storeForm.getName(), storeForm.getContent(), storeForm.getCategory(), storeForm.getRoadAddress());
+//        return "redirect:/store/detail/"+store.getId();
+        return "redirect:/store/owner/list";
+    }
+
+    @GetMapping("/delete/{storeid}")
+    public String deletestore(@PathVariable("storeid")Integer id) {
+        storeService.deleteStore(id);
+
+        return "redirect:/store/owner/list";
+
+    }
+
 }
