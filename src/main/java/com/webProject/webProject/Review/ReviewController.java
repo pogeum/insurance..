@@ -54,8 +54,8 @@ public class ReviewController {
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/create/{id}")
-    private String reviewCreate(Model model, ReviewForm reviewForm, @PathVariable("id") Integer id, BindingResult bindingResult, Principal principal,
-                                MultipartFile file) throws Exception {
+    private String reviewCreate(Model model, ReviewForm reviewForm, @PathVariable("id") Integer id,
+                                BindingResult bindingResult, Principal principal, List<MultipartFile> fileList) throws Exception {
         Store store = this.storeService.getStore(id);
         User user = this.userService.getUser(principal.getName());
 
@@ -69,7 +69,7 @@ public class ReviewController {
             reviewTagService.saveTagsForReview(review, reviewForm.getTagList());
         }
         if (review != null) {
-            photoService.saveImgsForReview(review, reviewForm.getFileList());
+            photoService.saveImgsForReview(review, fileList);
         }
 
         return String.format("redirect:/store/detail/%s", id);
@@ -116,7 +116,6 @@ public class ReviewController {
         if (newPhotos != null && !newPhotos.isEmpty()) {
             this.photoService.saveImgsForReview(review, newPhotos);
         }
-
         this.reviewService.modify(review, reviewForm.getContent(), reviewForm.getRating());
 
         return String.format("redirect:/store/detail/%s", review.getStore().getId());

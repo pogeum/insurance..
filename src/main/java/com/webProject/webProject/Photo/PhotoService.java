@@ -12,11 +12,6 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -25,7 +20,6 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class PhotoService {
     private final PhotoRepository photoRepository;
-    private final ReviewRepository reviewRepository;
 
     @Value("${ImgLocation}")
     public String imgLocation;
