@@ -1,7 +1,8 @@
 <html layout:decorate="~{layout}" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:layout="http://www.w3.org/1999/xhtml">
 <div layout:fragment="content" class="container">
     <h5 class="my-3 border-bottom pb-2">가게등록</h5>
-    <form th:object="${storeForm}" method="post">
+    <form th:object="${storeForm}" method="post" enctype="multipart/form-data">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
         <div class="mb-3">
             <label for="name" class="form-label">이름</label>
             <textarea th:field="*{name}" class="form-control" rows="1"></textarea>
@@ -27,12 +28,6 @@
         </div>
         <input type="submit" value="저장하기" class="btn btn-primary my-2">
     </form>
-<!--    <script>-->
-<!--        function selectCategory(element) {-->
-<!--        var categoryId = element.getAttribute('data-categoryId');-->
-<!--        console.log('Category ID: ' + categoryId);-->
-<!--        }-->
-<!--    </script>-->
 </div>
 
 

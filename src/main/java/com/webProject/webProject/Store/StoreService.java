@@ -76,4 +76,12 @@ public class StoreService {
         return this.storeRepository.findById(id).get();
     }
 
+    public void modifyStore(Store store, String name, String content, String category, String roadaddress) {
+        store.setName(name);
+        store.setContent(content);
+        store.setCategory(category);
+        store.setRoadAddress(roadaddress);
+        store.setCreateDate(LocalDateTime.now());
+        this.storeRepository.save(store);
+    }
 }

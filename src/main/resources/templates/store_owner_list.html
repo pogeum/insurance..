@@ -9,12 +9,12 @@
         <tbody>
         <tr class="text-center" th:each="store : ${ownerStoreList}">
             <td >
-                <a th:href="@{|/store/owner/detail/${store.id}|}" th:text="${store.name}"></a>
+                <a th:href="@{|/store/detail/${store.id}|}" th:text="${store.name}"></a>
             </td>
             <td th:text="${store.category}"></td>
             <td th:text="${store.content}"></td>
             <td>
-                <a th:href="@{|#|}" th:text="수정"></a>
+                <a th:href="@{|/store/modify/${store.id}|}" th:text="수정"></a>
             </td>
             <td>
                 <a th:href="@{|#|}" th:text="삭제"></a>
