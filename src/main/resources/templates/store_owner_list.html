@@ -7,9 +7,11 @@
         <table class="table">
             <thead class="table-dark" style="text-align:center;">
             <tr>
+                <th>작성자</th>
                 <th>이름</th>
                 <th>카테고리</th>
-                <th>설명</th>
+                <th>내용</th>
+                <th>작성일자</th>
                 <th></th>
 
             </tr>
@@ -17,11 +19,14 @@
             <thead class="table-dark">
             <tbody>
             <tr class="text-center" th:each="store : ${ownerStoreList}">
+                <td th:text="${store.author.getNickname()}"></td>
                 <td>
                     <a th:href="@{|/store/detail/${store.id}|}" th:text="${store.name}"></a>
                 </td>
                 <td th:text="${store.category}"></td>
                 <td th:text="${store.content}"></td>
+                <td th:text="${#temporals.format(store.createDate, 'yyyy-MM-dd HH:mm')}"></td>
+
                 <td>
                     <a th:href="@{|/store/modify/${store.id}|}"
                        th:text="수정"></a>

@@ -15,6 +15,6 @@ public class StoreForm {
     private String category;
     private String roadAddress;
 
-    private List<MultipartFile> files; //    사장이 등록할 사진
+    private List<MultipartFile> fileList; //    사장이 등록할 사진
 
 }
