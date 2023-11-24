@@ -1,43 +1,37 @@
 package com.webProject.webProject.Review;
 
 import com.webProject.webProject.DataNotFoundException;
+import com.webProject.webProject.Photo.Photo;
+import com.webProject.webProject.Photo.PhotoRepository;
 import com.webProject.webProject.Review_tag.Review_tag;
 import com.webProject.webProject.Review_tag.Review_tagRepository;
-import com.webProject.webProject.Review_tag.Review_tagService;
 import com.webProject.webProject.Store.Store;
 import com.webProject.webProject.Tag.Tag;
-import com.webProject.webProject.Tag.TagService;
 import com.webProject.webProject.User.User;
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @RequiredArgsConstructor
 @Service
 public class ReviewService {
     private final ReviewRepository reviewRepository;
-    private final TagService tagService;
     private final Review_tagRepository reviewTagRepository;
+    private final PhotoRepository photoRepository;
 
     public List<Review> getreviewList(Store store) {
         return this.reviewRepository.findAllByStore(store);
     }
-    
+
     public Review findById(Integer reviewid) {
         return this.reviewRepository.findById(reviewid).get();
     }
-    
+
     public Review getReview(Integer id) {
         Optional<Review> review = this.reviewRepository.findById(id);
         if (review.isPresent()) {
@@ -46,7 +40,7 @@ public class ReviewService {
             throw new DataNotFoundException("review not found");
         }
     }
-    
+
     public Review create(User user, Store store, String content, Double rating) {
         Review review = new Review();
         review.setStore(store);
@@ -82,7 +76,7 @@ public class ReviewService {
 
         return tagIds;
     }
-    
+
     // 수정하기 -> 새로운 태그 저장
     public void addTagToReview(Review review, Tag tag) {
         Review_tag reviewTag = new Review_tag();
