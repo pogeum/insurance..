@@ -1,27 +1,46 @@
 <html layout:decorate="~{layout}" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:layout="http://www.w3.org/1999/xhtml">
 <div layout:fragment="content">
-<div class="container my-3">
-    <div class="col-6">
-        <a class="btn btn-sm btn-light" th:href="@{/store/create}">가게 등록</a>
+    <div class="container my-3">
+        <div class="col-6">
+            <a class="btn btn-sm btn-light" th:href="@{/store/create}">가게 등록</a>
+        </div>
+        <table class="table">
+            <thead class="table-dark" style="text-align:center;">
+            <tr>
+                <th>이름</th>
+                <th>카테고리</th>
+                <th>설명</th>
+                <th></th>
+
+            </tr>
+            </thead>
+            <thead class="table-dark">
+            <tbody>
+            <tr class="text-center" th:each="store : ${ownerStoreList}">
+                <td>
+                    <a th:href="@{|/store/detail/${store.id}|}" th:text="${store.name}"></a>
+                </td>
+                <td th:text="${store.category}"></td>
+                <td th:text="${store.content}"></td>
+                <td>
+                    <a th:href="@{|/store/modify/${store.id}|}"
+                       th:text="수정"></a>
+                    <a href="javascript:void(0);" th:data-uri="@{|/store/delete/${store.id}|}"
+                       class="delete btn btn-sm btn-outline-secondary" th:text="삭제"></a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
     </div>
-    <table class="table">-
-        <thead class="table-dark">
-        <tbody>
-        <tr class="text-center" th:each="store : ${ownerStoreList}">
-            <td >
-                <a th:href="@{|/store/owner/detail/${store.id}|}" th:text="${store.name}"></a>
-            </td>
-            <td th:text="${store.category}"></td>
-            <td th:text="${store.content}"></td>
-            <td>
-                <a th:href="@{|#|}" th:text="수정"></a>
-            </td>
-            <td>
-                <a th:href="@{|#|}" th:text="삭제"></a>
-            </td>
-        </tr>
-        </tbody>
-    </table>
 </div>
-</div>
+<script layout:fragment="script" type='text/javascript'>
+    const delete_elements = document.getElementsByClassName("delete");
+    Array.from(delete_elements).forEach(function(element) {
+        element.addEventListener('click', function() {
+            if(confirm("정말로 삭제하시겠습니까?")) {
+                location.href = this.dataset.uri;
+            };
+        });
+    });
+</script>
 </html>
