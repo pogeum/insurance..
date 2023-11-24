@@ -1,6 +1,7 @@
 package com.webProject.webProject.Store;
 
 
+import com.webProject.webProject.Photo.PhotoService;
 import com.webProject.webProject.Review.Review;
 import com.webProject.webProject.Review.ReviewService;
 import com.webProject.webProject.Review_tag.Review_tag;
@@ -13,9 +14,12 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.client.RestTemplate;
+
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,9 +29,11 @@ import java.util.List;
 public class StoreController {
     private final StoreService storeService;
     private final UserService userService;
+    private final ReviewService reviewService;
+    private final PhotoService photoService;
 
     private final StoreRepository storeRepository;
-    private final ReviewService reviewService;
+
 
     @GetMapping("/list")
     public String list(Model model){
@@ -75,16 +81,23 @@ public class StoreController {
 
     @GetMapping("/create")
     public String createStore(StoreForm storeForm){
+
+
+
         return "store_form";
     }
 
     @PostMapping("/create")
-    public String createStore(Model model, StoreForm storeForm){
-//        if (storeForm.getFiles()!=null&& !storeForm.getFiles().isEmpty()) {
-//            storeService.setFiles(storeForm.getFiles());
-//            this.storeService.createStore(storeForm.getName(),storeForm.getContent(),storeForm.getCategory(),storeForm.getRoadAddress());
-//        }
-        this.storeService.createStore(storeForm.getName(),storeForm.getContent(),storeForm.getCategory(),storeForm.getRoadAddress());
+    public String createStore(Model model, StoreForm storeForm, BindingResult bindingResult, Principal principal, List<MultipartFile> fileList) throws Exception{
+        User user = this.userService.getUser(principal.getName());
+
+        if (bindingResult.hasErrors()) {
+            return "store_owner_list";
+        }
+
+        Store newStore = storeService.createStore(user, storeForm.getName(),storeForm.getContent(),storeForm.getCategory(),storeForm.getRoadAddress());
+        photoService.saveImgsForStore(newStore, fileList);
+
         return "redirect:/store/owner/list";
     }
 
@@ -118,8 +131,14 @@ public class StoreController {
     }
 
     @PostMapping("/modify/{storeid}")
-    public String modifystore2(StoreForm storeForm, @PathVariable("storeid")Integer id) {
+    public String modifystore2(StoreForm storeForm, @PathVariable("storeid")Integer id, BindingResult bindingResult, List<MultipartFile> fileList) throws Exception{
         Store store = storeService.findstoreById(id);
+        List<MultipartFile> newPhotos = storeForm.getFileList();
+        this.photoService.deletePhotosByStore(store);
+
+        if (newPhotos!= null && !newPhotos.isEmpty()) {
+            this.photoService.saveImgsForStore(store, newPhotos);
+        }
         this.storeService.modifyStore(store, storeForm.getName(), storeForm.getContent(), storeForm.getCategory(), storeForm.getRoadAddress());
 //        return "redirect:/store/detail/"+store.getId();
         return "redirect:/store/owner/list";

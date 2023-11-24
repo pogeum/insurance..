@@ -1,6 +1,7 @@
 package com.webProject.webProject.Store;
 
 import com.webProject.webProject.Menu.Menu;
+import com.webProject.webProject.Photo.Photo;
 import com.webProject.webProject.Review.Review;
 import com.webProject.webProject.User.User;
 import jakarta.persistence.*;
@@ -41,6 +42,6 @@ public class Store {
     @ManyToOne
     private User author;
 
-    @Lob
-    private List<byte[]> imagefiles; //가게 사장이 첨부한 사진 등록할 필드
+    @OneToMany(mappedBy = "store")
+    private List<Photo> photoList;
 }

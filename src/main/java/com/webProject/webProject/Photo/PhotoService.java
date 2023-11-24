@@ -3,6 +3,7 @@ package com.webProject.webProject.Photo;
 import com.webProject.webProject.Review.Review;
 import com.webProject.webProject.Review.ReviewRepository;
 import com.webProject.webProject.Review_tag.Review_tag;
+import com.webProject.webProject.Store.Store;
 import com.webProject.webProject.Tag.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -47,6 +48,42 @@ public class PhotoService {
 
     public void deletePhotosByReview(Review review) {
         List<Photo> photos = review.getPhotoList();
+
+        if (photos != null && !photos.isEmpty()) {
+            for (Photo photo : new ArrayList<>(photos)) {
+                File imageFile = new File(photo.getFilePath());
+                if (imageFile.exists()) {
+                    imageFile.delete();
+                }
+                this.photoRepository.delete(photo);
+                photos.remove(photo);
+            }
+        }
+    }
+//--------------------------------------------------------------------------------------------------------
+    public void saveImgsForStore(Store store, List<MultipartFile> files) throws Exception {
+        if (store != null && files != null && !files.isEmpty()) {
+            for (MultipartFile file : files) {
+                if (!file.isEmpty()) {
+                    String projectPath = imgLocation;
+                    UUID uuid = UUID.randomUUID();
+                    String fileName = uuid + "_" + file.getOriginalFilename();
+                    File saveFile = new File(projectPath, fileName);
+                    file.transferTo(saveFile);
+
+                    Photo photo = new Photo();
+                    photo.setFileName(fileName);
+                    photo.setFilePath(saveFile.getAbsolutePath());
+                    photo.setStore(store);
+
+                    this.photoRepository.save(photo);
+                }
+            }
+        }
+    }
+
+    public void deletePhotosByStore(Store store) {
+        List<Photo> photos = store.getPhotoList();
 
         if (photos != null && !photos.isEmpty()) {
             for (Photo photo : new ArrayList<>(photos)) {
