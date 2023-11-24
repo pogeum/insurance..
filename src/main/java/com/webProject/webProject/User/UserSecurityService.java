@@ -28,9 +28,11 @@ public class UserSecurityService implements UserDetailsService {
         }
         User user = _user.get();
         List<GrantedAuthority> authorities = new ArrayList<>();
-        if ("admin".equals(userId)) {
+        if ("owner".equals(user.getRole())) {
+            authorities.add(new SimpleGrantedAuthority(UserRole.OWNER.getValue()));
+        } else if("admin".equals(user.getRole())){
             authorities.add(new SimpleGrantedAuthority(UserRole.ADMIN.getValue()));
-        } else {
+        }else {
             authorities.add(new SimpleGrantedAuthority(UserRole.USER.getValue()));
         }
         CustomUser customUser = new CustomUser(user.getUserId(), user.getPassword(), authorities);

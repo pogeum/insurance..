@@ -5,7 +5,7 @@
             <a href="#">
                 <input class="btn btn-outline-secondary" value="상세위치 검색">
             </a>
-            <a th:href="@{|/store/mylocation|}">
+            <a href="/" id="myLocationBtn">
                 <input class="btn btn-outline-secondary" style="margin-left: 20px;" value="내 위치 검색">
             </a>
             <input type="text" th:value="${location}" style="margin-left: 20px;">
@@ -39,10 +39,12 @@
     </div>
 </div>
 <script layout:fragment="script" type='text/javascript'>
+    var map;
+    var myLocationMarker;
     var mapContainer = document.getElementById('map');
     var mapOption = {
-        center: new kakao.maps.LatLng(37.566826, 126.978656), // 서울 중심좌표
-        level: 3 // 지도의 확대 레벨
+       center: new kakao.maps.LatLng(37.566826, 126.978656), // 서울 중심좌표
+       level: 3 // 지도의 확대 레벨
     };
 
     var map = new kakao.maps.Map(mapContainer, mapOption);
@@ -52,92 +54,58 @@
     var addressElements = document.querySelectorAll(".address");
     console.log(addressElements);
     addressElements.forEach(function(element) {
-        var address = element.textContent;
-        var infowindow = new kakao.maps.InfoWindow({
-            content: element.parentElement.querySelector('.card-title').innerText // 가게 이름 설정
-        });
+       var address = element.textContent;
+       var infowindow = new kakao.maps.InfoWindow({
+           content: element.parentElement.querySelector('.card-title').innerText // 가게 이름 설정
+       });
 
-        geocoder.addressSearch(address, function(result, status) {
-            if (status === kakao.maps.services.Status.OK) {
-                var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+       geocoder.addressSearch(address, function(result, status) {
+           if (status === kakao.maps.services.Status.OK) {
+               var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
 
-                var marker = new kakao.maps.Marker({
-                    map: map,
-                    position: coords
-                });
+               var marker = new kakao.maps.Marker({
+                   map: map,
+                   position: coords
+               });
 
-                kakao.maps.event.addListener(marker, 'click', function() {
-                    var current_status = infowindow.getMap(); // 인포윈도우의 현재 상태를 가져옵니다.
+               kakao.maps.event.addListener(marker, 'click', function() {
+                   var current_status = infowindow.getMap(); // 인포윈도우의 현재 상태를 가져옵니다.
 
-                    if (current_status) {
-                        infowindow.close(); // 인포윈도우가 열려있다면 닫습니다.
-                    } else {
-                        infowindow.open(map, marker); // 인포윈도우가 닫혀있다면 엽니다.
-                    }
-                });
+                   if (current_status) {
+                       infowindow.close(); // 인포윈도우가 열려있다면 닫습니다.
+                   } else {
+                       infowindow.open(map, marker); // 인포윈도우가 닫혀있다면 엽니다.
+                   }
+               });
 
-                map.setCenter(coords);
-            }
-        });
+               map.setCenter(coords);
+           }
+       });
     });
-
-    function getLocation() {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(showPosition);
-        } else {
-            alert("Geolocation is not supported by this browser.");
-        }
-    }
-
-<!--    function showPosition(position) {-->
-<!--        var mapContainer = document.getElementById('map');-->
-<!--        var mapOption = {-->
-<!--            center: new kakao.maps.LatLng(position.coords.latitude, position.coords.longitude), // 현재 위치로 지도 중심 설정-->
-<!--            level: 2 // 지도의 확대 레벨-->
-<!--        };-->
-
-<!--        var map = new kakao.maps.Map(mapContainer, mapOption);-->
-
-<!--        var markerPosition = new kakao.maps.LatLng(position.coords.latitude, position.coords.longitude);-->
-
-<!--        var marker = new kakao.maps.Marker({-->
-<!--            position: markerPosition-->
-<!--        });-->
-
-<!--        marker.setMap(map);-->
-<!--    }-->
-
-    kakao.maps.load(function () {
+   // "내 위치 찾기" 버튼 클릭 시 이벤트 처리
+    document.getElementById('myLocationBtn').addEventListener('click', function () {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(function (position) {
-                var latitude = position.coords.latitude;
-                var longitude = position.coords.longitude;
+                var lat = position.coords.latitude,
+                    lon = position.coords.longitude;
 
-                // 위도와 경도를 JSON 형식으로 만들기
-                var data = {
-                    latitude: latitude,
-                    longitude: longitude
-                };
+                var locPosition = new kakao.maps.LatLng(lat, lon);
 
-                // 서버로 데이터 전송 (fetch API 사용)
-                fetch('/mylocation', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(data)
-                })
-                .then(response => {
-                    // 서버 응답 처리
-                    console.log('데이터가 성공적으로 전송되었습니다.');
-                })
-                .catch(error => {
-                    console.error('데이터 전송 중 오류가 발생했습니다:', error);
-                });
+                if (!myLocationMarker) {
+                    myLocationMarker = new kakao.maps.Marker({
+                        position: locPosition,
+                        map: map
+                    });
+                } else {
+                    myLocationMarker.setPosition(locPosition); // 기존 마커 위치 변경
+                }
+
+                map.panTo(locPosition); // 해당 위치로 지도 이동
             });
         } else {
-            console.log("브라우저가 Geolocation을 지원하지 않습니다.");
+            alert('Geolocation을 지원하지 않습니다.');
         }
     });
+
 </script>
 </html>

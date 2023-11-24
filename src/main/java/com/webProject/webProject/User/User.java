@@ -25,4 +25,5 @@ public class User {
 
     private String nickname;
 
+    private String role; // 권한 (admin, owner, user)
 }

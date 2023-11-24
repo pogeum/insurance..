@@ -27,7 +27,21 @@ public class SecurityConfig {
                                 XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN)))
                 .formLogin((formLogin) -> formLogin
                         .loginPage("/user/login")
-                        .defaultSuccessUrl("/"))
+                        .defaultSuccessUrl("/")
+                        .successHandler((request, response, authentication) -> {
+                            boolean isOwner = authentication.getAuthorities().stream()
+                                    .anyMatch(a -> a.getAuthority().equals("ROLE_OWNER"));
+                            boolean isUser = authentication.getAuthorities().stream()
+                                    .anyMatch(a -> a.getAuthority().equals("ROLE_USER"));
+                            if (isOwner) {
+                                response.sendRedirect("/store/owner/list");
+                            } else if (isUser) {
+                                response.sendRedirect("/store/list");
+                            } else {
+                                response.sendRedirect("/");
+                            }
+                        })
+                )
                 .logout((logout) -> logout
                         .logoutRequestMatcher(new AntPathRequestMatcher("/user/logout"))
                         .logoutSuccessUrl("/")
