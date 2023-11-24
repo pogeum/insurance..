@@ -29,13 +29,9 @@ public class SecurityConfig {
                         .loginPage("/user/login")
                         .defaultSuccessUrl("/")
                         .successHandler((request, response, authentication) -> {
-                            boolean isOwner = authentication.getAuthorities().stream()
-                                    .anyMatch(a -> a.getAuthority().equals("ROLE_OWNER"));
-                            boolean isUser = authentication.getAuthorities().stream()
-                                    .anyMatch(a -> a.getAuthority().equals("ROLE_USER"));
-                            if (isOwner) {
+                            if (authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_OWNER"))) {
                                 response.sendRedirect("/store/owner/list");
-                            } else if (isUser) {
+                            } else if (authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_USER"))) {
                                 response.sendRedirect("/store/list");
                             } else {
                                 response.sendRedirect("/");
