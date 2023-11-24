@@ -1,5 +1,8 @@
 package com.webProject.webProject.Review;
 
+import com.webProject.webProject.Photo.Photo;
+import com.webProject.webProject.Photo.PhotoRepository;
+import com.webProject.webProject.Photo.PhotoService;
 import com.webProject.webProject.Review_tag.Review_tag;
 import com.webProject.webProject.Review_tag.Review_tagRepository;
 import com.webProject.webProject.Review_tag.Review_tagService;
@@ -21,8 +24,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.io.File;
 import java.security.Principal;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -36,6 +41,8 @@ public class ReviewController {
     private final ReviewService reviewService;
     private final TagService tagService;
     private final Review_tagService reviewTagService;
+    private final PhotoService photoService;
+
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/create/{id}")
@@ -47,7 +54,8 @@ public class ReviewController {
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/create/{id}")
-    private String reviewCreate(Model model, ReviewForm reviewForm, @PathVariable("id") Integer id, BindingResult bindingResult, Principal principal) {
+    private String reviewCreate(Model model, ReviewForm reviewForm, @PathVariable("id") Integer id, BindingResult bindingResult, Principal principal,
+                                MultipartFile file) throws Exception {
         Store store = this.storeService.getStore(id);
         User user = this.userService.getUser(principal.getName());
 
@@ -59,6 +67,9 @@ public class ReviewController {
 
         if (review != null) {
             reviewTagService.saveTagsForReview(review, reviewForm.getTagList());
+        }
+        if (review != null) {
+            photoService.saveImgsForReview(review, reviewForm.getFileList());
         }
 
         return String.format("redirect:/store/detail/%s", id);
@@ -83,7 +94,7 @@ public class ReviewController {
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/modify/{id}")
     public String reviewModify(@Valid ReviewForm reviewForm, BindingResult bindingResult,
-                               @PathVariable("id") Integer id, Principal principal) {
+                               @PathVariable("id") Integer id, Principal principal) throws Exception {
         if (bindingResult.hasErrors()) {
             return "review_form";
         }
@@ -91,9 +102,10 @@ public class ReviewController {
         if (!review.getAuthor().getUserId().equals(principal.getName())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
         }
-
         List<Integer> newTagIds = reviewForm.getTagList();
         this.reviewTagService.deleteTagsForReview(review);
+        List<MultipartFile> newPhotos = reviewForm.getFileList();
+        this.photoService.deletePhotosByReview(review);
 
         for (Integer tagId : newTagIds) {
             Tag tag = tagService.getTagById(tagId);
@@ -101,6 +113,10 @@ public class ReviewController {
                 reviewService.addTagToReview(review, tag);
             }
         }
+        if (newPhotos != null && !newPhotos.isEmpty()) {
+            this.photoService.saveImgsForReview(review, newPhotos);
+        }
+
         this.reviewService.modify(review, reviewForm.getContent(), reviewForm.getRating());
 
         return String.format("redirect:/store/detail/%s", review.getStore().getId());
@@ -114,11 +130,14 @@ public class ReviewController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "삭제권한이 없습니다.");
         }
 
+        this.photoService.deletePhotosByReview(review);
         this.reviewTagService.deleteTagsByReviewId(id);
         this.reviewService.delete(review);
 
         return String.format("redirect:/store/detail/%s", review.getStore().getId());
     }
+
+
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/vote/{id}")

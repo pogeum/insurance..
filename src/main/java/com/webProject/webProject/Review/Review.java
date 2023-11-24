@@ -1,13 +1,16 @@
 package com.webProject.webProject.Review;
 
+import com.webProject.webProject.Photo.Photo;
 import com.webProject.webProject.Review_tag.Review_tag;
 import com.webProject.webProject.Store.Store;
 import com.webProject.webProject.User.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -36,6 +39,9 @@ public class Review {
     private LocalDateTime createDate;
 
     private LocalDateTime modifyDate;
+
+    @OneToMany(mappedBy = "review")
+    private List<Photo> photoList;
 
     @ManyToMany
     Set<User> voter;

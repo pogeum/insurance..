@@ -4,6 +4,7 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -17,4 +18,6 @@ class ReviewForm {
     private Double rating; // double 대신 Double 사용
 
     private List<Integer> tagList; // 컬렉션의 빈 여부만을 검증하는 @NotEmpty
+
+    private List<MultipartFile> fileList; // 파일 업로드를 위한 필드
 }
