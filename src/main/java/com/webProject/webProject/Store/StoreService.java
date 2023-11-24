@@ -1,6 +1,7 @@
 package com.webProject.webProject.Store;
 
 import com.webProject.webProject.DataNotFoundException;
+import com.webProject.webProject.User.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,21 +37,15 @@ public class StoreService {
         return bytes;
     }
 
-    public void createStore(String name, String content, String category, String roadAddress) {
+    public Store createStore(User user, String name, String content, String category, String roadAddress) {
         Store store = new Store();
+        store.setAuthor(user);
         store.setName(name);
         store.setContent(content);
         store.setCategory(category);
         store.setRoadAddress(roadAddress);
         store.setCreateDate(LocalDateTime.now());
-        try {
-            if (this.files !=null && ! this.files.isEmpty()) {
-                store.setImagefiles(this.convertMultipartFIleToByteArray());
-            }
-        } catch (IOException e) {
-            System.out.println(e.toString());
-        }
-        this.storeRepository.save(store);
+        return this.storeRepository.save(store);
     }
 
 

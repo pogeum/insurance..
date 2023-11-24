@@ -22,4 +22,7 @@ public class Photo {
 
     @Column(columnDefinition = "TEXT NOT NULL")
     private String filePath;  // 파일 저장 경로
+
+    @ManyToOne
+    private Store store;
 }
