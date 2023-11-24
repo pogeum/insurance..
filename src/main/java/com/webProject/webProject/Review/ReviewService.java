@@ -47,7 +47,7 @@ public class ReviewService {
         }
     }
     
-    public Review   create(User user, Store store, String content, Double rating) {
+    public Review create(User user, Store store, String content, Double rating) {
         Review review = new Review();
         review.setStore(store);
         review.setAuthor(user);
