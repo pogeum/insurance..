@@ -33,10 +33,10 @@
                         <div class="d-flex flex-column">
                             <div style="height:10%; padding:10px; border-bottom:2px solid black;">
                                 <div class="d-flex align-items-center">
-                                    <h5 class="fw-bold" style="flex:4;margin: 0 10px 0 10px;"
-                                        th:text="|${#lists.size(store.reviewList)}개의 답변이 있습니다.|">
-                                    </h5>
-                                    <a th:href="@{|/review/create/${store.id}|}" class="btn btn-sm btn-dark" style="flex:1;" onclick="evaluate(event)">평가하기</a>
+                                    <h5 class="fw-bold" style="flex:4;margin: 0 10px 0 10px;" th:text="|${#lists.size(store.reviewList)}개의 답변이 있습니다.|"></h5>
+                                    <a th:href="@{|/review/create/${store.id}|}"
+                                       sec:authorize="isAuthenticated() and hasRole('USER') and #authentication.getPrincipal().getUsername() != store.author.userId"
+                                       class="btn btn-sm btn-dark" style="flex:1;">평가하기</a>
                                 </div>
                             </div>
                             <div style="height: 90%; overflow-y: auto;">
@@ -117,26 +117,35 @@
                                                        th:text="삭제"></a>
                                                 </div>
                                                 <!-- 질문 댓글 Start -->
-                                                <div class="mt-3" th:if="${not #lists.isEmpty(review.commentList)}">
-                                                    <div th:each="comment,index : ${review.commentList}" class="comment py-2 text-muted">
-                                                        <span style="white-space: pre-line;" th:text="${comment.content}"></span>
-                                                        <span th:if="${comment.modifyDate != null}"
-                                                              th:text="| - ${comment.author.userId}, ${#temporals.format(comment.createDate, 'yyyy-MM-dd HH:mm')} (수정: ${#temporals.format(comment.modifyDate, 'yyyy-MM-dd HH:mm')})|"></span>
-                                                        <span th:if="${comment.modifyDate == null}"
-                                                              th:text="| - ${comment.author.userId}, ${#temporals.format(comment.createDate, 'yyyy-MM-dd HH:mm')}|"></span>
-                                                        <a sec:authorize="isAuthenticated()"
-                                                           th:if="${#authentication.getPrincipal().getUsername() == comment.author.userId}"
-                                                           th:href="@{|/comment/modify/${comment.id}|}" class="small">수정</a>,
-                                                        <a sec:authorize="isAuthenticated()"
-                                                           th:if="${#authentication.getPrincipal().getUsername() == comment.author.userId}"
-                                                           href="javascript:void(0);" class="small delete" th:data-uri="@{|/comment/delete/${comment.id}|}">삭제</a>
+                                                <div class="cord mt-3" style="margin-bottom: 20px; border-top: 2px solid black;" th:if="${not #lists.isEmpty(review.commentList)}">
+                                                    <div class="card" style="width:100%;margin-top: 20px;">
+                                                        <div class="card-body comment py-2 text-muted d-flex flex-column" th:each="comment,index : ${review.commentList}">
+                                                            <h3 th:text="${comment.author.nickname} + ' 사장님'"></h3>
+                                                            <span style="white-space: pre-line; margin-top: 10px;" th:text="${comment.content}"></span>
+                                                            <div class="d-flex justify-content-end" style="margin-top: 10px;">
+                                                                <div class="badge bg-light text-dark p-2 text-start mx-3">
+                                                                    <div th:if="${comment.modifyDate != null}">
+                                                                        <span th:text="${#temporals.format(comment.modifyDate, 'yyyy-MM-dd HH:mm')} + ' (수정)'"></span>
+                                                                    </div>
+                                                                    <div th:if="${comment.modifyDate == null}">
+                                                                        <span th:text="${#temporals.format(comment.createDate, 'yyyy-MM-dd HH:mm')}"></span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="d-flex" style="border-radius: 10px; margin-top:20px;">
+                                                                <a style="flex:1; margin-right:10px;" sec:authorize="isAuthenticated()" th:if="${#authentication.getPrincipal().getUsername() == comment.author.userId}"
+                                                                   th:href="@{|/comment/modify/${comment.id}|}" class="btn btn-sm btn-outline-secondary">수정</a>
+                                                                <a style="flex:1; margin-left:10px;" sec:authorize="isAuthenticated()" th:if="${#authentication.getPrincipal().getUsername() == comment.author.userId}"
+                                                                   href="javascript:void(0);" class="delete btn btn-sm btn-outline-secondary" th:data-uri="@{|/comment/delete/${comment.id}|}">삭제</a>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                <div th:if="${#authentication.principal.username == store.author.userId}">
-                                                    <a th:href="@{|/comment/create/review/${review.id}|}" class="btn btn-sm btn-outline-secondary btn-block"
-                                                       sec:authorize="hasRole('ROLE_OWNER') and isAuthenticated()"
-                                                       th:if="${review.author != null}"
-                                                       th:text="사장답글작성" style="width:100%;"></a>
+                                                <div th:if="${#authorization.expression('isAuthenticated()')}">
+                                                    <div th:if="${#authentication.principal.username == store.author.userId}">
+                                                        <a th:href="@{|/comment/create/review/${review.id}|}" class="btn btn-sm btn-outline-secondary btn-block"
+                                                           th:text="사장답글작성" style="width:100%;"></a>
+                                                    </div>
                                                 </div>
                                                 <!-- 질문 댓글 End -->
                                             </div>
@@ -208,16 +217,5 @@
             }
         });
     });
-
-    function evaluate(event) {
-        var isAuthenticated = [[${#authorization.expression('isAuthenticated()')}]];
-
-        if (!isAuthenticated) {
-            event.preventDefault();
-            alert('로그인이 필요합니다!');
-            return;
-        }
-        window.location.href = '/review/create/${store.id}';
-    }
 </script>
 </html>
