@@ -35,7 +35,7 @@
                                 <div class="d-flex align-items-center">
                                     <h5 class="fw-bold" style="flex:4;margin: 0 10px 0 10px;" th:text="|${#lists.size(store.reviewList)}개의 답변이 있습니다.|"></h5>
                                     <a th:href="@{|/review/create/${store.id}|}"
-                                       sec:authorize="isAuthenticated() and hasRole('USER') and #authentication.getPrincipal().getUsername() != store.author.userId"
+                                       sec:authorize="isAuthenticated() and hasRole('USER')"
                                        class="btn btn-sm btn-dark" style="flex:1;">평가하기</a>
                                 </div>
                             </div>

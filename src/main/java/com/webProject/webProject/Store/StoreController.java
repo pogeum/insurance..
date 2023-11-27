@@ -146,10 +146,9 @@ public class StoreController {
 
     @GetMapping("/delete/{storeid}")
     public String deletestore(@PathVariable("storeid")Integer id) {
-        storeService.deleteStore(id);
+        Store store = this.storeService.getStore(id);
+        storeService.deleteStore(store);
 
         return "redirect:/store/owner/list";
-
     }
-
 }
