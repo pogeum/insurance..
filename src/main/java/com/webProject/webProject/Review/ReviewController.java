@@ -1,5 +1,7 @@
 package com.webProject.webProject.Review;
 
+import com.webProject.webProject.Comment.Comment;
+import com.webProject.webProject.Comment.CommentService;
 import com.webProject.webProject.Photo.Photo;
 import com.webProject.webProject.Photo.PhotoRepository;
 import com.webProject.webProject.Photo.PhotoService;
@@ -42,7 +44,7 @@ public class ReviewController {
     private final TagService tagService;
     private final Review_tagService reviewTagService;
     private final PhotoService photoService;
-
+    private final CommentService commentService;
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/create/{id}")
@@ -128,14 +130,16 @@ public class ReviewController {
         if (!review.getAuthor().getUserId().equals(principal.getName())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "삭제권한이 없습니다.");
         }
-
+        List<Comment> commentsToDelete = review.getCommentList();
+        for (Comment comment : commentsToDelete) {
+            this.commentService.delete(comment);
+        }
         this.photoService.deletePhotosByReview(review);
         this.reviewTagService.deleteTagsByReviewId(id);
         this.reviewService.delete(review);
 
         return String.format("redirect:/store/detail/%s", review.getStore().getId());
     }
-
 
 
     @PreAuthorize("isAuthenticated()")
