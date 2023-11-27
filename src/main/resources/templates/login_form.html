@@ -21,11 +21,30 @@
                             </div>
                             <div class="mb-3">
                                 <label for="username" class="form-label">사용자ID</label>
-                                <input type="text" name="username" id="username" class="form-control">
+                                <div class="input-group">
+                                    <input type="text" name="username" id="username" class="form-control" placeholder="ID" required style="border-top-right-radius: 0; border-bottom-right-radius: 0;">
+                                    <span class="input-group-text" style="border-top-left-radius: 0; border-bottom-left-radius: 0; background: transparent; border-color: #CCC;">
+                                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <circle cx="10" cy="10" r="9" stroke="#CCC" stroke-miterlimit="10"></circle>
+                                            <path d="M6.537 11.469a5.038 5.038 0 006.64 0M6.776 7.48v1.496M13.02 7.48v1.496" stroke="#CCC" stroke-miterlimit="10" stroke-linecap="round"></path>
+                                        </svg>
+                                    </span>
+                                </div>
                             </div>
                             <div class="mb-3">
                                 <label for="password" class="form-label">비밀번호</label>
-                                <input type="password" name="password" id="password" class="form-control">
+                                <div class="input-group">
+                                    <input type="password" name="password" id="password" class="form-control" placeholder="Password">
+                                    <span class="input-group-text" style="border-top-left-radius: 0; border-bottom-left-radius: 0; background: transparent; border-color: #CCC;">
+                                        <svg width="17" height="21" viewBox="0 0 17 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <g opacity=".2" stroke="#000">
+                                                <rect x=".5" y="8.289" width="15.301" height="11.905" rx="1.5"></rect>
+                                                <circle cx="8.489" cy="14.244" r="1.877"></circle>
+                                                <path d="M4.754 8.471v-3.69C4.754 2.693 6.427 1 8.489 1c2.063 0 3.736 1.693 3.736 3.781v3.69" stroke-miterlimit="10"></path>
+                                            </g>
+                                        </svg>
+                                    </span>
+                                </div>
                             </div>
                             <button class="btn btn-dark w-100 py-2" style="margin-top: 20px;" type="submit">로그인</button>
                         </form>
