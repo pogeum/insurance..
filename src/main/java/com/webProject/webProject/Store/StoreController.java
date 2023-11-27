@@ -1,6 +1,9 @@
 package com.webProject.webProject.Store;
 
 
+import com.webProject.webProject.Menu.Menu;
+import com.webProject.webProject.Menu.MenuForm;
+import com.webProject.webProject.Menu.MenuService;
 import com.webProject.webProject.Photo.PhotoService;
 import com.webProject.webProject.Review.Review;
 import com.webProject.webProject.Review.ReviewService;
@@ -12,6 +15,7 @@ import com.webProject.webProject.User.UserService;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -21,6 +25,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Controller
@@ -31,6 +36,7 @@ public class StoreController {
     private final UserService userService;
     private final ReviewService reviewService;
     private final PhotoService photoService;
+    private final MenuService menuService;
 
     private final StoreRepository storeRepository;
 
@@ -80,22 +86,31 @@ public class StoreController {
 
 
     @GetMapping("/create")
-    public String createStore(StoreForm storeForm){
-
-
+    public String createStore(Model model, StoreForm storeForm, MenuForm menuForm){
+//        model.addAttribute("menuForm", Collections.singletonList(new MenuForm())) ;
 
         return "store_form";
     }
 
     @PostMapping("/create")
-    public String createStore(Model model, StoreForm storeForm, BindingResult bindingResult, Principal principal, List<MultipartFile> fileList) throws Exception{
+    public String createStore(Model model, StoreForm storeForm, MenuForm menuForm, BindingResult bindingResult, Principal principal, List<MultipartFile> fileList) throws Exception{
         User user = this.userService.getUser(principal.getName());
 
+        //fltmxm 메뉴리스트 연결 스토ㅇ어에
         if (bindingResult.hasErrors()) {
             return "store_owner_list";
         }
+        List<Menu> menuList = new ArrayList<>();
+        Menu menu = new Menu();
+        menu.setMenuName(menuForm.getMenuName());
+        menu.setPrice(menuForm.getPrice());
+        menuList.add(menu);
+
 
         Store newStore = storeService.createStore(user, storeForm.getName(),storeForm.getContent(),storeForm.getCategory(),storeForm.getRoadAddress());
+        menuService.saveMenus(newStore, menuList);
+        newStore.setMenuList(menuList);
+//        newStore.setMenuList();
         photoService.saveImgsForStore(newStore, fileList);
 
         return "redirect:/store/owner/list";
@@ -121,7 +136,7 @@ public class StoreController {
     }
 
     @GetMapping("/modify/{storeid}")
-    public String modifystore(StoreForm storeForm, @PathVariable("storeid")Integer id) {
+    public String modifystore(StoreForm storeForm, @PathVariable("storeid")Integer id, MenuForm menuForm) {
         Store store = storeService.findstoreById(id);
         storeForm.setName(store.getName());
         storeForm.setContent(store.getContent());

@@ -15,7 +15,9 @@ public class StoreForm {
     private String content; //설명 없을시 설명이 없습니다. 라고 뜨도록?
     private String category;
     private String roadAddress;
+
     private List<Menu> menuList;
+
     private List<MultipartFile> fileList; //    사장이 등록할 사진
 
 }

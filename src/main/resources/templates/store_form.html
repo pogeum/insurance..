@@ -2,7 +2,7 @@
 <div layout:fragment="content" class="container">
     <h5 class="my-3 border-bottom pb-2">가게등록</h5>
     <form th:object="${storeForm}" method="post" enctype="multipart/form-data">
-        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
         <div class="mb-3">
             <label for="name" class="form-label">이름</label>
             <textarea th:field="*{name}" class="form-control" rows="1"></textarea>
@@ -11,17 +11,31 @@
             <label for="content" class="form-label">내용</label>
             <textarea th:field="*{content}" class="form-control" rows="15"></textarea>
         </div>
-        <input type="file" name="files" multiple />
-        <div>
-        <select name="category" class="form-select" aria-label="Default select example">
-            <option selected>카테고리</option>
-            <option th:selected="${storeForm.category == '한식'}" value="한식">한식</option>
-            <option th:selected="${storeForm.category == '양식'}" value="양식">양식</option>
-            <option th:selected="${storeForm.category == '일식'}" value="일식">일식</option>
-            <option th:selected="${storeForm.category == '중식'}" value="중식">중식</option>
-        </select>
-        </div>
+        <input type="file" name="files" multiple/>
 
+        <div>
+            <select name="category" class="form-select" aria-label="Default select example">
+                <option selected>카테고리</option>
+                <option th:selected="${storeForm.category == '한식'}" value="한식">한식</option>
+                <option th:selected="${storeForm.category == '양식'}" value="양식">양식</option>
+                <option th:selected="${storeForm.category == '일식'}" value="일식">일식</option>
+                <option th:selected="${storeForm.category == '중식'}" value="중식">중식</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <div class="btnWrap">
+                <button type="button" onclick="addMenuInput()" class="btn btn-light"> 메뉴추가</button>
+            </div>
+
+
+                <div th:object="${menuForm}">
+                    <label for="menuName" class="form-label">메뉴이름</label>
+                    <textarea th:field="*{menuName}" class="form-control" rows="1"></textarea>
+                    <label for="price" class="form-label">가격</label>
+                    <textarea th:field="*{price}" class="form-control" rows="1"></textarea>
+                </div>
+
+        </div>
         <div class="mb-3">
             <label for="roadAddress" class="form-label">도로명주소</label>
             <textarea th:field="*{roadAddress}" class="form-control" rows="1"></textarea>
@@ -29,6 +43,20 @@
         <input type="submit" value="저장하기" class="btn btn-primary my-2">
     </form>
 </div>
+<script>
+    function addMenuInput() {
+        var menuInputs = document.getElementById('menuInputs');
+        var inputDiv = document.createElement('div');
+        inputDiv.className = 'form-check mb-2';
+            inputDiv.innerHTML = '' +
+                '<input type="text" name="menuForms[__${#lists.size(menuForms)}__].menuName" placeholder="메뉴명"/>' +
+                '<input type="text" name="menuForms[__${#lists.size(menuForms)}__].price" placeholder="가격"/>';
+
+            // 생성된 입력 필드를 추가
+            menuInputs.appendChild(inputDiv);
+    }
+</script>
+</html>
 
 
 
