@@ -37,6 +37,7 @@ public class UserSecurityService implements UserDetailsService {
         }
         CustomUser customUser = new CustomUser(user.getUserId(), user.getPassword(), authorities);
         customUser.setNickname(user.getNickname());
+        customUser.setRole(user.getRole());
         return customUser;
     }
 }

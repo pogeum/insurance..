@@ -28,21 +28,11 @@ public class SecurityConfig {
                 .formLogin((formLogin) -> formLogin
                         .loginPage("/user/login")
                         .defaultSuccessUrl("/")
-                        .successHandler((request, response, authentication) -> {
-                            if (authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_OWNER"))) {
-                                response.sendRedirect("/store/owner/list");
-                            } else if (authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_USER"))) {
-                                response.sendRedirect("/store/list");
-                            } else {
-                                response.sendRedirect("/");
-                            }
-                        })
                 )
                 .logout((logout) -> logout
                         .logoutRequestMatcher(new AntPathRequestMatcher("/user/logout"))
                         .logoutSuccessUrl("/")
-                        .invalidateHttpSession(true))
-        ;
+                        .invalidateHttpSession(true));
         return http.build();
     }
 

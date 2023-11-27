@@ -11,6 +11,7 @@ import java.util.Collection;
 @Setter
 public class CustomUser extends User {
     private String nickname;
+    private String role;
     public CustomUser(String userId, String password, Collection<? extends GrantedAuthority> authorities) {
         super(userId, password, authorities);
     }

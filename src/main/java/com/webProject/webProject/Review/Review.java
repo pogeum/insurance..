@@ -1,5 +1,6 @@
 package com.webProject.webProject.Review;
 
+import com.webProject.webProject.Comment.Comment;
 import com.webProject.webProject.Photo.Photo;
 import com.webProject.webProject.Review_tag.Review_tag;
 import com.webProject.webProject.Store.Store;
@@ -42,6 +43,9 @@ public class Review {
 
     @OneToMany(mappedBy = "review")
     private List<Photo> photoList;
+
+    @OneToMany(mappedBy = "review")
+    private List<Comment> commentList;
 
     @ManyToMany
     Set<User> voter;

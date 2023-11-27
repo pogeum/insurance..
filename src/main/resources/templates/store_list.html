@@ -67,17 +67,16 @@
                    map: map,
                    position: coords
                });
-
-               kakao.maps.event.addListener(marker, 'click', function() {
-                   var current_status = infowindow.getMap(); // 인포윈도우의 현재 상태를 가져옵니다.
-
-                   if (current_status) {
-                       infowindow.close(); // 인포윈도우가 열려있다면 닫습니다.
-                   } else {
-                       infowindow.open(map, marker); // 인포윈도우가 닫혀있다면 엽니다.
-                   }
+               kakao.maps.event.addListener(marker, 'mouseover', function() {
+                 // 마커에 마우스오버 이벤트가 발생하면 인포윈도우를 마커위에 표시합니다
+                   infowindow.open(map, marker);
                });
 
+               // 마커에 마우스아웃 이벤트를 등록합니다
+               kakao.maps.event.addListener(marker, 'mouseout', function() {
+                   // 마커에 마우스아웃 이벤트가 발생하면 인포윈도우를 제거합니다
+                   infowindow.close();
+               });
                map.setCenter(coords);
            }
        });
