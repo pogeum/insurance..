@@ -16,4 +16,9 @@ public class MainController {
     public String root() {
         return "redirect:/store/list";
     }
+
+    @RequestMapping("/test")
+    public String test() {
+        return "test";
+    }
 }

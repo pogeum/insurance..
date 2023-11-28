@@ -19,12 +19,13 @@ public class UserService {
         return this.userRepository.findAll();
     }
 
-    public User create(String userId, String email, String password, String nickname) {
+    public User create(String userId, String email, String password, String nickname, String role) {
         User user = new User();
         user.setUserId(userId);
         user.setEmail(email);
         user.setPassword(passwordEncoder.encode(password));
         user.setNickname(nickname);
+        user.setRole(role);
         this.userRepository.save(user);
         return user;
     }

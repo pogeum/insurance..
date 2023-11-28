@@ -6,6 +6,12 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.apache.http.client.ResponseHandler;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.BasicResponseHandler;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -18,6 +24,10 @@ import org.springframework.web.util.HtmlUtils;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -28,47 +38,54 @@ public class UserController {
 
     @GetMapping("/owner_check_bno")
     public String owner_check_bno(OwnerCreateForm ownerCreateForm){
-        return "owner_signup_form1";
+        return "owner_check_bno";
     }
+
     @PostMapping("/owner_check_bno")
     public String owner_check_bno(@Valid OwnerCreateForm ownerCreateForm, BindingResult bindingResult) {
-        try {
-            String data = String.format("{\"b_no\": \"%s\",\"start_dt\": \"%s\",\"p_nm\": \"%s\"}", HtmlUtils.htmlEscape(ownerCreateForm.getB_no()), HtmlUtils.htmlEscape(ownerCreateForm.getStart_dt()), HtmlUtils.htmlEscape(ownerCreateForm.getP_nm()));
-            RestTemplate restTemplate = new RestTemplate();
-            String serverAUrl = "http://api.odcloud.kr/api/nts-businessman/v1/validate?serviceKey=6EaPLiF5QZfSCQ1U9%2Fi2OHaHGHjsuguhUI%2FtFqreMA%2F84puk8RRN%2FnJ7sr0h7iU2lnXvsz2oPiHerQg1m%2BlG0g%3D%3D";
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_JSON);
-            HttpEntity<String> chatRequest = new HttpEntity<>(data, headers);
-            ResponseEntity<String> response = restTemplate.postForEntity(serverAUrl, chatRequest, String.class);
-            System.out.println(response.getBody());
+        final String VALID_NUM = "01";
+        try{
+            String data = String.format("{\"businesses\":[{\"b_no\": \"%s\",\"start_dt\": \"%s\",\"p_nm\": \"%s\"}]}", HtmlUtils.htmlEscape(ownerCreateForm.getB_no()),
+                    HtmlUtils.htmlEscape(ownerCreateForm.getStart_dt()), HtmlUtils.htmlEscape(ownerCreateForm.getP_nm()));
+            //hhtpClient 객체 생성
+            CloseableHttpClient httpClient = HttpClients.createDefault();
 
-            if (response.getStatusCode() == HttpStatus.OK) {
-                String responseBody = response.getBody();
+            //외부 api 가 존재하는 url
+            String url ="https://api.odcloud.kr/api/nts-businessman/v1/validate?serviceKey=6EaPLiF5QZfSCQ1U9%2Fi2OHaHGHjsuguhUI%2FtFqreMA%2F84puk8RRN%2FnJ7sr0h7iU2lnXvsz2oPiHerQg1m%2BlG0g%3D%3D";
+            HttpPost httpPost = new HttpPost(url);
 
-                ObjectMapper objectMapper = new ObjectMapper();
-                try {
-                    Map<String, Object> responseMap = objectMapper.readValue(responseBody, new TypeReference<Map<String, Object>>() {});
-                    String AnswerData = (String) responseMap.get("Answer");
-                    String QueryData = (String) responseMap.get("Query");
-                } catch (JsonMappingException e) {
-                    throw new RuntimeException(e);
-                } catch (JsonProcessingException e) {
-                    throw new RuntimeException(e);
-                }
-            } else {
-                // 다른 상태 코드에 대한 처리
+            //content-type 정의 및 http body에 json 문자열 정의
+            httpPost.addHeader("Content-Type","application/json");
+            StringEntity entity = new StringEntity(data, StandardCharsets.UTF_8);
+            httpPost.setEntity(entity);
+            ResponseHandler<String> responseHandler = new BasicResponseHandler();
+            String response = httpClient.execute(httpPost, responseHandler);
+
+            ObjectMapper mapper = new ObjectMapper();
+            Map<String, Object> map = mapper.readValue(response, Map.class);
+            System.out.println(map.get("status_code"));
+            System.out.println(response);
+
+            List<Map> dataList = (List<Map>)map.get("data");
+            String result = (String)dataList.get(0).get("valid");
+            System.out.println("result : " + result);
+            System.out.println("===>" + dataList.get(0).get("valid"));
+
+            if(!result.equals(VALID_NUM)){
+                return "redirect:/user/owner_check_bno";
             }
-        } catch (Exception e) {
+        }catch (Exception e) {
             e.printStackTrace();
             // 예외 처리
         }
-        return "";
+        return "redirect:/user/owner_signup";
     }
 
     @GetMapping("/owner_signup")
     public String owner_signup(UserCreateForm userCreateForm){
         return "owner_signup_form";
     }
+
     @PostMapping("/owner_signup")
     public String owner_signup(@Valid UserCreateForm userCreateForm, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -81,7 +98,7 @@ public class UserController {
             return "owner_signup_form";
         }
 
-        userService.create(userCreateForm.getUserId(), userCreateForm.getEmail(), userCreateForm.getPassword1(), userCreateForm.getNickname());
+        userService.create(userCreateForm.getUserId(), userCreateForm.getEmail(), userCreateForm.getPassword1(), userCreateForm.getNickname(), "owner");
 
         return "redirect:/";
     }
@@ -100,8 +117,7 @@ public class UserController {
                     "2개의 패스워드가 일치하지 않습니다.");
             return "user_signup_form";
         }
-
-        userService.create(userCreateForm.getUserId(), userCreateForm.getEmail(), userCreateForm.getPassword1(), userCreateForm.getNickname());
+        userService.create(userCreateForm.getUserId(), userCreateForm.getEmail(), userCreateForm.getPassword1(), userCreateForm.getNickname(), "user");
 
         return "redirect:/";
     }
@@ -114,41 +130,5 @@ public class UserController {
     @GetMapping("/login")
     public String login() {
         return "login_form";
-    }
-
-
-    @PostMapping("/")
-    public String sendDataToServer(OwnerCreateForm ownerCreateForm, @PathVariable("nickname") String nickname, @PathVariable("id") Integer id) throws UnsupportedEncodingException {
-        try {
-            String data = String.format("{\"b_no\": \"%s\",\"start_dt\": \"%s\",\"p_nm\": \"%s\"}", HtmlUtils.htmlEscape(ownerCreateForm.getB_no()), HtmlUtils.htmlEscape(ownerCreateForm.getStart_dt()), HtmlUtils.htmlEscape(ownerCreateForm.getP_nm()));
-            RestTemplate restTemplate = new RestTemplate();
-            String serverAUrl = "http://api.odcloud.kr/api/nts-businessman/v1/validate?serviceKey=6EaPLiF5QZfSCQ1U9%2Fi2OHaHGHjsuguhUI%2FtFqreMA%2F84puk8RRN%2FnJ7sr0h7iU2lnXvsz2oPiHerQg1m%2BlG0g%3D%3D";
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_JSON);
-            HttpEntity<String> chatRequest = new HttpEntity<>(data, headers);
-            ResponseEntity<String> response = restTemplate.postForEntity(serverAUrl, chatRequest, String.class);
-            System.out.println(response.getBody());
-
-            if (response.getStatusCode() == HttpStatus.OK) {
-                String responseBody = response.getBody();
-
-                ObjectMapper objectMapper = new ObjectMapper();
-                try {
-                    Map<String, Object> responseMap = objectMapper.readValue(responseBody, new TypeReference<Map<String, Object>>() {});
-                    String AnswerData = (String) responseMap.get("Answer");
-                    String QueryData = (String) responseMap.get("Query");
-                } catch (JsonMappingException e) {
-                    throw new RuntimeException(e);
-                } catch (JsonProcessingException e) {
-                    throw new RuntimeException(e);
-                }
-            } else {
-                // 다른 상태 코드에 대한 처리
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            // 예외 처리
-        }
-        return "redirect:/chatbotList/" + id;
     }
 }

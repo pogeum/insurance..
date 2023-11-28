@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class OwnerCreateForm {
-    private String p_nm;
-    private String start_dt;
-    private String b_no;
+    private String p_nm;    // 사업자 명
+    private String b_no;    // 사업자번호
+    private String start_dt;    // 사업자 등록일
 }
