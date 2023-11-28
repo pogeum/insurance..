@@ -63,13 +63,9 @@ public class UserController {
 
             ObjectMapper mapper = new ObjectMapper();
             Map<String, Object> map = mapper.readValue(response, Map.class);
-            System.out.println(map.get("status_code"));
-            System.out.println(response);
 
             List<Map> dataList = (List<Map>)map.get("data");
             String result = (String)dataList.get(0).get("valid");
-            System.out.println("result : " + result);
-            System.out.println("===>" + dataList.get(0).get("valid"));
 
             if(!result.equals(VALID_NUM)){
                 return "redirect:/user/owner_check_bno";
