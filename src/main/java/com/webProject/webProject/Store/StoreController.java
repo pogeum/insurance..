@@ -17,6 +17,7 @@ import com.webProject.webProject.User.UserService;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -64,6 +65,7 @@ public class StoreController {
     public String detail(Model model, @PathVariable("id") Integer id) {
         Store store = this.storeService.getStore(id);
         List<Review> reviewList = this.reviewService.getreviewList(store);
+        List<Menu> menuList = this.menuService.getstoreMenu(store);
 
         if (!reviewList.isEmpty()) {
             for (Review review : reviewList) {
@@ -77,6 +79,7 @@ public class StoreController {
             model.addAttribute("review", emptyReview);
         }
 
+        model.addAttribute("menuList", menuList);
         model.addAttribute("reviewList", reviewList);
         model.addAttribute("store", store);
         return "store_detail";
@@ -96,16 +99,16 @@ public class StoreController {
 
     //------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/create")
-    public String createStore(Model model, StoreForm storeForm, MenuForm menuForm){
-//        model.addAttribute("menuForm", Collections.singletonList(new MenuForm())) ;
+    public String createStore(Model model, StoreForm storeForm, MenuForm menuForm, Principal principal){
 
+        User siteUser = this.userService.getUser(principal.getName());
         return "store_form";
     }
-
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/create")
-    public String createStore(Model model, StoreForm storeForm, MenuForm menuForm, BindingResult bindingResult, Principal principal, List<MultipartFile> fileList) throws Exception{
+    public String createStore(Model model, StoreForm storeForm, MenuForm menuForm, BindingResult bindingResult, Principal principal, List<MultipartFile> fileList, @RequestParam("menuName")String[] menuNames) throws Exception{
         User user = this.userService.getUser(principal.getName());
 
         //fltmxm 메뉴리스트 연결 스토ㅇ어에
@@ -113,11 +116,12 @@ public class StoreController {
             return "store_owner_list";
         }
         List<Menu> menuList = new ArrayList<>();
-        Menu menu = new Menu();
-        menu.setMenuName(menuForm.getMenuName());
-        menu.setPrice(menuForm.getPrice());
-        menuList.add(menu);
-
+        for (String menuName : menuNames) {
+            Menu menu = new Menu();
+            menu.setMenuName(menuName);
+            menu.setPrice(100);
+            menuList.add(menu);
+        }
 
         Store newStore = storeService.createStore(user, storeForm.getName(),storeForm.getContent(),storeForm.getCategory(),storeForm.getRoadAddress());
         menuService.saveMenus(newStore, menuList);
@@ -130,26 +134,29 @@ public class StoreController {
 
     @GetMapping("/owner/list")
     public String ownerpage_list(Model model,Principal principal) {
+        if (principal == null ) {
+            return "redirect:/user/login";
+        } else {
+            User siteUser = this.userService.getUser(principal.getName());
+            List<Store> ownerStoreList = storeService.getstoreList_owner(siteUser.getNickname());
+            model.addAttribute("ownerStoreList", ownerStoreList);
 
-        User siteUser = this.userService.getUser(principal.getName());
-        List<Store> ownerStoreList = storeService.getstoreList_owner(siteUser.getNickname());
-        model.addAttribute("ownerStoreList", ownerStoreList);
-
-        return "store_owner_list";
+            return "store_owner_list";
+        }
     }
-
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/modify/{storeid}")
-    public String modifystore(StoreForm storeForm, @PathVariable("storeid")Integer id, MenuForm menuForm) {
+    public String modifystore(StoreForm storeForm, @PathVariable("storeid")Integer id, MenuForm menuForm,Principal principal) {
         Store store = storeService.findstoreById(id);
         storeForm.setName(store.getName());
         storeForm.setContent(store.getContent());
         storeForm.setCategory(store.getCategory());
-        storeForm.setRoadAddress(store.getRoadAddress());
+        storeForm.setRoadAddress(store.getRoadAddress());//rnedl굳이호ㅓㄱ인? 리스트 자체가 자기글이자너..사용자확인안핻도댈듯
         return "store_form";
     }
-
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/modify/{storeid}")
-    public String modifystore2(StoreForm storeForm, @PathVariable("storeid")Integer id, BindingResult bindingResult, List<MultipartFile> fileList) throws Exception{
+    public String modifystore2(StoreForm storeForm, @PathVariable("storeid")Integer id, BindingResult bindingResult, List<MultipartFile> fileList, Principal principal) throws Exception{
         Store store = storeService.findstoreById(id);
         List<MultipartFile> newPhotos = storeForm.getFileList();
         this.photoService.deletePhotosByStore(store);
@@ -161,12 +168,11 @@ public class StoreController {
 //        return "redirect:/store/detail/"+store.getId();
         return "redirect:/store/owner/list";
     }
-
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/delete/{storeid}")
-    public String deletestore(@PathVariable("storeid")Integer id) {
+    public String deletestore(@PathVariable("storeid")Integer id,Principal principal) {
         Store store = this.storeService.getStore(id);
         storeService.deleteStore(store);
-
         return "redirect:/store/owner/list";
     }
 

@@ -18,7 +18,8 @@
                                 <div style="flex: 1; border:1px solid gray; margin-right:10px;">
                                     <span class="text-secondary small address align-items-end" th:text="${store.roadAddress}"></span>
                                 </div>
-                                <div style="flex: 2; border:1px solid gray; margin-left:10px;">
+                                <div th:each="menu : ${menuList}" style="flex: 2; border:1px solid gray; margin-left:10px;">
+                                    <span th:text="${menu.menuName}"></span>
                                     <p>메뉴</p>
                                 </div>
                             </div>
