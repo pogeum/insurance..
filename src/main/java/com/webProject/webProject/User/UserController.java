@@ -100,6 +100,7 @@ public class UserController {
 
         userService.create(userCreateForm.getUserId(), userCreateForm.getEmail(), userCreateForm.getPassword1(), userCreateForm.getNickname(), "owner");
 
+
         return "redirect:/";
     }
     @GetMapping("/user_signup")

@@ -21,8 +21,15 @@ public class StoreService {
     private final StoreRepository storeRepository;
     private List<MultipartFile> files;
 
-    public List<Store> getstoreList_owner() {
-        return this.storeRepository.findAll();
+    public List<Store> getstoreList_owner(String authorname) {
+        List<Store> targetstoreList = new ArrayList<>();
+        for (Store store : this.storeRepository.findAll()){
+            if (store.getAuthor().getNickname().equals(authorname)) {
+                targetstoreList.add(store);
+            }
+        }
+
+        return targetstoreList;
     }
 
     public void setFiles(List<MultipartFile> files) {
