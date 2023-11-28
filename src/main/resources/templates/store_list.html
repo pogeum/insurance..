@@ -12,8 +12,8 @@
 <!--            여기 내가게보기 버튼 임의로 추가 함-->
             <div class="my-3">
                 <a th:href="@{|/store/owner/list|}" class="btn btn-sm btn-outline-secondary"
-<!--                   sec:authorize="isAuthenticated()"-->
-<!--                   th:if="${#authentication.getPrincipal().getUsername() != null and hasRole('ROLE_OWNER')}"-->
+                   sec:authorize="isAuthenticated()"
+                   th:if="${#authentication.getPrincipal().getUsername() != null and hasRole('OWNER')}"
                    th:text="내가게보기"></a>
             </div>
 <!--            여기까지-->
