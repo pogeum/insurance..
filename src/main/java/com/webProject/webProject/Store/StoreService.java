@@ -28,7 +28,6 @@ public class StoreService {
                 targetstoreList.add(store);
             }
         }
-
         return targetstoreList;
     }
 

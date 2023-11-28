@@ -4,6 +4,7 @@ import com.webProject.webProject.Store.Store;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -20,4 +21,18 @@ public class MenuService {
         }
         return this.menuRepository.findAll();
     }
+
+    public List<Menu> getstoreMenu(Store store) {
+        List<Menu> storeMenu = new ArrayList<>();
+        for (Menu menu : this.menuRepository.findAll()) {
+            if (menu.getStore() != null) {
+                if (menu.getStore().getId() == store.getId()) {
+                    storeMenu.add(menu);
+                }
+            }
+
+        }
+        return storeMenu;
+    }
+
 }
