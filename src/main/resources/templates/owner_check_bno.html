@@ -35,7 +35,7 @@
                                 <label for="start_dt" class="form-label">사업자 등록일</label>
                                 <input type="text" th:field="*{start_dt}" class="form-control" placeholder="사업자 등록일" required>
                             </div>
-                            <button class="btn btn-dark w-100 py-2" style="margin-top: 20px;" type="submit">인증하기</button>
+                            <button class="check btn btn-dark w-100 py-2" style="margin-top: 20px;" type="submit">인증하기</button>
                         </form>
                     </div>
                 </div>
@@ -43,22 +43,4 @@
         </div>
     </div>
 </div>
-<script layout:fragment="script" type='text/javascript'>
-    // Function to simulate verification (replace this with your actual verification logic)
-    function verifyBusinessRegistrationNumber() {
-        // Simulating verification success
-        return true; // Replace this with your actual verification logic
-    }
-
-    // Handling form submission
-    document.getElementById('ownerCheckForm').addEventListener('submit', function (event) {
-        event.preventDefault(); // Prevent the form from submitting (for demo purposes)
-
-        // Call your business registration number verification logic
-        if (verifyBusinessRegistrationNumber()) {
-            // If verification succeeds, display the confirmation using JavaScript alert
-            alert('사업자 확인되었습니다');
-        }
-    });
-</script>
 </html>

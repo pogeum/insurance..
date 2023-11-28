@@ -51,6 +51,15 @@ public class StoreController {
         return "store_list";
     }
 
+    @GetMapping("/list/my_location")
+    public String mylocation_list(Model model, @RequestParam("latitude") double latitude, @RequestParam("longitude") double longitude){
+        System.out.println(latitude);
+        System.out.println(longitude);
+        List<Store> storeList = this.storeRepository.findAll();
+        model.addAttribute("storeList", storeList);
+        return "store_list";
+    }
+
     @GetMapping("/detail/{id}") // 해당 id는 store id
     public String detail(Model model, @PathVariable("id") Integer id) {
         Store store = this.storeService.getStore(id);

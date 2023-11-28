@@ -1,21 +1,22 @@
-<html layout:decorate="~{layout}" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:layout="http://www.w3.org/1999/xhtml">
+<html layout:decorate="~{layout}" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:layout="http://www.w3.org/1999/xhtml"
+      xmlns:sec="http://www.w3.org/1999/xhtml">
 <div layout:fragment="content" class="content-area" style="height:90%;">
     <div class="d-flex flex-column" style="height:100%;">
         <div style="height:5%; margin:10px; display: flex; justify-content: flex-start;">
             <a href="#">
                 <input class="btn btn-outline-secondary" value="상세위치 검색">
             </a>
-            <a href="/" id="myLocationBtn">
+            <a id="myLocationBtn">
                 <input class="btn btn-outline-secondary" style="margin-left: 20px;" value="내 위치 검색">
             </a>
             <input type="text" th:value="${location}" style="margin-left: 20px;">
 <!--            여기 내가게보기 버튼 임의로 추가 함-->
-            <div class="my-3">
-                <a th:href="@{|/store/owner/list|}" class="btn btn-sm btn-outline-secondary"
-                   sec:authorize="isAuthenticated()"
-                   th:if="${#authentication.getPrincipal().getUsername() != null and hasRole('OWNER')}"
-                   th:text="내가게보기"></a>
-            </div>
+<!--            <div class="my-3">-->
+<!--                <a th:href="@{|/store/owner/list|}" class="btn btn-sm btn-outline-secondary"-->
+<!--                   sec:authorize="isAuthenticated()"-->
+<!--                   th:if="${#authentication.getPrincipal().getUsername() != null and hasRole('ROLE_OWNER')}"-->
+<!--                   th:text="내가게보기"></a>-->
+<!--            </div>-->
 <!--            여기까지-->
         </div>
         <div style="height:90%;">
@@ -89,30 +90,31 @@
            }
        });
     });
-   // "내 위치 찾기" 버튼 클릭 시 이벤트 처리
-    document.getElementById('myLocationBtn').addEventListener('click', function () {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(function (position) {
-                var lat = position.coords.latitude,
-                    lon = position.coords.longitude;
+    document.addEventListener("DOMContentLoaded", function() {
+        // 버튼 클릭 시 위치 정보를 가져오고 URL에 파라미터로 추가
+        document.getElementById('myLocationBtn').addEventListener('click', function() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
+            } else {
+                alert('Geolocation is not supported by this browser.');
+            }
+        });
 
-                var locPosition = new kakao.maps.LatLng(lat, lon);
+        function successCallback(position) {
+            const latitude = position.coords.latitude;
+            const longitude = position.coords.longitude;
 
-                if (!myLocationMarker) {
-                    myLocationMarker = new kakao.maps.Marker({
-                        position: locPosition,
-                        map: map
-                    });
-                } else {
-                    myLocationMarker.setPosition(locPosition); // 기존 마커 위치 변경
-                }
+            // 내 위치 좌표를 파라미터로 하여 URL을 생성
+            const url = `/store/list/my_location?latitude=${latitude}&longitude=${longitude}`;
 
-                map.panTo(locPosition); // 해당 위치로 지도 이동
-            });
-        } else {
-            alert('Geolocation을 지원하지 않습니다.');
+            // 내 위치에 해당하는 URL로 이동
+            window.location.href = url;
+        }
+
+        function errorCallback(error) {
+            console.error('Error occurred while retrieving location:', error);
+            // 위치 정보를 가져오지 못할 경우에 대한 처리
         }
     });
-
 </script>
 </html>
