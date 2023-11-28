@@ -23,17 +23,31 @@
             </select>
         </div>
         <div class="mb-3">
+            <!-- 버튼 -->
             <div class="btnWrap">
-                <button type="button" onclick="addMenuInput()" class="btn btn-light"> 메뉴추가</button>
-            </div>
-
-
                 <div th:object="${menuForm}">
                     <label for="menuName" class="form-label">메뉴이름</label>
                     <textarea th:field="*{menuName}" class="form-control" rows="1"></textarea>
                     <label for="price" class="form-label">가격</label>
                     <textarea th:field="*{price}" class="form-control" rows="1"></textarea>
                 </div>
+                <button type="button" id="menuButton">메뉴추가</button>
+            </div>
+
+            <!-- 박스 추가되는 영역 -->
+            <div id="boxWrap">
+                <div class="original">
+                    original
+                </div>
+            </div>
+
+
+            <div th:object="${menuForm}">
+                <label for="menuName" class="form-label">메뉴이름</label>
+                <textarea th:field="*{menuName}" class="form-control" rows="1"></textarea>
+                <label for="price" class="form-label">가격</label>
+                <textarea th:field="*{price}" class="form-control" rows="1"></textarea>
+            </div>
 
         </div>
         <div class="mb-3">
@@ -44,17 +58,20 @@
     </form>
 </div>
 <script>
-    function addMenuInput() {
-        var menuInputs = document.getElementById('menuInputs');
-        var inputDiv = document.createElement('div');
-        inputDiv.className = 'form-check mb-2';
-            inputDiv.innerHTML = '' +
-                '<input type="text" name="menuForms[__${#lists.size(menuForms)}__].menuName" placeholder="메뉴명"/>' +
-                '<input type="text" name="menuForms[__${#lists.size(menuForms)}__].price" placeholder="가격"/>';
+    document.addEventListener("DOMContentLoaded", function() {
+           var i = 1;
+           var button = document.getElementById("menuButton");
 
-            // 생성된 입력 필드를 추가
-            menuInputs.appendChild(inputDiv);
-    }
+           button.addEventListener("click", function() {
+               var boxWrap = document.getElementById("boxWrap");
+               var newDiv = document.createElement("div");
+               newDiv.className = "original";
+               newDiv.textContent = "등장" + i;
+               boxWrap.appendChild(newDiv);
+
+               i++;
+           });
+       });
 </script>
 </html>
 
