@@ -1,25 +1,31 @@
+<!DOCTYPE html>
 <html layout:decorate="~{layout}" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:layout="http://www.w3.org/1999/xhtml">
 <div layout:fragment="content" class="container">
+    <!-- 폼 시작 -->
     <form th:object="${storeForm}" method="post" enctype="multipart/form-data">
         <div class="d-flex flex-column" style="height:100%;">
+            <!-- 가게 등록 부분 -->
             <div class="d-flex align-items-center p-2" style="height:5%; padding:10px;margin: 20px 10px 0 10px;">
                 <h4 class="fw-bold" style="flex:6;margin: 0 10px 0 10px;" th:text="가게등록"></h4>
                 <button type="submit" class="btn btn-sm btn-dark">저장하기</button>
             </div>
+            <!-- 내용 입력 부분 -->
             <div style="height:70%">
                 <div class="m-3">
                     <div style="background: white; box-shadow:0px 0px 10px rgba(0,0,0,0.2);border-radius: 10px; padding : 10px; margin-bottom:20px;">
+                        <!-- CSRF 토큰 -->
                         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                        <!-- 이름 입력 -->
                         <div class="mb-3">
                             <label for="name" class="form-label">이름</label>
                             <textarea th:field="*{name}" class="form-control" rows="1"></textarea>
                         </div>
+                        <!-- 내용 입력 -->
                         <div class="mb-3">
                             <label for="content" class="form-label">내용</label>
                             <textarea th:field="*{content}" class="form-control" rows="15"></textarea>
                         </div>
-
-
+                        <!-- 카테고리 선택 -->
                         <div>
                             <select name="category" class="form-select" aria-label="Default select example">
                                 <option selected>카테고리</option>
@@ -29,33 +35,34 @@
                                 <option th:selected="${storeForm.category == '중식'}" value="중식">중식</option>
                             </select>
                         </div>
-
+                        <!-- 도로명주소 입력 -->
                         <div class="mb-3">
                             <label for="roadAddress" class="form-label">도로명주소</label>
                             <textarea th:field="*{roadAddress}" class="form-control" rows="1"></textarea>
                         </div>
                     </div>
                 </div>
-
-
             </div>
-
+            <!-- 메뉴 추가와 이미지 업로드 부분 -->
             <div style="height:30%;">
                 <div class="m-3">
                     <div class="d-flex">
+                        <!-- 메뉴 추가 -->
                         <div style="width:60%; background: white; box-shadow:0px 0px 10px rgba(0,0,0,0.2);border-radius: 10px; padding : 10px; margin-right:10px; ">
                             <div class="mb-3">
                                 <div id="parah">메뉴추가</div>
                                 <input type="button" value="추가" onclick="addInput();"/>
-<!--                                <input type="button" value="삭제" onclick="deleteInput();"/>-->
                             </div>
                         </div>
+                        <!-- 이미지 업로드 -->
                         <div style="width:40%; background: white; box-shadow:0px 0px 10px rgba(0,0,0,0.2);border-radius: 10px; padding : 10px; ">
                             <input type="file" name="files" id="fileInput" multiple/>
                             <div id="imagePreview"></div>
                             <button onclick="deleteSelectedFile()">삭제</button>
                         </div>
-                        <script>
+                    </div>
+                    <!-- 자바스크립트 -->
+                    <script>
                            var selectedImages = [];  // 선택된 이미지 목록
 
                            // 이미지 클릭 이벤트 처리 함수
@@ -138,50 +145,50 @@
                                   }
                               }
                           }
-                        </script>
-                    </div>
+                    </script>
                 </div>
             </div>
         </div>
     </form>
-    <script>
-        var arrInput = new Array(0);
- var arrInputValues = []; // 입력한 값들을 저장할 배열
-
- function addInput() {
-     var newIndex = arrInput.length;
-     arrInput.push(newIndex);
-     arrInputValues.push("");
-     display();
- }
-
- function display() {
-     document.getElementById('parah').innerHTML = "";
-     for (var intI = 0; intI < arrInput.length; intI++) {
-         document.getElementById('parah').innerHTML += createInput(arrInput[intI], arrInputValues[arrInput[intI]], arrInput[intI]);
-     }
- }
-
- function createInput(id, value1, value2) {
-     var input1 = "<input name='menuName' type='text' id='test" + id + "' placeholder='메뉴이름' onChange='javascript:saveValue(" + id + ", this.value)' style='display: inline-block; margin-right: 10px;' value='" + value1 + "' >";
-     var input2 = "<input name='price' type='text' id='anotherTest" + id + "' placeholder='가격' onChange='javascript:saveValue(" + id + ", this.value)' style='display: inline-block; margin-right: 10px;' value='" + (arrInputValues[id] || "") + "' >";
-     var deleteButton = "<button onclick='javascript:deleteInput(" + id + ")'>삭제</button>";
-
-     return input1 + input2 + deleteButton + "<br>";
- }
-
- function saveValue(id, value) {
-     // 입력한 값 저장
-     arrInputValues[id] = value;
- }
-
- function deleteInput(id) {
-     arrInput.splice(id, 1);
-     arrInputValues.splice(id, 1);
-     display();
- }
-    </script>
 </div>
+<!-- 추가 자바스크립트 -->
+<script layout:fragment="script" type='text/javascript'>
+     var arrInput = new Array(0);
+     var arrInputValues = []; // 입력한 값들을 저장할 배열
+
+     function addInput() {
+         var newIndex = arrInput.length;
+         arrInput.push(newIndex);
+         arrInputValues.push("");
+         display();
+     }
+
+     function display() {
+         document.getElementById('parah').innerHTML = "";
+         for (var intI = 0; intI < arrInput.length; intI++) {
+             document.getElementById('parah').innerHTML += createInput(arrInput[intI], arrInputValues[arrInput[intI]], arrInput[intI]);
+         }
+     }
+
+     function createInput(id, value1, value2) {
+         var input1 = "<input name='menuName' type='text' id='test" + id + "' placeholder='메뉴이름' onChange='javascript:saveValue(" + id + ", this.value)' style='display: inline-block; margin-right: 10px;' value='" + value1 + "' >";
+         var input2 = "<input name='price' type='text' id='anotherTest" + id + "' placeholder='가격' onChange='javascript:saveValue(" + id + ", this.value)' style='display: inline-block; margin-right: 10px;' value='" + (arrInputValues[id] || "") + "' >";
+         var deleteButton = "<button onclick='javascript:deleteInput(" + id + ")'>삭제</button>";
+
+         return input1 + input2 + deleteButton + "<br>";
+     }
+
+     function saveValue(id, value) {
+         // 입력한 값 저장
+         arrInputValues[id] = value;
+     }
+
+     function deleteInput(id) {
+         arrInput.splice(id, 1);
+         arrInputValues.splice(id, 1);
+         display();
+     }
+</script>
 </html>
 
 

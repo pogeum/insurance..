@@ -9,16 +9,26 @@
             <span class="text-white ms-2 fw-bold fs-4">Store List</span>
         </a>
         <div class="d-flex justify-content-end align-items-center">
-            <div class="dropdown">
-                <span class="dropdown-toggle" style="margin: 0 10px 0 10px; font-size: 1rem; font-weight: bold; color: white;"
-                      th:if="${#authorization.expression('isAuthenticated()')}"
-                      th:text="${#authentication.principal.nickname}"
-                      data-bs-toggle="dropdown" aria-expanded="false">
-                </span>
-                <ul class="dropdown-menu" style="height: auto;">
-                    <li><a class="dropdown-item" th:href="@{/user/profile}">마이페이지</a></li>
-                </ul>
+            <div class="d-flex align-items-center">
+                <!-- Image -->
+                <div th:if="${#authorization.expression('isAuthenticated()') and #authentication.principal != null and #authentication.principal.fileName != null}">
+                    <img th:src="@{|/photo/${#authentication.principal.fileName}|}"
+                         class="img-fluid"
+                         style="object-fit: cover; width: 30px; height: 30px; border-radius: 50%; margin-right: 5px;">
+                </div>
+                <!-- Nickname -->
+                <div class="dropdown">
+            <span class="dropdown-toggle" style="margin-right: 10px; font-size: 1rem; font-weight: bold; color: white;"
+                  th:if="${#authorization.expression('isAuthenticated()')}"
+                  th:text="${#authentication.principal.nickname}"
+                  data-bs-toggle="dropdown" aria-expanded="false">
+            </span>
+                    <ul class="dropdown-menu" style="height: auto;">
+                        <li><a class="dropdown-item" th:href="@{/user/profile}">마이페이지</a></li>
+                    </ul>
+                </div>
             </div>
+            <!-- Sign in / Sign out buttons -->
             <a class="btn btn-dark" sec:authorize="isAnonymous()" th:href="@{/user/login}" style="margin: 3px;">Sign in</a>
             <a class="btn btn-dark" sec:authorize="isAuthenticated()" th:href="@{/user/logout}" style="margin: 3px;">Sign out</a>
         </div>

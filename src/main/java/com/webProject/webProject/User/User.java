@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -26,4 +27,12 @@ public class User {
     private String nickname;
 
     private String role; // 권한 (admin, owner, user)
+
+    private LocalDateTime createDate;
+
+    private LocalDateTime modifyDate;
+
+    private String fileName;  // 파일 원본명
+
+    private String filePath;  // 파일 저장 경로
 }

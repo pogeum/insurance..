@@ -9,6 +9,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,9 +17,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.util.HtmlUtils;
 
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.Principal;
 import java.util.List;
@@ -29,6 +32,7 @@ import java.util.Map;
 @RequestMapping("/user")
 public class UserController {
     private final UserService userService;
+
 
     @GetMapping("/owner_check_bno")
     public String owner_check_bno(OwnerCreateForm ownerCreateForm){
@@ -136,38 +140,39 @@ public class UserController {
     @GetMapping("/profile/modify")
     public String modifyProfile(Model model, UserUpdateForm userUpdateForm, UserPasswordForm userPasswordForm, Principal principal) {
         String userId = principal.getName();
-        User user = this.userService.getUser(userId);
-        model.addAttribute("user", user);
+        User userinfo = this.userService.getUser(userId);
+        model.addAttribute("userinfo", userinfo);
 
-        userUpdateForm.setNickname(user.getNickname());
-        userUpdateForm.setEmail(user.getEmail());
-        userPasswordForm.setPassword(user.getPassword());
+        userUpdateForm.setNickname(userinfo.getNickname());
+        userUpdateForm.setEmail(userinfo.getEmail());
+        userPasswordForm.setPassword(userinfo.getPassword());
         return "update_profile"; // 수정 폼으로 이동합니다.
     }
 
     // 사용자 프로필 정보 수정 및 비밀번호 변경 처리
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/profile/modify")
-    public String modifyProfile(UserUpdateForm userUpdateForm, UserPasswordForm userPasswordForm, Principal principal, BindingResult bindingResult) {
-        // 현재 로그인한 사용자의 ID를 가져옵니다.
+    public String modifyProfile(UserUpdateForm userUpdateForm, UserPasswordForm userPasswordForm, Principal principal, BindingResult bindingResult){
         String userId = principal.getName();
-        // 해당 사용자 정보를 가져옵니다.
-        User user = this.userService.getUser(userId);
-
-        // 만약 유효성 검사 오류가 발생했다면, 수정 폼으로 다시 돌아갑니다.
+        User userinfo = this.userService.getUser(userId);
         if (bindingResult.hasErrors()) {
             return "update_profile";
         }
 
         // 사용자 정보만 수정하고 비밀번호는 변경하지 않는 경우
         if (userUpdateForm.getNickname() != null || userUpdateForm.getEmail() != null) {
-            this.userService.modify(user, userUpdateForm.getNickname(), userUpdateForm.getEmail());
+            this.userService.modify(userinfo, userUpdateForm.getNickname(), userUpdateForm.getEmail());
         }
 
         // 새로운 비밀번호가 입력되었고 사용자 정보가 입력되지 않은 경우, 비밀번호만 변경합니다.
         if (userUpdateForm.getNickname() == null && userUpdateForm.getEmail() == null
                 && userPasswordForm.getNewPassword1() != null && !userPasswordForm.getNewPassword1().isEmpty()) {
-            this.userService.modifyPw(user, userPasswordForm.getNewPassword1());
+            if (!userPasswordForm.getNewPassword1().equals(userPasswordForm.getNewPassword2())) {
+                bindingResult.rejectValue("password2", "passwordInCorrect",
+                        "2개의 패스워드가 일치하지 않습니다.");
+                return "update_profile";
+            }
+            this.userService.modifyPw(userinfo, userPasswordForm.getNewPassword1());
         }
 
         // 사용자 프로필 페이지로 리다이렉트합니다.
