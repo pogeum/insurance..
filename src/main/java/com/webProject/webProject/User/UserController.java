@@ -1,8 +1,5 @@
 package com.webProject.webProject.User;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -12,21 +9,18 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
-import org.springframework.http.*;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.HtmlUtils;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.security.Principal;
 import java.util.List;
 import java.util.Map;
 
@@ -127,5 +121,29 @@ public class UserController {
     @GetMapping("/login")
     public String login() {
         return "login_form";
+    }
+
+    @GetMapping("/profile")
+    public String profile(Principal principal, Model model){
+        String userId = principal.getName();
+        User userinfo = this.userService.getUser(userId);
+        model.addAttribute("userinfo", userinfo);
+
+        return "profile";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/profile/modify/{id}")
+    public String reviewModify(Model model, UserCreateForm userCreateForm, @PathVariable("id") Integer id, Principal principal) {
+
+        return "update_profile";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/profile/modify/{id}")
+    public String reviewModify(@Valid UserCreateForm userCreateForm, BindingResult bindingResult,
+                               @PathVariable("id") Integer id, Principal principal) throws Exception {
+
+        return "";
     }
 }
