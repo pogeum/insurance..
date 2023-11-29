@@ -29,6 +29,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -108,25 +109,15 @@ public class StoreController {
     }
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/create")
-    public String createStore(Model model, StoreForm storeForm, MenuForm menuForm, BindingResult bindingResult, Principal principal, List<MultipartFile> fileList, @RequestParam("menuName")String[] menuNames) throws Exception{
+    public String createStore(Model model, StoreForm storeForm, MenuForm menuForm, BindingResult bindingResult, Principal principal, List<MultipartFile> fileList,
+                              @RequestParam("menuName")String[] menuNames,@RequestParam("price")String[] prices) throws Exception{
         User user = this.userService.getUser(principal.getName());
 
-        //fltmxm 메뉴리스트 연결 스토ㅇ어에
         if (bindingResult.hasErrors()) {
             return "store_owner_list";
         }
-        List<Menu> menuList = new ArrayList<>();
-        for (String menuName : menuNames) {
-            Menu menu = new Menu();
-            menu.setMenuName(menuName);
-            menu.setPrice(100);
-            menuList.add(menu);
-        }
-
         Store newStore = storeService.createStore(user, storeForm.getName(),storeForm.getContent(),storeForm.getCategory(),storeForm.getRoadAddress());
-        menuService.saveMenus(newStore, menuList);
-        newStore.setMenuList(menuList);
-//        newStore.setMenuList();
+        newStore.setMenuList(menuService.saveMenus(newStore, Arrays.asList(menuNames) ,Arrays.asList(prices)));
         photoService.saveImgsForStore(newStore, fileList);
 
         return "redirect:/store/owner/list";
