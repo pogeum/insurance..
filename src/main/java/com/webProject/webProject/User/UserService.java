@@ -1,11 +1,13 @@
 package com.webProject.webProject.User;
 
 import com.webProject.webProject.DataNotFoundException;
+import com.webProject.webProject.Review.Review;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,5 +39,16 @@ public class UserService {
         } else {
             throw new DataNotFoundException("siteuser not found");
         }
+    }
+
+    public void modify(User user, String nickname, String email) {
+        user.setNickname(nickname);
+        user.setEmail(email);
+        this.userRepository.save(user);
+    }
+
+    public void modifyPw(User user, String pw){
+        user.setPassword(passwordEncoder.encode(pw));
+        this.userRepository.save(user);
     }
 }

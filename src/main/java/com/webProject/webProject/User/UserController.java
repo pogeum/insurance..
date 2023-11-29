@@ -9,14 +9,14 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.util.HtmlUtils;
 
 import java.nio.charset.StandardCharsets;
@@ -124,7 +124,7 @@ public class UserController {
     }
 
     @GetMapping("/profile")
-    public String profile(Principal principal, Model model){
+    public String profile(Principal principal, UserPasswordForm userPasswordForm, Model model){
         String userId = principal.getName();
         User userinfo = this.userService.getUser(userId);
         model.addAttribute("userinfo", userinfo);
@@ -133,17 +133,47 @@ public class UserController {
     }
 
     @PreAuthorize("isAuthenticated()")
-    @GetMapping("/profile/modify/{id}")
-    public String reviewModify(Model model, UserCreateForm userCreateForm, @PathVariable("id") Integer id, Principal principal) {
+    @GetMapping("/profile/modify")
+    public String modifyProfile(Model model, UserUpdateForm userUpdateForm, UserPasswordForm userPasswordForm, Principal principal) {
+        String userId = principal.getName();
+        User user = this.userService.getUser(userId);
+        model.addAttribute("user", user);
 
-        return "update_profile";
+        userUpdateForm.setNickname(user.getNickname());
+        userUpdateForm.setEmail(user.getEmail());
+        userPasswordForm.setPassword(user.getPassword());
+        return "update_profile"; // 수정 폼으로 이동합니다.
     }
 
+    // 사용자 프로필 정보 수정 및 비밀번호 변경 처리
     @PreAuthorize("isAuthenticated()")
-    @PostMapping("/profile/modify/{id}")
-    public String reviewModify(@Valid UserCreateForm userCreateForm, BindingResult bindingResult,
-                               @PathVariable("id") Integer id, Principal principal) throws Exception {
+    @PostMapping("/profile/modify")
+    public String modifyProfile(UserUpdateForm userUpdateForm, UserPasswordForm userPasswordForm, Principal principal, BindingResult bindingResult) {
+        // 현재 로그인한 사용자의 ID를 가져옵니다.
+        String userId = principal.getName();
+        // 해당 사용자 정보를 가져옵니다.
+        User user = this.userService.getUser(userId);
 
-        return "";
+        // 만약 유효성 검사 오류가 발생했다면, 수정 폼으로 다시 돌아갑니다.
+        if (bindingResult.hasErrors()) {
+            return "update_profile";
+        }
+
+        // 사용자 정보만 수정하고 비밀번호는 변경하지 않는 경우
+        if (userUpdateForm.getNickname() != null || userUpdateForm.getEmail() != null) {
+            this.userService.modify(user, userUpdateForm.getNickname(), userUpdateForm.getEmail());
+        }
+
+        // 새로운 비밀번호가 입력되었고 사용자 정보가 입력되지 않은 경우, 비밀번호만 변경합니다.
+        if (userUpdateForm.getNickname() == null && userUpdateForm.getEmail() == null
+                && userPasswordForm.getNewPassword1() != null && !userPasswordForm.getNewPassword1().isEmpty()) {
+            this.userService.modifyPw(user, userPasswordForm.getNewPassword1());
+        }
+
+        // 사용자 프로필 페이지로 리다이렉트합니다.
+        return "redirect:/user/profile";
     }
+
+
+
 }
