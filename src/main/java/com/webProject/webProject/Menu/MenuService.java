@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -12,12 +13,16 @@ import java.util.List;
 public class MenuService {
     private final MenuRepository menuRepository;
 
-    public List<Menu> saveMenus(Store store, List<Menu> menus) {
-        for (Menu menu : menus) {
-            menu.setStore(store);
-            Menu addmenu = menu;
+    public List<Menu> saveMenus(Store store, List<String> menuNames, List<String> prices) {
 
-            this.menuRepository.save(addmenu);
+        List<Menu> menuList = new ArrayList<>();
+        for (int i =0; i< menuNames.size(); i++) {
+            Menu menu = new Menu();
+            menu.setStore(store);
+            menu.setMenuName(menuNames.get(i));
+            menu.setPrice(Integer.valueOf(prices.get(i)));
+            menuList.add(menu);
+            this.menuRepository.save(menu);
         }
         return this.menuRepository.findAll();
     }
@@ -30,7 +35,6 @@ public class MenuService {
                     storeMenu.add(menu);
                 }
             }
-
         }
         return storeMenu;
     }
