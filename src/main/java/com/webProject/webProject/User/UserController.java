@@ -173,7 +173,4 @@ public class UserController {
         // 사용자 프로필 페이지로 리다이렉트합니다.
         return "redirect:/user/profile";
     }
-
-
-
 }
