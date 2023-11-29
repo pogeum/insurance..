@@ -33,15 +33,15 @@ public class Store {
 
     private LocalDateTime createDate;
 
-    @OneToMany(mappedBy = "store")
+    @OneToMany(mappedBy = "store", cascade = CascadeType.REMOVE)
     private List<Review> reviewList;
 
-    @OneToMany(mappedBy = "store")
+    @OneToMany(mappedBy = "store", cascade = CascadeType.REMOVE)
     private List<Menu> menuList;
 
     @ManyToOne
     private User author;
 
-    @OneToMany(mappedBy = "store")
+    @OneToMany(mappedBy = "store", cascade = CascadeType.REMOVE)
     private List<Photo> photoList;
 }
