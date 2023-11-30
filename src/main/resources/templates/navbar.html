@@ -18,11 +18,11 @@
                 </div>
                 <!-- Nickname -->
                 <div class="dropdown">
-            <span class="dropdown-toggle" style="margin-right: 10px; font-size: 1rem; font-weight: bold; color: white;"
-                  th:if="${#authorization.expression('isAuthenticated()')}"
-                  th:text="${#authentication.principal.nickname}"
-                  data-bs-toggle="dropdown" aria-expanded="false">
-            </span>
+                    <span class="dropdown-toggle" style="margin-right: 10px; font-size: 1rem; font-weight: bold; color: white;"
+                          th:if="${#authorization.expression('isAuthenticated()')}"
+                          th:text="${#authentication.principal.nickname}"
+                          data-bs-toggle="dropdown" aria-expanded="false">
+                    </span>
                     <ul class="dropdown-menu" style="height: auto;">
                         <li><a class="dropdown-item" th:href="@{/user/profile}">마이페이지</a></li>
                     </ul>
