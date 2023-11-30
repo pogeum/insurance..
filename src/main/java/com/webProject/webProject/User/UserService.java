@@ -1,5 +1,6 @@
 package com.webProject.webProject.User;
 
+import com.webProject.webProject.CustomUser;
 import com.webProject.webProject.DataNotFoundException;
 import com.webProject.webProject.Review.Review;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     @Value("${ImgLocation}")
     public String imgLocation;
+
     public List<User> getUserList() {
         return this.userRepository.findAll();
     }
@@ -90,7 +92,7 @@ public class UserService {
         return null;
     }
 
-    public void modifyPw(User user, String pw){
+    public void modifyPw(User user, String pw) {
         user.setPassword(passwordEncoder.encode(pw));
         user.setModifyDate(LocalDateTime.now());
         this.userRepository.save(user);

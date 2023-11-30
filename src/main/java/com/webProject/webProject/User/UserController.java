@@ -1,6 +1,7 @@
 package com.webProject.webProject.User;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.webProject.webProject.CustomUser;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.apache.http.client.ResponseHandler;
@@ -15,6 +16,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -22,11 +24,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.HtmlUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.nio.charset.StandardCharsets;
 import java.security.Principal;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -165,14 +169,23 @@ public class UserController {
         if (userUpdateForm.getImage() != null) {
             this.userService.modify(userinfo, userUpdateForm.getNickname(), userUpdateForm.getEmail(), userUpdateForm.getImage());
         }
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        Authentication newAuthentication = new UsernamePasswordAuthenticationToken(userDetails, userDetails.getPassword(), userDetails.getAuthorities());
-        Authentication currentAuthentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication.getPrincipal() instanceof CustomUser) {
+            CustomUser customUser = (CustomUser) authentication.getPrincipal();
 
-        ((AbstractAuthenticationToken) currentAuthentication).setDetails(newAuthentication.getDetails());
-        SecurityContextHolder.getContext().setAuthentication(newAuthentication);
+            customUser.setNickname(userUpdateForm.getNickname());
 
-        return "redirect:/user/profile";
+            if (userUpdateForm.getImage() != null && !userUpdateForm.getImage().isEmpty()) {
+                String fileName = userUpdateForm.getImage().getOriginalFilename();
+                customUser.setFileName(fileName);
+            }
+            Collection<? extends GrantedAuthority> authorities = customUser.getAuthorities();
+            Authentication newAuthentication = new UsernamePasswordAuthenticationToken(customUser, authentication.getCredentials(), authorities);
+            SecurityContextHolder.getContext().setAuthentication(newAuthentication);
+
+            return "redirect:/user/profile";
+        } else {
+            return "error";
+        }
     }
 
     @PreAuthorize("isAuthenticated()")
