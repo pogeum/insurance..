@@ -12,8 +12,11 @@ import org.apache.http.impl.client.HttpClients;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.AbstractAuthenticationToken;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -152,7 +155,7 @@ public class UserController {
     // 사용자 프로필 정보 수정
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/profile/modify")
-    public String modifyUserProfile(@Valid UserUpdateForm userUpdateForm, Principal principal, BindingResult bindingResult) throws Exception {
+    public String modifyUserProfile(@Valid UserUpdateForm userUpdateForm, Authentication authentication, Principal principal, BindingResult bindingResult) throws Exception {
         String userId = principal.getName();
         User userinfo = this.userService.getUser(userId);
         if (bindingResult.hasErrors()) {
@@ -162,6 +165,13 @@ public class UserController {
         if (userUpdateForm.getImage() != null) {
             this.userService.modify(userinfo, userUpdateForm.getNickname(), userUpdateForm.getEmail(), userUpdateForm.getImage());
         }
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        Authentication newAuthentication = new UsernamePasswordAuthenticationToken(userDetails, userDetails.getPassword(), userDetails.getAuthorities());
+        Authentication currentAuthentication = SecurityContextHolder.getContext().getAuthentication();
+
+        ((AbstractAuthenticationToken) currentAuthentication).setDetails(newAuthentication.getDetails());
+        SecurityContextHolder.getContext().setAuthentication(newAuthentication);
+
         return "redirect:/user/profile";
     }
 
