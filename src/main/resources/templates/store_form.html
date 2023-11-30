@@ -51,10 +51,23 @@
                         <div style="width:60%; background: white; box-shadow:0px 0px 10px rgba(0,0,0,0.2);border-radius: 10px; padding : 10px; margin-right:10px; ">
                             <div class="mb-3">
                                 <div id="parah">
-                                    <a href="/store/menu-form">메뉴 등록하기</a>
-                                    <h3>등록된 메뉴</h3>
+                                    <a class="btn btn-sm btn-light" th:href="@{/store/addmenu}">메뉴등록하기</a>
+                                    <li th:if="${store.menuList == null}">
+                                        메뉴가 없습니다.
+                                    </li>
+                                    <ul th:unless="${store.menuList == null}">
+                                        <li th:each="menu : ${store.menuList}">
+                                            <ul>
+                                                <li>
+                                                    <span th:text="${menu.menuName}"></span>
+                                                    <span th:text="${menu.price}"></span>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+
                                 </div>
-                                <input type="button" value="추가" onclick="addInput();"/>
+<!--                                <input type="button" value="추가" onclick="addInput();"/>-->
                             </div>
                         </div>
                         <!-- 이미지 업로드 -->

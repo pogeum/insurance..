@@ -45,6 +45,8 @@ public class StoreController {
     private final UserSecurityService userSecurityService;
     private final StoreRepository storeRepository;
 
+    Store tempStore = new Store();
+    List<Menu> tempmenuList = new ArrayList<>();
 
     @GetMapping("/list")
     public String list(Model model){
@@ -102,26 +104,46 @@ public class StoreController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/create")
-    public String createStore(Model model, StoreForm storeForm, MenuForm menuForm, Principal principal){
-
-        User siteUser = this.userService.getUser(principal.getName());
+    public String createStore(StoreForm storeForm,Principal principal, Model model){
+        tempStore.setMenuList(tempmenuList);
+        User siteUser = this.userService.getUser(principal.getName()); // ?이거왜있는거
+        model.addAttribute("store",tempStore);
         return "store_form";
     }
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/create")
-    public String createStore(Model model, StoreForm storeForm, MenuForm menuForm, BindingResult bindingResult, Principal principal, List<MultipartFile> fileList,
-                              @RequestParam("menuName")String[] menuNames,@RequestParam("price")String[] prices) throws Exception{
+    public String createStore(Model model, StoreForm storeForm, BindingResult bindingResult, Principal principal, List<MultipartFile> fileList) throws Exception{
         User user = this.userService.getUser(principal.getName());
 
         if (bindingResult.hasErrors()) {
             return "store_owner_list";
         }
         Store newStore = storeService.createStore(user, storeForm.getName(),storeForm.getContent(),storeForm.getCategory(),storeForm.getRoadAddress());
-        newStore.setMenuList(menuService.saveMenus(newStore, Arrays.asList(menuNames) ,Arrays.asList(prices)));
+        newStore.setMenuList(tempmenuList);
+//        newStore.setMenuList(menuService.saveMenus(newStore, Arrays.asList(menuNames) ,Arrays.asList(prices)));
         photoService.saveImgsForStore(newStore, fileList);
 
         return "redirect:/store/owner/list";
     }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/addmenu")
+    public String addmenu(MenuForm menuForm) {
+        return "menu_form";
+    }
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/addmenu") //하나씩만됨..
+    public String addmenu(MenuForm menuForm, Principal principal) {
+
+        Menu menu = new Menu();
+        menu.setMenuName(menuForm.getMenuName());
+        menu.setPrice(menuForm.getPrice());
+        tempmenuList.add(menu);
+
+        return "redirect:/store/create";
+    }
+
+
 
     @GetMapping("/owner/list")
     public String ownerpage_list(Model model,Principal principal) {
@@ -142,7 +164,8 @@ public class StoreController {
         storeForm.setName(store.getName());
         storeForm.setContent(store.getContent());
         storeForm.setCategory(store.getCategory());
-        storeForm.setRoadAddress(store.getRoadAddress());//rnedl굳이호ㅓㄱ인? 리스트 자체가 자기글이자너..사용자확인안핻도댈듯
+        storeForm.setRoadAddress(store.getRoadAddress());
+        storeForm.setMenuList(store.getMenuList());
         return "store_form";
     }
     @PreAuthorize("isAuthenticated()")
@@ -166,6 +189,10 @@ public class StoreController {
         storeService.deleteStore(store);
         return "redirect:/store/owner/list";
     }
+
+
+
+
 
 //    @GetMapping("/list")
 //    public String list(Model model, Principal principal){
