@@ -19,5 +19,5 @@ public class UserUpdateForm {
     @Email
     private String email;
 
-    private MultipartFile file; // 파일 업로드를 위한 필드
+    private MultipartFile image; // 파일 업로드를 위한 필드
 }

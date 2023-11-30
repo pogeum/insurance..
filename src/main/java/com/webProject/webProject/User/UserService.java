@@ -52,76 +52,47 @@ public class UserService {
         }
     }
 
-    public void modify(User user, String nickname, String email) {
-//        String projectPath = imgLocation;
-//
-//        if (file == null || file.isEmpty()) {
-//            // No new file provided
-//            user.setFileName(user.getFileName());
-//            user.setFilePath(user.getFilePath());
-//        } else {
-//            File f = new File(user.getFilePath());
-//
-//            if (f.exists()) {
-//                // File exists, delete it
-//                f.delete();
-//            }
-//
-//            UUID uuid = UUID.randomUUID();
-//            String fileName = uuid + "_" + file.getOriginalFilename();
-//            File saveFile = new File(projectPath, fileName);
-//            file.transferTo(saveFile);
-//
-//            user.setFileName(fileName);
-//            user.setFilePath(projectPath + File.separator + fileName);
-//        }
+    public void modify(User user, String nickname, String email, MultipartFile file) throws IOException {
+        String projectPath = imgLocation;
+        String existingFilePath = user.getFilePath();
 
+        if (file != null && !file.isEmpty()) {
+            deleteExistingFile(existingFilePath);
+
+            String fileName = uploadFile(file, projectPath);
+            user.setFileName(fileName);
+            user.setFilePath(projectPath + File.separator + fileName);
+        }
+
+        // 사용자 정보 업데이트
         user.setNickname(nickname);
         user.setEmail(email);
-        this.userRepository.save(user);
+        userRepository.save(user);
+    }
+
+    private void deleteExistingFile(String existingFilePath) {
+        if (existingFilePath != null && !existingFilePath.isEmpty()) {
+            File existingFile = new File(existingFilePath);
+            if (existingFile.exists()) {
+                existingFile.delete();
+            }
+        }
+    }
+
+    private String uploadFile(MultipartFile file, String projectPath) throws IOException {
+        if (file != null && !file.isEmpty()) {
+            UUID uuid = UUID.randomUUID();
+            String fileName = uuid + "_" + file.getOriginalFilename();
+            File saveFile = new File(projectPath, fileName);
+            file.transferTo(saveFile);
+            return fileName;
+        }
+        return null;
     }
 
     public void modifyPw(User user, String pw){
         user.setPassword(passwordEncoder.encode(pw));
         user.setModifyDate(LocalDateTime.now());
         this.userRepository.save(user);
-    }
-
-    public String saveImage(MultipartFile imageFile) {
-        if (imageFile.isEmpty()) {
-            return null; // 이미지가 없는 경우 처리
-        }
-
-        try {
-            // 이미지 파일의 고유한 파일명 생성
-            String fileName = generateUniqueFileName(imageFile.getOriginalFilename());
-
-            // 이미지를 지정된 디렉토리에 저장
-            byte[] bytes = imageFile.getBytes();
-            Path path = Paths.get(imgLocation + fileName);
-            Files.write(path, bytes);
-
-            // 저장된 이미지 파일의 경로를 반환
-            return fileName;
-        } catch (IOException e) {
-            e.printStackTrace();
-            // 이미지 저장 중 예외 발생 시 처리
-            return null;
-        }
-    }
-
-    // 이미지 파일의 고유한 파일명 생성
-    private String generateUniqueFileName(String originalFileName) {
-        String extension = StringUtils.getFilenameExtension(originalFileName);
-        return UUID.randomUUID().toString() + "." + extension;
-    }
-
-    public void updateUserImage(User user, String imagePath) {
-        // 사용자 정보의 이미지 경로를 새로운 이미지 경로로 설정합니다.
-        user.setFilePath(imagePath);
-
-        // 여기에서 사용자 정보를 저장하거나 업데이트하는 로직을 추가할 수 있습니다.
-        // 예를 들어, JPA를 사용한다면 user 객체를 다시 저장하면 됩니다.
-        // userRepository.save(user); // userRepository는 실제 사용하는 Repository에 따라 다를 수 있습니다.
     }
 }

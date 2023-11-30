@@ -9,19 +9,19 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.util.HtmlUtils;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.Principal;
 import java.util.List;
@@ -149,33 +149,62 @@ public class UserController {
         return "update_profile"; // 수정 폼으로 이동합니다.
     }
 
-    // 사용자 프로필 정보 수정 및 비밀번호 변경 처리
+    // 사용자 프로필 정보 수정
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/profile/modify")
-    public String modifyProfile(UserUpdateForm userUpdateForm, UserPasswordForm userPasswordForm, Principal principal, BindingResult bindingResult){
+    public String modifyUserProfile(@Valid UserUpdateForm userUpdateForm, Principal principal, BindingResult bindingResult) throws Exception {
         String userId = principal.getName();
         User userinfo = this.userService.getUser(userId);
         if (bindingResult.hasErrors()) {
             return "update_profile";
         }
 
-        // 사용자 정보만 수정하고 비밀번호는 변경하지 않는 경우
-        if (userUpdateForm.getNickname() != null || userUpdateForm.getEmail() != null) {
-            this.userService.modify(userinfo, userUpdateForm.getNickname(), userUpdateForm.getEmail());
+        if (userUpdateForm.getImage() != null) {
+            this.userService.modify(userinfo, userUpdateForm.getNickname(), userUpdateForm.getEmail(), userUpdateForm.getImage());
         }
-
-        // 새로운 비밀번호가 입력되었고 사용자 정보가 입력되지 않은 경우, 비밀번호만 변경합니다.
-        if (userUpdateForm.getNickname() == null && userUpdateForm.getEmail() == null
-                && userPasswordForm.getNewPassword1() != null && !userPasswordForm.getNewPassword1().isEmpty()) {
-            if (!userPasswordForm.getNewPassword1().equals(userPasswordForm.getNewPassword2())) {
-                bindingResult.rejectValue("password2", "passwordInCorrect",
-                        "2개의 패스워드가 일치하지 않습니다.");
-                return "update_profile";
-            }
-            this.userService.modifyPw(userinfo, userPasswordForm.getNewPassword1());
-        }
-
-        // 사용자 프로필 페이지로 리다이렉트합니다.
         return "redirect:/user/profile";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/profile/modify_pw")
+    public String modifyUserPw(@Valid UserPasswordForm userPasswordForm, Principal principal, BindingResult bindingResult){
+        String userId = principal.getName();
+        User userinfo = this.userService.getUser(userId);
+
+        if (bindingResult.hasErrors()) {
+            return "update_profile";
+        }
+        this.userService.modifyPw(userinfo, userPasswordForm.getNewPassword2());
+
+        return "redirect:/user/profile/modify";
+    }
+
+    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+    @PostMapping("/profile/checkPassword")
+    public ResponseEntity<String> checkPassword(@RequestBody UserPasswordForm userPasswordForm) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        String userId = authentication.getName();
+        User userinfo = this.userService.getUser(userId);
+
+        if (userinfo == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        String storedPassword = userinfo.getPassword();
+        if (storedPassword == null || storedPassword.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+
+        if (passwordEncoder.matches(userPasswordForm.getPassword(), storedPassword)) {
+            return ResponseEntity.ok("YES");
+        } else {
+            return ResponseEntity.ok("NO");
+        }
     }
 }
