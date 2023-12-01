@@ -1,17 +1,17 @@
 <html layout:decorate="~{layout}" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:layout="http://www.w3.org/1999/xhtml">
-<head>
-    <link rel="stylesheet" type="text/css" th:href="@{/store_list.css}">
-</head>
+<!--<head>-->
+<!--    <link rel="stylesheet" type="text/css" th:href="@{/store_list.css}">-->
+<!--</head>-->
 <div layout:fragment="content" class="content-area" style="height:90%;">
     <div class="d-flex flex-column" style="height:100%;">
-        <div class="fade-in-container">
-            <div class="fade-in-content">
-                <div class="text-overlay">
-                    <h1>맛집리스트~!</h1>
-                    <p>각지역 맛집을 찾아보세요!</p>
-                </div>
-            </div>
-        </div>
+<!--        <div class="fade-in-container">-->
+<!--            <div class="fade-in-content">-->
+<!--                <div class="text-overlay">-->
+<!--                    <h1>맛집리스트~!</h1>-->
+<!--                    <p>각지역 맛집을 찾아보세요!</p>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
         <div style="height:5%; margin:10px; display: flex; justify-content: flex-start;">
             <a href="#">
                 <input class="btn btn-dark" value="상세위치 검색">
@@ -51,8 +51,8 @@
     var myLocationMarker;
     var mapContainer = document.getElementById('map');
     var mapOption = {
-       center: new kakao.maps.LatLng(37.566826, 126.978656), // 서울 중심좌표
-       level: 3 // 지도의 확대 레벨
+        center: new kakao.maps.LatLng(37.566826, 126.978656), // 서울 중심좌표
+        level: 3 // 지도의 확대 레벨
     };
 
     var map = new kakao.maps.Map(mapContainer, mapOption);
@@ -61,84 +61,116 @@
 
     var addressElements = document.querySelectorAll(".address");
     console.log(addressElements);
+    setCenterToCurrentLocation(); // 사용자의 현재 위치를 가져와 지도 중심으로 설정합니다.
     addressElements.forEach(function(element) {
-       var address = element.textContent;
-       var infowindow = new kakao.maps.InfoWindow({
-           content: element.parentElement.querySelector('.card-title').innerText // 가게 이름 설정
-       });
+        var address = element.textContent;
+        var infowindow = new kakao.maps.InfoWindow({
+            content: element.parentElement.querySelector('.card-title').innerText // 가게 이름 설정
+        });
 
-       geocoder.addressSearch(address, function(result, status) {
-           if (status === kakao.maps.services.Status.OK) {
-               var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+        geocoder.addressSearch(address, function(result, status) {
+            if (status === kakao.maps.services.Status.OK) {
+                var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
 
-               var marker = new kakao.maps.Marker({
-                   map: map,
-                   position: coords
-               });
-               kakao.maps.event.addListener(marker, 'mouseover', function() {
-                 // 마커에 마우스오버 이벤트가 발생하면 인포윈도우를 마커위에 표시합니다
-                   infowindow.open(map, marker);
-               });
+                var marker = new kakao.maps.Marker({
+                    map: map,
+                    position: coords
+                });
+                kakao.maps.event.addListener(marker, 'mouseover', function() {
+                    // 마커에 마우스오버 이벤트가 발생하면 인포윈도우를 마커위에 표시합니다
+                    infowindow.open(map, marker);
+                });
 
-               // 마커에 마우스아웃 이벤트를 등록합니다
-               kakao.maps.event.addListener(marker, 'mouseout', function() {
-                   // 마커에 마우스아웃 이벤트가 발생하면 인포윈도우를 제거합니다
-                   infowindow.close();
-               });
-               map.setCenter(coords);
-           }
-       });
+                // 마커에 마우스아웃 이벤트를 등록합니다
+                kakao.maps.event.addListener(marker, 'mouseout', function() {
+                    // 마커에 마우스아웃 이벤트가 발생하면 인포윈도우를 제거합니다
+                    infowindow.close();
+                });
+                map.setCenter(coords);
+            }
+        });
     });
 
-   // 사용자의 위치를 받아오는 함수
-    function getUserLocation() {
+    // 사용자의 현재 위치를 가져와 지도 중심으로 설정하는 함수
+    function setCenterToCurrentLocation() {
         if (navigator.geolocation) {
+            // 사용자의 현재 위치를 가져옵니다
             navigator.geolocation.getCurrentPosition(function(position) {
-                var lat = position.coords.latitude; // 사용자의 현재 위도
-                var lng = position.coords.longitude; // 사용자의 현재 경도
+                var lat = position.coords.latitude; // 위도
+                var lng = position.coords.longitude; // 경도
 
-                var userLatLng = new kakao.maps.LatLng(lat, lng);
+                var myLocation = new kakao.maps.LatLng(lat, lng);
 
-                // 기존에 있던 사용자 마커 제거
+                // 내 위치 마커를 생성합니다
                 if (myLocationMarker) {
-                    myLocationMarker.setMap(null);
+                    myLocationMarker.setMap(null); // 이미 마커가 있다면 제거합니다
                 }
 
-                // 사용자의 위치를 지도 중심에 표시
-                map.setCenter(userLatLng);
                 myLocationMarker = new kakao.maps.Marker({
-                    position: userLatLng,
+                    position: myLocation,
                     map: map
                 });
 
-                // 사용자의 위치 좌표를 주소로 변환
-                var geocoder = new kakao.maps.services.Geocoder();
-                geocoder.coord2Address(userLatLng.getLng(), userLatLng.getLat(), function(result, status) {
-                    if (status === kakao.maps.services.Status.OK) {
-                        var userAddress = result[0].address.address_name;
-                        console.log(userAddress);
-                        // AJAX를 통해 주소값을 서버로 전달하고, 해당 주소가 포함된 음식점 리스트를 받아옴
-                        $.ajax({
-                            type: 'GET',
-                            url: '/store/list/findStores', // 서버 주소 입력
-                            data: { address: userAddress }, // 주소값 전달
-                            success: function(restaurants) {
-                                // 받아온 음식점 리스트 처리
-                                console.log('주변 음식점 리스트:', restaurants);
-                                // 여기서 받아온 음식점 리스트를 원하는 방식으로 처리하면 됩니다.
-                            },
-                            error: function(error) {
-                                console.error('에러 발생:', error);
-                            }
-                        });
-                    } else {
-                        console.error('주소 변환 실패');
-                    }
-                });
+                // 지도 중심을 내 위치로 설정합니다
+                map.setCenter(myLocation);
+            }, function(error) {
+                console.error('Error getting the user location', error);
             });
         } else {
-            alert('브라우저가 Geolocation을 지원하지 않습니다.');
+            console.error('Geolocation is not supported by this browser.');
         }
     }
+
+
+    <!--   // 사용자의 위치를 받아오는 함수-->
+    <!--    function getUserLocation() {-->
+    <!--        if (navigator.geolocation) {-->
+    <!--            navigator.geolocation.getCurrentPosition(function(position) {-->
+    <!--                var lat = position.coords.latitude; // 사용자의 현재 위도-->
+    <!--                var lng = position.coords.longitude; // 사용자의 현재 경도-->
+
+    <!--                var userLatLng = new kakao.maps.LatLng(lat, lng);-->
+
+    <!--                // 기존에 있던 사용자 마커 제거-->
+    <!--                if (myLocationMarker) {-->
+    <!--                    myLocationMarker.setMap(null);-->
+    <!--                }-->
+
+    <!--                // 사용자의 위치를 지도 중심에 표시-->
+    <!--                map.setCenter(userLatLng);-->
+    <!--                myLocationMarker = new kakao.maps.Marker({-->
+    <!--                    position: userLatLng,-->
+    <!--                    map: map-->
+    <!--                });-->
+
+    <!--                // 사용자의 위치 좌표를 주소로 변환-->
+    <!--                var geocoder = new kakao.maps.services.Geocoder();-->
+    <!--                geocoder.coord2Address(userLatLng.getLng(), userLatLng.getLat(), function(result, status) {-->
+    <!--                    if (status === kakao.maps.services.Status.OK) {-->
+    <!--                        var userAddress = result[0].address.address_name;-->
+    <!--                        console.log(userAddress);-->
+    <!--                        // AJAX를 통해 주소값을 서버로 전달하고, 해당 주소가 포함된 음식점 리스트를 받아옴-->
+    <!--                        $.ajax({-->
+    <!--                            type: 'GET',-->
+    <!--                            url: '/store/list/findStores', // 서버 주소 입력-->
+    <!--                            data: { jibunAddress: userAddress }, // 주소값 전달-->
+    <!--                            success: function(restaurants) {-->
+    <!--                                // 받아온 음식점 리스트 처리-->
+    <!--                                console.log('주변 음식점 리스트:', restaurants);-->
+    <!--                                // 여기서 받아온 음식점 리스트를 원하는 방식으로 처리하면 됩니다.-->
+    <!--                            },-->
+    <!--                            error: function(error) {-->
+    <!--                                console.error('에러 발생:', error);-->
+    <!--                            }-->
+    <!--                        });-->
+    <!--                    } else {-->
+    <!--                        console.error('주소 변환 실패');-->
+    <!--                    }-->
+    <!--                });-->
+    <!--            });-->
+    <!--        } else {-->
+    <!--            alert('브라우저가 Geolocation을 지원하지 않습니다.');-->
+    <!--        }-->
+    <!--    }-->
 </script>
 </html>

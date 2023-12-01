@@ -18,6 +18,9 @@ import com.webProject.webProject.User.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -28,6 +31,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.w3c.dom.ls.LSException;
 
 import java.security.Principal;
 import java.util.ArrayList;
@@ -58,11 +62,11 @@ public class StoreController {
     }
 
     @GetMapping("/list/findStores")
-    public String mylocation_list(Model model, @RequestParam("userAddress") String userAddress) {
-//        List<Store> storeList = storeRepository.findNearbyStores(userAddress);
+    public ResponseEntity<List<Store>> findStoresByAddress(Model model, @RequestParam("jibunAddress") String jibunAddress) {
+        List<Store> storeList  = this.storeService.getAddressList(jibunAddress);
+        model.addAttribute("storeList", storeList);
 
-//        model.addAttribute("storeList", storeList);
-        return "store_list";
+        return ResponseEntity.ok(storeList);
     }
 
     @GetMapping("/detail/{id}") // 해당 id는 store id

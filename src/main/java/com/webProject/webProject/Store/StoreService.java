@@ -2,15 +2,19 @@ package com.webProject.webProject.Store;
 
 import com.webProject.webProject.DataNotFoundException;
 import com.webProject.webProject.User.User;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -94,7 +98,24 @@ public class StoreService {
         this.storeRepository.delete(store);
     }
 
+    public List<Store> getAddressList(String jibunAddress) {
+        String[] addressParts = jibunAddress.split("\\s+"); // 공백을 기준으로 문자열 분할
+        String formattedAddress = String.join(" ", Arrays.copyOfRange(addressParts, 0, 3)); // 처음 세 부분을 결합
 
+        Specification<Store> spec = search(formattedAddress); // 형식화된 주소 사용
+        return this.storeRepository.findAllByKeyword(formattedAddress);
+    }
+
+    private Specification<Store> search(String kw) {
+        return new Specification<>() {
+            private static final long serialVersionUID = 1L;
+            @Override
+            public Predicate toPredicate(Root<Store> q, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                query.distinct(true);  // 중복을 제거
+                return cb.like(q.get("jibunAddress"), "%" + kw + "%"); // 제목
+            }
+        };
+    }
 //    // 데이터베이스에서 음식점 목록을 가져오는 메서드
 //    public List<Store> getRestaurantsNearby(double userLatitude, double userLongitude) {
 //        // 데이터베이스에서 모든 음식점 정보를 가져옴

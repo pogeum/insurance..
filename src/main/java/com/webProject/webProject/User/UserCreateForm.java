@@ -20,6 +20,7 @@ public class UserCreateForm {
     @NotEmpty(message = "비밀번호 확인은 필수항목입니다.")
     private String password2;
 
+    @Size(min = 3, message = "닉네임은 3글자 이상이어야 합니다.") // 수정된 부분
     @NotEmpty(message = "닉네임은 필수항목입니다.")
     private String nickname;
 
