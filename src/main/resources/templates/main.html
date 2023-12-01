@@ -1,0 +1,16 @@
+<html layout:decorate="~{layout}" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:layout="http://www.w3.org/1999/xhtml">
+<head>
+    <link rel="stylesheet" type="text/css" th:href="@{/store_list.css}">
+</head>
+<div layout:fragment="content" class="content-area" style="display: flex;justify-content: center; align-items: center; height: 90vh;">
+    <div class="button_group" style="padding: 15px 25px; text-decoration: none; color: white; background-color: #333;
+        border: none;border-radius: 5px;cursor: pointer;margin: 0 10px;font-size: 16px;">
+        <a href="#">
+            <input class="btn btn-dark" value="상세위치 검색">
+        </a>
+        <a th:href="@{/store/list}">
+            <input class="btn btn-dark" style="margin-left: 20px;" value="내 위치 검색">
+        </a>
+    </div>
+</div>
+</html>
