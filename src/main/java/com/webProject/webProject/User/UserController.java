@@ -10,6 +10,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -28,11 +29,17 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.HtmlUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.io.File;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.Principal;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @Controller
 @RequiredArgsConstructor
@@ -135,7 +142,7 @@ public class UserController {
     }
 
     @GetMapping("/profile")
-    public String profile(Principal principal, UserPasswordForm userPasswordForm, Model model){
+    public String profile(Authentication authentication, Principal principal, UserPasswordForm userPasswordForm, Model model){
         String userId = principal.getName();
         User userinfo = this.userService.getUser(userId);
         model.addAttribute("userinfo", userinfo);
@@ -167,7 +174,7 @@ public class UserController {
         }
 
         if (userUpdateForm.getImage() != null) {
-            this.userService.modify(userinfo, userUpdateForm.getNickname(), userUpdateForm.getEmail(), userUpdateForm.getImage());
+            userinfo = this.userService.modify(userinfo, userUpdateForm.getNickname(), userUpdateForm.getEmail(), userUpdateForm.getImage());
         }
         if (authentication.getPrincipal() instanceof CustomUser) {
             CustomUser customUser = (CustomUser) authentication.getPrincipal();
@@ -175,7 +182,7 @@ public class UserController {
             customUser.setNickname(userUpdateForm.getNickname());
 
             if (userUpdateForm.getImage() != null && !userUpdateForm.getImage().isEmpty()) {
-                String fileName = userUpdateForm.getImage().getOriginalFilename();
+                String fileName = userinfo.getFileName();
                 customUser.setFileName(fileName);
             }
             Collection<? extends GrantedAuthority> authorities = customUser.getAuthorities();
@@ -228,6 +235,29 @@ public class UserController {
             return ResponseEntity.ok("YES");
         } else {
             return ResponseEntity.ok("NO");
+        }
+    }
+    @Value("${ImgLocation}")
+    public String imgLocation;
+
+    @PostMapping("/profile/upload")
+    public ResponseEntity<String> handleFileUpload(@RequestParam("image") MultipartFile file) throws IOException {
+        // 새 이미지 파일 업로드
+        String fileName = this.userService.uploadFile(file, imgLocation);
+        if (fileName != null) {
+            // 기존 이미지 파일 경로 설정
+            String existingImagePath = imgLocation + fileName;
+            System.out.println("Existing Image Path: " + existingImagePath);
+
+            // 기존 이미지 파일 삭제
+            boolean isDeleted = this.userService.deleteExistingFile(existingImagePath);
+            if (isDeleted) {
+                return ResponseEntity.ok(fileName); // 파일 이름 반환
+            } else {
+                return ResponseEntity.ok("Failed to delete existing image");
+            }
+        } else {
+            return ResponseEntity.ok("NO"); // 실패 시 응답
         }
     }
 }

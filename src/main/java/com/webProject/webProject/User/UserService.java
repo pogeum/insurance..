@@ -1,21 +1,14 @@
 package com.webProject.webProject.User;
 
-import com.webProject.webProject.CustomUser;
 import com.webProject.webProject.DataNotFoundException;
-import com.webProject.webProject.Review.Review;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -54,7 +47,7 @@ public class UserService {
         }
     }
 
-    public void modify(User user, String nickname, String email, MultipartFile file) throws IOException {
+    public User modify(User user, String nickname, String email, MultipartFile file) throws IOException {
         String projectPath = imgLocation;
         String existingFilePath = user.getFilePath();
 
@@ -69,19 +62,31 @@ public class UserService {
         // 사용자 정보 업데이트
         user.setNickname(nickname);
         user.setEmail(email);
-        userRepository.save(user);
+        return userRepository.save(user);
     }
 
-    private void deleteExistingFile(String existingFilePath) {
+    public boolean deleteExistingFile(String existingFilePath) {
         if (existingFilePath != null && !existingFilePath.isEmpty()) {
             File existingFile = new File(existingFilePath);
             if (existingFile.exists()) {
                 existingFile.delete();
             }
         }
+        return false;
     }
 
-    private String uploadFile(MultipartFile file, String projectPath) throws IOException {
+    public String uploadFile(MultipartFile file, String projectPath) throws IOException {
+        if (file != null && !file.isEmpty()) {
+            UUID uuid = UUID.randomUUID();
+            String fileName = uuid + "_" + file.getOriginalFilename();
+            File saveFile = new File(projectPath, fileName);
+            file.transferTo(saveFile);
+            return fileName;
+        }
+        return null;
+    }
+
+    public String uploadImg(MultipartFile file, String projectPath, String projectUploadPath) throws IOException {
         if (file != null && !file.isEmpty()) {
             UUID uuid = UUID.randomUUID();
             String fileName = uuid + "_" + file.getOriginalFilename();

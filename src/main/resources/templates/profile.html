@@ -17,8 +17,8 @@
             <h5 class="title" style="padding: 10px 0 10px 0;">기본정보</h5>
             <div class="sign-form">
                 <div class="form-group d-flex flex-column justify-content-center align-items-center text-center" style="border: 1px solid gray; border-radius: 10px; background: #f8f9fa; height: 100%; padding: 30px;">
-                    <img onerror="this.style.visibility='hidden'" th:src="@{|/photo/${userinfo.fileName}|}" class="img-fluid" style="object-fit: cover; width: 20%; height: 20%;border-radius: 50%; margin-bottom: 30px;">
-                    <span th:text="${userinfo.nickname}" style="width: 250px; padding: 10px;"></span>
+                    <img onerror="this.style.visibility='hidden'" th:src="@{|/photo/${userinfo.fileName}|}" class="img-fluid" style="width: 20%; height: 20%; border-radius: 50%; margin-bottom: 30px;">
+                    <h4 th:text="${userinfo.nickname}" style="width: 250px; padding: 10px;"></h4>
                     <span th:text="${userinfo.email}" style="width: 250px; padding: 10px;"></span>
                     <a th:href="@{/user/profile/modify}" class="btn btn-dark" style="padding: 10px;">수정</a>
                 </div>

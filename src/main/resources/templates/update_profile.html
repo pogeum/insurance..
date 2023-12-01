@@ -28,8 +28,9 @@
                                     <path d="M11.375 22.658v2.969h2.969l8.756-8.756-2.97-2.969-8.755 8.756zm14.02-8.083a.788.788 0 000-1.116l-1.852-1.852a.788.788 0 00-1.116 0l-1.45 1.448 2.97 2.97 1.448-1.45z" fill="#fff"></path>
                                 </svg>
                             </label>
-                            <input id="fileUpload" type="file" name="image" accept="image/.jpg, .jpeg, .png, .gif" class="form-control" style="opacity: 0; position: absolute; right: 0; bottom: 30px;">
-                            <img onerror="this.style.visibility='hidden'" th:src="@{|/photo/${userinfo.fileName}|}" class="img-fluid" style="width: 80%; height: 80%; border-radius: 50%; margin-bottom: 30px;">
+                            <input type="file" id="fileUpload" onchange="showImage(event)" name="image" accept="image/.jpg, .jpeg, .png, .gif" class="form-control" style="opacity: 0; position: absolute; right: 0; bottom: 30px;">
+                            <img onerror="this.style.visibility='hidden'" id="uploadedImage" th:src="@{|/photo/${userinfo.fileName}|}" class="img-fluid" style="width: 80%; height: 80%; border-radius: 50%; margin-bottom: 30px;">
+<!--                            <img onerror="this.style.visibility='hidden'" th:src="@{|/photo/${userinfo.fileName}|}" class="img-fluid" style="width: 80%; height: 80%; border-radius: 50%; margin-bottom: 30px;">-->
                         </div>
                         <div class="mb-3" style="height: 20%;">
                             <label for="nickname" class="form-label">이름</label>
@@ -95,6 +96,17 @@
     </div>
 </div>
 <script layout:fragment="script" type='text/javascript'>
+    function checkNewPasswords() {
+        var password = $('#Password').val(); // 기존 비밀번호
+        var newPassword1 = $('#newPassword1').val();
+        var newPassword2 = $('#newPassword2').val();
+
+        if (password !== newPassword1 && newPassword1 === newPassword2) {
+            alert('새로 입력하신 PW가 동일합니다.');
+        } else {
+            alert('새로 입력하신 PW가 동일하지 않거나 기존 비밀번호와 동일합니다.');
+        }
+    }
     function checkCurrentPassword() {
         var currentPassword = $('#Password').val().trim();
 
@@ -112,9 +124,6 @@
             contentType: 'application/json',
             data: JSON.stringify({ password: currentPassword }),
             beforeSend: function(xhr) {
-                console.log(token);
-                console.log(header);
-
                 if (header && token) {
                     xhr.setRequestHeader(header, token);
                 }
@@ -132,16 +141,52 @@
             }
         });
     }
-    function checkNewPasswords() {
-        var password = $('#Password').val(); // 기존 비밀번호
-        var newPassword1 = $('#newPassword1').val();
-        var newPassword2 = $('#newPassword2').val();
+    function showImage(event) {
+        const input = event.target;
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
 
-        if (password !== newPassword1 && newPassword1 === newPassword2) {
-            alert('새로 입력하신 PW가 동일합니다.');
-        } else {
-            alert('새로 입력하신 PW가 동일하지 않거나 기존 비밀번호와 동일합니다.');
+            reader.onload = function(e) {
+                const image = document.getElementById('uploadedImage');
+                image.src = e.target.result;
+                // 서버로 이미지를 업로드합니다.
+                uploadImage(input.files[0]);
+            }
+
+            reader.readAsDataURL(input.files[0]);
         }
+    }
+
+    function uploadImage(file) {
+        var formData = new FormData();
+        var token = $("input[name='_csrf']").attr("value");
+        var header = $("input[name='_csrf_header']").attr("value");
+        formData.append('image', file);
+
+        $.ajax({
+            type: 'POST',
+            url: '/user/profile/upload',
+            data: formData,
+            processData: false,
+            contentType: false,
+            beforeSend: function(xhr) {
+                if (header && token) {
+                    xhr.setRequestHeader(header, token);
+                }
+            },
+            success: function(response) {
+                const newImageName = response;
+                if (newImageName) {
+                    console.log('이미지 업로드 성공');
+                } else {
+                    console.log('이미지 업로드 실패');
+                }
+            },
+            error: function(xhr, status, error) {
+                alert('서버 오류가 발생했습니다. 다시 시도해주세요.');
+                console.error(xhr.responseText);
+            }
+        });
     }
 </script>
 </html>
