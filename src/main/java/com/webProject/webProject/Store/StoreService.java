@@ -78,14 +78,16 @@ public class StoreService {
         return this.storeRepository.findById(id).get();
     }
 
-    public void modifyStore(Store store, String name, String content, String category, String roadaddress) {
-        Store newstore = findstoreById(store.getId());
-        newstore.setName(name);
-        newstore.setContent(content);
-        newstore.setCategory(category);
-        newstore.setRoadAddress(roadaddress);
-        newstore.setCreateDate(LocalDateTime.now());
-        this.storeRepository.save(newstore);
+
+    public void modifyStore(Store store, String name, String content, String category, String postcode, String roadAddress, String jibunAddress) {
+        store.setName(name);
+        store.setContent(content);
+        store.setCategory(category);
+        store.setPostcode(postcode);
+        store.setRoadAddress(roadAddress);
+        store.setJibunAddress(jibunAddress);
+        store.setCreateDate(LocalDateTime.now());
+        this.storeRepository.save(store);
     }
 
     public void deleteStore(Store store) {
