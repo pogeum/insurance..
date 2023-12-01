@@ -1,0 +1,42 @@
+.fade-in-container {
+    position: absolute;
+    width: 100%;
+    height: 93.8%;
+    background-color: black;
+    overflow: hidden;
+    opacity: 0;
+    z-index: 2;
+    animation: fadeInOut 1.5s ease-in-out forwards;
+}
+
+.fade-in-content {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.text-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: white;
+}
+
+.fade-in-content img {
+    width: 100%;
+    height: auto;
+}
+
+@keyframes fadeInOut {
+    0%, 100% {
+        opacity: 0;
+    }
+    25%, 75% {
+        opacity: 1;
+    }
+    100% {
+        display:none;
+    }
+}
