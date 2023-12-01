@@ -29,7 +29,13 @@ public class Store {
     private String category;
 
     @Column(columnDefinition = "TEXT")
+    private String postcode;
+
+    @Column(columnDefinition = "TEXT")
     private String roadAddress;
+
+    @Column(columnDefinition = "TEXT")
+    private String jibunAddress;
 
     private LocalDateTime createDate;
 

@@ -164,7 +164,9 @@ public class StoreController {
         storeForm.setName(store.getName());
         storeForm.setContent(store.getContent());
         storeForm.setCategory(store.getCategory());
+        storeForm.setPostcode(store.getPostcode());
         storeForm.setRoadAddress(store.getRoadAddress());
+        storeForm.setJibunAddress(store.getJibunAddress());
         storeForm.setMenuList(store.getMenuList());
         model.addAttribute("store",store);
         return "store_form";
@@ -179,7 +181,7 @@ public class StoreController {
         if (newPhotos!= null && !newPhotos.isEmpty()) {
             this.photoService.saveImgsForStore(store, newPhotos);
         }
-        this.storeService.modifyStore(store, storeForm.getName(), storeForm.getContent(), storeForm.getCategory(), storeForm.getRoadAddress());
+        this.storeService.modifyStore(store, storeForm.getName(), storeForm.getContent(), storeForm.getCategory(), storeForm.getPostcode(), storeForm.getRoadAddress(), storeForm.getJibunAddress());
 //        return "redirect:/store/detail/"+store.getId();
         return "redirect:/store/owner/list";
     }
