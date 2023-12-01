@@ -194,10 +194,10 @@ public class StoreController {
             this.photoService.saveImgsForStore(store, newPhotos);
         }
 
-
-
+        menuService.saveMenus(store,tempmenuList);
+        store.setMenuList(tempmenuList);
         this.storeService.modifyStore(store, storeForm.getName(), storeForm.getContent(), storeForm.getCategory(), storeForm.getPostcode(), storeForm.getRoadAddress(), storeForm.getJibunAddress());
-//        return "redirect:/store/detail/"+store.getId();
+        tempmenuList.clear();
         return "redirect:/store/owner/list";
     }
     @PreAuthorize("isAuthenticated()")
