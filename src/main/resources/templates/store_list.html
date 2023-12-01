@@ -1,14 +1,22 @@
-<html layout:decorate="~{layout}" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:layout="http://www.w3.org/1999/xhtml"
-      xmlns:sec="http://www.w3.org/1999/xhtml">
+<html layout:decorate="~{layout}" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:layout="http://www.w3.org/1999/xhtml">
+<head>
+    <link rel="stylesheet" type="text/css" th:href="@{/store_list.css}">
+</head>
 <div layout:fragment="content" class="content-area" style="height:90%;">
     <div class="d-flex flex-column" style="height:100%;">
+        <div class="fade-in-container">
+            <div class="fade-in-content">
+                <div class="text-overlay">
+                    <h1>맛집리스트~!</h1>
+                    <p>각지역 맛집을 찾아보세요!</p>
+                </div>
+            </div>
+        </div>
         <div style="height:5%; margin:10px; display: flex; justify-content: flex-start;">
             <a href="#">
                 <input class="btn btn-dark" value="상세위치 검색">
             </a>
-            <a id="myLocationBtn">
-                <input class="btn btn-dark" style="margin-left: 20px;" value="내 위치 검색">
-            </a>
+            <input class="btn btn-dark" onclick="getUserLocation()" style="margin-left: 20px;" value="내 위치 검색">
         </div>
         <div style="height:90%;">
             <div class="d-flex" style="height:100%;width:100%;">
@@ -81,31 +89,56 @@
            }
        });
     });
-    document.addEventListener("DOMContentLoaded", function() {
-        // 버튼 클릭 시 위치 정보를 가져오고 URL에 파라미터로 추가
-        document.getElementById('myLocationBtn').addEventListener('click', function() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
-            } else {
-                alert('Geolocation is not supported by this browser.');
-            }
-        });
 
-        function successCallback(position) {
-            const latitude = position.coords.latitude;
-            const longitude = position.coords.longitude;
+   // 사용자의 위치를 받아오는 함수
+    function getUserLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+                var lat = position.coords.latitude; // 사용자의 현재 위도
+                var lng = position.coords.longitude; // 사용자의 현재 경도
 
-            // 내 위치 좌표를 파라미터로 하여 URL을 생성
-            const url = `/store/list/my_location?latitude=${latitude}&longitude=${longitude}`;
+                var userLatLng = new kakao.maps.LatLng(lat, lng);
 
-            // 내 위치에 해당하는 URL로 이동
-            window.location.href = url;
+                // 기존에 있던 사용자 마커 제거
+                if (myLocationMarker) {
+                    myLocationMarker.setMap(null);
+                }
+
+                // 사용자의 위치를 지도 중심에 표시
+                map.setCenter(userLatLng);
+                myLocationMarker = new kakao.maps.Marker({
+                    position: userLatLng,
+                    map: map
+                });
+
+                // 사용자의 위치 좌표를 주소로 변환
+                var geocoder = new kakao.maps.services.Geocoder();
+                geocoder.coord2Address(userLatLng.getLng(), userLatLng.getLat(), function(result, status) {
+                    if (status === kakao.maps.services.Status.OK) {
+                        var userAddress = result[0].address.address_name;
+                        console.log(userAddress);
+                        // AJAX를 통해 주소값을 서버로 전달하고, 해당 주소가 포함된 음식점 리스트를 받아옴
+                        $.ajax({
+                            type: 'GET',
+                            url: '/store/list/findStores', // 서버 주소 입력
+                            data: { address: userAddress }, // 주소값 전달
+                            success: function(restaurants) {
+                                // 받아온 음식점 리스트 처리
+                                console.log('주변 음식점 리스트:', restaurants);
+                                // 여기서 받아온 음식점 리스트를 원하는 방식으로 처리하면 됩니다.
+                            },
+                            error: function(error) {
+                                console.error('에러 발생:', error);
+                            }
+                        });
+                    } else {
+                        console.error('주소 변환 실패');
+                    }
+                });
+            });
+        } else {
+            alert('브라우저가 Geolocation을 지원하지 않습니다.');
         }
-
-        function errorCallback(error) {
-            console.error('Error occurred while retrieving location:', error);
-            // 위치 정보를 가져오지 못할 경우에 대한 처리
-        }
-    });
+    }
 </script>
 </html>
