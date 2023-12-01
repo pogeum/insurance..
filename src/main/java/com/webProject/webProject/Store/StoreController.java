@@ -55,12 +55,11 @@ public class StoreController {
         return "store_list";
     }
 
-    @GetMapping("/list/my_location")
-    public String mylocation_list(Model model, @RequestParam("latitude") double latitude, @RequestParam("longitude") double longitude){
-        System.out.println(latitude);
-        System.out.println(longitude);
-        List<Store> storeList = this.storeRepository.findAll();
-        model.addAttribute("storeList", storeList);
+    @GetMapping("/list/findStores")
+    public String mylocation_list(Model model, @RequestParam("userAddress") String userAddress) {
+//        List<Store> storeList = storeRepository.findNearbyStores(userAddress);
+
+//        model.addAttribute("storeList", storeList);
         return "store_list";
     }
 
