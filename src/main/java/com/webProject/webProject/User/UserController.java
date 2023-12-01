@@ -95,7 +95,7 @@ public class UserController {
     }
 
     @PostMapping("/owner_signup")
-    public String owner_signup(@Valid UserCreateForm userCreateForm, BindingResult bindingResult) {
+    public String owner_signup(@Valid UserCreateForm userCreateForm, BindingResult bindingResult, MultipartFile file) throws Exception {
         if (bindingResult.hasErrors()) {
             return "owner_signup_form";
         }
@@ -106,17 +106,16 @@ public class UserController {
             return "owner_signup_form";
         }
 
-        userService.create(userCreateForm.getUserId(), userCreateForm.getEmail(), userCreateForm.getPassword1(), userCreateForm.getNickname(), "owner");
+        userService.create(userCreateForm.getUserId(), userCreateForm.getEmail(), userCreateForm.getPassword1(), userCreateForm.getNickname(), "owner", file);
 
-
-        return "redirect:/";
+        return "login_form";
     }
     @GetMapping("/user_signup")
     public String user_signup(UserCreateForm userCreateForm){
         return "user_signup_form";
     }
     @PostMapping("/user_signup")
-    public String user_signup(@Valid UserCreateForm userCreateForm, BindingResult bindingResult) {
+    public String user_signup(@Valid UserCreateForm userCreateForm, BindingResult bindingResult, MultipartFile file) throws Exception {
         if (bindingResult.hasErrors()) {
             return "user_signup_form";
         }
@@ -126,9 +125,9 @@ public class UserController {
                     "2개의 패스워드가 일치하지 않습니다.");
             return "user_signup_form";
         }
-        userService.create(userCreateForm.getUserId(), userCreateForm.getEmail(), userCreateForm.getPassword1(), userCreateForm.getNickname(), "user");
+        userService.create(userCreateForm.getUserId(), userCreateForm.getEmail(), userCreateForm.getPassword1(), userCreateForm.getNickname(), "user", file);
 
-        return "redirect:/";
+        return "login_form";
     }
 
     @GetMapping("/signup")
