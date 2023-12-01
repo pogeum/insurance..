@@ -23,11 +23,11 @@
                         <!-- 내용 입력 -->
                         <div class="mb-3">
                             <label for="content" class="form-label">내용</label>
-                            <textarea th:field="*{content}" class="form-control" rows="15"></textarea>
+                            <textarea id="content" th:field="*{content}" class="form-control" rows="15"></textarea>
                         </div>
                         <!-- 카테고리 선택 -->
                         <div>
-                            <select name="category" class="form-select" aria-label="Default select example">
+                            <select id="category" name="category" class="form-select" aria-label="Default select example">
                                 <option selected>카테고리</option>
                                 <option th:selected="${storeForm.category == '한식'}" value="한식">한식</option>
                                 <option th:selected="${storeForm.category == '양식'}" value="양식">양식</option>
@@ -38,7 +38,7 @@
                         <!-- 도로명주소 입력 -->
                         <div class="mb-3">
                             <label for="roadAddress" class="form-label">도로명주소</label>
-                            <textarea th:field="*{roadAddress}" class="form-control" rows="1"></textarea>
+                            <textarea id="roadAddress" th:field="*{roadAddress}" class="form-control" rows="1"></textarea>
                         </div>
                     </div>
                 </div>
@@ -167,15 +167,6 @@
         </div>
     </form>
     <script>
-        var currentUrl = window.locationl.href;
-
-        if (currentUrl.endsWith("/create")) {
-            // 페이지 로드 시, 로컬 스토리지에서 저장된 값 가져오기
-            document.getElementById('name').value = localStorage.getItem('savedInput');
-            document.getElementById('content').value = localStorage.getItem('savedInput2');
-            document.getElementById('category').value = localStorage.getItem('savedInput3');
-            document.getElementById('roadAddress').value = localStorage.getItem('savedInput4');
-
 
             // 입력 값이 변경될 때마다 로컬 스토리지에 저장
             document.getElementById('name').addEventListener('input', function () {
@@ -190,77 +181,28 @@
             document.getElementById('roadAddress').addEventListener('input', function () {
                 localStorage.setItem('savedInput4', this.value);
             });
+
             // (선택) 폼 제출 시 로컬 스토리지의 값을 지우기-->
             document.getElementById('myForm').addEventListener('submit', function () {
                 localStorage.clear();
             });
+
+        var currentUrl = window.location.href;
+
+        if (currentUrl.endsWith("/create")) {
+            // 페이지 로드 시, 로컬 스토리지에서 저장된 값 가져오기
+            console.log(localStorage.getItem('savedInput'));
+            document.getElementById('name').value = localStorage.getItem('savedInput');
+            document.getElementById('content').value = localStorage.getItem('savedInput2');
+            document.getElementById('category').value = localStorage.getItem('savedInput3');
+            document.getElementById('roadAddress').value = localStorage.getItem('savedInput4');
+
+
+
         }
 
-
-<!--      document.getElementById('myForm').addEventListener('submit', function (event) {-->
-<!--        // 폼 제출 시, 기본 동작 방지-->
-<!--        event.preventDefault();-->
-<!--        // 다른 동작 수행 (필요에 따라 추가)-->
-
-<!--        // localStorage를 clear하지 않도록 주석 처리-->
-<!--        // localStorage.clear();-->
-<!--        });-->
-
-
-<!--
-<!--        document.getElementById('myForm').addEventListener('submit', function () {-->
-<!--            console.log('폼 제출됨');-->
-<!--            localStorage.removeItem('savedInput');-->
-<!--        });-->
-<!--        document.getElementById('myForm').addEventListener('submit', function () {-->
-<!--            localStorage.removeItem('savedInput2');-->
-<!--        });-->
-<!--        document.getElementById('myForm').addEventListener('submit', function () {-->
-<!--            localStorage.removeItem('savedInput3');-->
-<!--        });-->
-<!--        document.getElementById('myForm').addEventListener('submit', function () {-->
-<!--            localStorage.removeItem('savedInput4');-->
-<!--        });-->
     </script>
 </div>
-<!-- 추가 자바스크립트 -->
-<!--<script layout:fragment="script" type='text/javascript'>-->
-<!--    var arrInput = new Array(0);-->
-<!--    var arrInputValues = []; // 입력한 값들을 저장할 배열-->
-
-<!--    function addInput() {-->
-<!--        var newIndex = arrInput.length;-->
-<!--        arrInput.push(newIndex);-->
-<!--        arrInputValues.push("");-->
-<!--        display();-->
-<!--    }-->
-
-<!--    function display() {-->
-<!--        document.getElementById('parah').innerHTML = "";-->
-<!--        for (var intI = 0; intI < arrInput.length; intI++) {-->
-<!--            document.getElementById('parah').innerHTML += createInput(arrInput[intI], arrInputValues[arrInput[intI]], arrInput[intI]);-->
-<!--        }-->
-<!--    }-->
-
-<!--    function createInput(id, value1, value2) {-->
-<!--        var input1 = "<input name='menuName' type='text' id='test" + id + "' placeholder='메뉴이름' onChange='javascript:saveValue(" + id + ", this.value)' style='display: inline-block; margin-right: 10px;' value='" + value1 + "' >";-->
-<!--        var input2 = "<input name='price' type='text' id='anotherTest" + id + "' placeholder='가격' onChange='javascript:saveValue(" + id + ", this.value)' style='display: inline-block; margin-right: 10px;' value='" + (arrInputValues[id] || "") + "' >";-->
-<!--        var deleteButton = "<button onclick='javascript:deleteInput(" + id + ")'>삭제</button>";-->
-
-<!--        return input1 + input2 + deleteButton + "<br>";-->
-<!--    }-->
-
-<!--    function saveValue(id, value) {-->
-<!--        // 입력한 값 저장-->
-<!--        arrInputValues[id] = value;-->
-<!--    }-->
-
-<!--    function deleteInput(id) {-->
-<!--        arrInput.splice(id, 1);-->
-<!--        arrInputValues.splice(id, 1);-->
-<!--        display();-->
-<!--    }-->
-<!--</script>-->
 </html>
 
 

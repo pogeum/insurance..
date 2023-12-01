@@ -15,6 +15,7 @@ import com.webProject.webProject.User.User;
 import com.webProject.webProject.User.UserSecurityService;
 import com.webProject.webProject.User.UserService;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -26,6 +27,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
 import java.util.ArrayList;
@@ -129,22 +131,35 @@ public class StoreController {
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/addmenu")
     public String addmenu(MenuForm menuForm) {
-
         return "menu_form";
     }
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/addmenu") //하나씩만됨..
-    public String addmenu(MenuForm menuForm, Principal principal) {
+    public String addmenu(MenuForm menuForm, Principal principal, HttpServletRequest httpServletRequest, RedirectAttributes redirectAttributes) {
 
         Menu menu = new Menu();
         menu.setMenuName(menuForm.getMenuName());
         menu.setPrice(menuForm.getPrice());
         tempmenuList.add(menu);
 
-        return "redirect:/store/create";
+//        if () {
+//            return "redirect:/store/create";
+//        } else {
+//            return "redirect:/store/modify/" + storeid ;
+//        }
+
+
+
+        String referer = httpServletRequest.getHeader("Referer");
+        redirectAttributes.addAttribute("referer", referer);
+        return "redirect:${referer}";
+        // Referer 값을 RedirectAttributes를 통해 전달
+//        redirectAttributes.addAttribute("referer", "referer");
+
+        // 이전 페이지로 리다이렉션
+//        return "redirect:${referer}";
+
     }
-
-
 
     @GetMapping("/owner/list")
     public String ownerpage_list(Model model,Principal principal) {
@@ -160,7 +175,7 @@ public class StoreController {
     }
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/modify/{storeid}")
-    public String modifystore(Model model, StoreForm storeForm, @PathVariable("storeid")Integer id, MenuForm menuForm,Principal principal) {
+    public String modifystore(Model model, StoreForm storeForm, @PathVariable("storeid")Integer id ,Principal principal) {
         Store store = storeService.findstoreById(id);
         storeForm.setName(store.getName());
         storeForm.setContent(store.getContent());
@@ -172,16 +187,26 @@ public class StoreController {
     }
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/modify/{storeid}")
-    public String modifystore2(StoreForm storeForm, @PathVariable("storeid")Integer id, BindingResult bindingResult, List<MultipartFile> fileList, Principal principal) throws Exception{
+    public String modifystore(StoreForm storeForm ,@PathVariable("storeid")Integer id, BindingResult bindingResult, List<MultipartFile> fileList, Principal principal) throws Exception{
         Store store = storeService.findstoreById(id);
+
+        photoService.saveImgsForStore(store, fileList);
+
+
         List<MultipartFile> newPhotos = storeForm.getFileList();
-        this.photoService.deletePhotosByStore(store);
+//        this.photoService.deletePhotosByStore(store);//수정안할수도있는데 지워버리면..;;
 
         if (newPhotos!= null && !newPhotos.isEmpty()) {
             this.photoService.saveImgsForStore(store, newPhotos);
         }
+
+        menuService.saveMenus(store,tempmenuList);
+        store.setMenuList(tempmenuList);
         this.storeService.modifyStore(store, storeForm.getName(), storeForm.getContent(), storeForm.getCategory(), storeForm.getRoadAddress());
-//        return "redirect:/store/detail/"+store.getId();
+
+
+
+        tempmenuList.clear();
         return "redirect:/store/owner/list";
     }
     @PreAuthorize("isAuthenticated()")
@@ -193,20 +218,4 @@ public class StoreController {
     }
 
 
-
-
-
-//    @GetMapping("/list")
-//    public String list(Model model, Principal principal){
-//        List<Store> storeList = this.storeRepository.findAll();
-//
-//        //        현재 이 페이지를 요청한 유저 닉넴 받아오기
-//        User siteUser = this.userService.getUser(principal.getName());
-////        System.out.println(siteUser.getRole()); ->아직 null
-//        System.out.println(siteUser.getNickname());
-//
-//        model.addAttribute("storeList", storeList);
-////        model.addAttribute("requestUser", requestUser);
-//        return "store_list";
-//    }
 }
