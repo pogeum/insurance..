@@ -109,6 +109,7 @@ public class StoreController {
         tempStore.setMenuList(tempmenuList);
         User siteUser = this.userService.getUser(principal.getName()); // ?이거왜있는거
         model.addAttribute("store",tempStore);
+        model.addAttribute("process", "create");
         return "store_form";
     }
     @PreAuthorize("isAuthenticated()")
@@ -129,34 +130,25 @@ public class StoreController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/addmenu")
-    public String addmenu(MenuForm menuForm) {
+    public String addmenu(MenuForm menuForm, @RequestParam String process, Model model) {
+        model.addAttribute("process", process);
         return "menu_form";
     }
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/addmenu") //하나씩만됨..
-    public String addmenu(MenuForm menuForm, Principal principal, HttpServletRequest httpServletRequest, RedirectAttributes redirectAttributes) {
+    public String addmenu(MenuForm menuForm, Principal principal, @RequestParam String process) {
 
         Menu menu = new Menu();
         menu.setMenuName(menuForm.getMenuName());
         menu.setPrice(menuForm.getPrice());
         tempmenuList.add(menu);
 
-//        if () {
-//            return "redirect:/store/create";
-//        } else {
-//            return "redirect:/store/modify/" + storeid ;
-//        }
+        if (process.equals("create")) {
+            return "redirect:/store/create";
+        } else {
+            return "redirect:/store/" + process ;
+        }
 
-
-
-        String referer = httpServletRequest.getHeader("Referer");
-        redirectAttributes.addAttribute("referer", referer);
-        return "redirect:${referer}";
-        // Referer 값을 RedirectAttributes를 통해 전달
-//        redirectAttributes.addAttribute("referer", "referer");
-
-        // 이전 페이지로 리다이렉션
-//        return "redirect:${referer}";
 
     }
 
@@ -182,6 +174,7 @@ public class StoreController {
         storeForm.setRoadAddress(store.getRoadAddress());
         storeForm.setMenuList(store.getMenuList());
         model.addAttribute("store",store);
+        model.addAttribute("process", "modify/"+ store.getId());
         return "store_form";
     }
     @PreAuthorize("isAuthenticated()")
