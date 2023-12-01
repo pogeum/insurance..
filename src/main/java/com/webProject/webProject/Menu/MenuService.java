@@ -13,27 +13,12 @@ import java.util.List;
 public class MenuService {
     private final MenuRepository menuRepository;
 
-    public void saveMenu(Store tempStore, String menuName, Integer price) {
-        Menu menu = new Menu();
-        menu.setStore(tempStore);
-        menu.setMenuName(menuName);
-        menu.setPrice(price);
-//        menu.setPrice(Integer.valueOf(price));
-        this.menuRepository.save(menu); //store는나중에 연결..
-    }
+    public void saveMenus(Store store, List<Menu> menuList) {
 
-    public List<Menu> saveMenus(Store store, List<String> menuNames, List<String> prices) {
-
-        List<Menu> menuList = new ArrayList<>();
-        for (int i =0; i< menuNames.size(); i++) {
-            Menu menu = new Menu();
+        for (Menu menu : menuList) {
             menu.setStore(store);
-            menu.setMenuName(menuNames.get(i));
-            menu.setPrice(Integer.valueOf(prices.get(i)));
-            menuList.add(menu);
             this.menuRepository.save(menu);
         }
-        return this.menuRepository.findAll();
     }
 
     public List<Menu> getstoreMenu(Store store) {

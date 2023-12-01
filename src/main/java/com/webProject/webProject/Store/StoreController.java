@@ -119,16 +119,17 @@ public class StoreController {
             return "store_owner_list";
         }
         Store newStore = storeService.createStore(user, storeForm.getName(),storeForm.getContent(),storeForm.getCategory(),storeForm.getRoadAddress());
+        menuService.saveMenus(newStore,tempmenuList);
         newStore.setMenuList(tempmenuList);
-//        newStore.setMenuList(menuService.saveMenus(newStore, Arrays.asList(menuNames) ,Arrays.asList(prices)));
         photoService.saveImgsForStore(newStore, fileList);
-
+        tempmenuList.clear();
         return "redirect:/store/owner/list";
     }
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/addmenu")
     public String addmenu(MenuForm menuForm) {
+
         return "menu_form";
     }
     @PreAuthorize("isAuthenticated()")
@@ -159,13 +160,14 @@ public class StoreController {
     }
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/modify/{storeid}")
-    public String modifystore(StoreForm storeForm, @PathVariable("storeid")Integer id, MenuForm menuForm,Principal principal) {
+    public String modifystore(Model model, StoreForm storeForm, @PathVariable("storeid")Integer id, MenuForm menuForm,Principal principal) {
         Store store = storeService.findstoreById(id);
         storeForm.setName(store.getName());
         storeForm.setContent(store.getContent());
         storeForm.setCategory(store.getCategory());
         storeForm.setRoadAddress(store.getRoadAddress());
         storeForm.setMenuList(store.getMenuList());
+        model.addAttribute("store",store);
         return "store_form";
     }
     @PreAuthorize("isAuthenticated()")
