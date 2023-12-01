@@ -23,11 +23,11 @@
                         <!-- 내용 입력 -->
                         <div class="mb-3">
                             <label for="content" class="form-label">내용</label>
-                            <textarea th:field="*{content}" class="form-control" rows="15"></textarea>
+                            <textarea id="content" th:field="*{content}" class="form-control" rows="15"></textarea>
                         </div>
                         <!-- 카테고리 선택 -->
                         <div>
-                            <select name="category" class="form-select" aria-label="Default select example">
+                            <select id="category" name="category" class="form-select" aria-label="Default select example">
                                 <option selected>카테고리</option>
                                 <option th:selected="${storeForm.category == '한식'}" value="한식">한식</option>
                                 <option th:selected="${storeForm.category == '양식'}" value="양식">양식</option>
@@ -68,10 +68,7 @@
                         <div style="width:60%; background: white; box-shadow:0px 0px 10px rgba(0,0,0,0.2);border-radius: 10px; padding : 10px; margin-right:10px; ">
                             <div class="mb-3">
                                 <div id="parah">
-                                    <a class="btn btn-sm btn-light" th:href="@{/store/addmenu}">메뉴등록하기</a>
-                                    <!--                                    <li th:if="${store.menuList == null}">-->
-                                    <!--                                        메뉴가 없습니다.-->
-                                    <!--                                    </li>-->
+                                    <a class="btn btn-sm btn-light" th:href="@{|/store/addmenu?process=${process}|}">메뉴등록하기</a>
                                     <ul th:unless="${store.menuList == null}">
                                         <li th:each="menu : ${store.menuList}">
                                             <ul>
