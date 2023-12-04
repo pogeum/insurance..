@@ -20,7 +20,7 @@
                                 </div>
                             </div>
                         </div>
-                        <input type="text" id="location" th:value="${location}">
+                        <input type="hidden" id="location" th:value="${location}">
                     </div>
                 </div>
             </div>
@@ -29,66 +29,56 @@
 </div>
 <script layout:fragment="script" type='text/javascript'>
     document.addEventListener('DOMContentLoaded', function () {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(showPosition);
-        } else {
-            alert("Geolocation is not supported by this browser.");
-        }
+        var locationInput = document.getElementById('location');
+        var location = locationInput.value;
+        var geocoder = new kakao.maps.services.Geocoder();
 
-        function showPosition(position) {
-            var locationInput = document.getElementById('location');
-            var locationValue = locationInput.value;
+        geocoder.addressSearch(location, function(result, status) {
+            if (status === kakao.maps.services.Status.OK) {
+                var latitude = result[0].y;
+                var longitude = result[0].x;
+                console.log("위도:", latitude, "경도:", longitude);
 
-            // 쉼표(,)를 기준으로 문자열을 분할하여 위도와 경도를 추출합니다.
-            var coordinates = locationValue.split(',');
+                var mapContainer = document.getElementById('map');
+                var mapOption = {
+                    center: new kakao.maps.LatLng(latitude, longitude),
+                    level: 5 // 지도의 확대 레벨
+                };
 
-            // 추출된 값을 실수형으로 변환합니다.
-            var latitude = parseFloat(coordinates[0]); // 위도
-            console.log(latitude);
-            var longitude = parseFloat(coordinates[1]); // 경도
-            console.log(longitude);
-<!--            var latitude = position.coords.latitude;-->
-<!--            var longitude = position.coords.longitude;-->
+                var map = new kakao.maps.Map(mapContainer, mapOption);
 
-            var mapContainer = document.getElementById('map');
-            var mapOption = {
-                center: new kakao.maps.LatLng(latitude, longitude),
-                level: 3 // 지도의 확대 레벨
-            };
+                var geocoder = new kakao.maps.services.Geocoder();
 
-            var map = new kakao.maps.Map(mapContainer, mapOption);
+                var addressElements = document.querySelectorAll(".address");
+                console.log(addressElements);
 
-            var geocoder = new kakao.maps.services.Geocoder();
+                addressElements.forEach(function(element) {
+                    var address = element.textContent;
+                    geocoder.addressSearch(address, function(result, status) {
+                        if (status === kakao.maps.services.Status.OK) {
+                            var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
 
-            var addressElements = document.querySelectorAll(".address");
-            console.log(addressElements);
+                            var marker = new kakao.maps.Marker({
+                                map: map,
+                                position: coords
+                            });
 
-            addressElements.forEach(function(element) {
-                var address = element.textContent;
-                geocoder.addressSearch(address, function(result, status) {
-                    if (status === kakao.maps.services.Status.OK) {
-                        var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+                            var infowindow = new kakao.maps.InfoWindow({
+                                content: element.parentElement.querySelector('.card-title').innerText
+                            });
 
-                        var marker = new kakao.maps.Marker({
-                            map: map,
-                            position: coords
-                        });
+                            kakao.maps.event.addListener(marker, 'mouseover', function() {
+                                infowindow.open(map, marker);
+                            });
 
-                        var infowindow = new kakao.maps.InfoWindow({
-                            content: element.parentElement.querySelector('.card-title').innerText
-                        });
-
-                        kakao.maps.event.addListener(marker, 'mouseover', function() {
-                            infowindow.open(map, marker);
-                        });
-
-                        kakao.maps.event.addListener(marker, 'mouseout', function() {
-                            infowindow.close();
-                        });
-                     }
+                            kakao.maps.event.addListener(marker, 'mouseout', function() {
+                                infowindow.close();
+                            });
+                         }
+                    });
                 });
-            });
-        }
+            }
+        });
     });
 </script>
 </html>
