@@ -2,7 +2,7 @@
 <div layout:fragment="content">
     <div class="container my-3">
         <div class="col-6">
-            <a class="btn btn-sm btn-light" th:href="@{/store/create}" style="position: absolute; bottom: 0; right: 0;" >가게 등록</a>
+            <a class="btn btn-sm btn-light" th:href="@{/store/create}" style="display: flex; flex-direction: column; width: 20%;" >가게 등록</a>
         </div>
         <div th:each="store : ${ownerStoreList}">
             <div class="card text-dark bg-light mb-3" style="width: 80%; display: flex; flex-direction: column;">

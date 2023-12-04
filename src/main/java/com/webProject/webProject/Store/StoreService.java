@@ -48,6 +48,12 @@ public class StoreService {
         return bytes;
     }
 
+    public Store defaultStore(User user) {
+        Store store = new Store();
+        store.setAuthor(user);
+        return this.storeRepository.save(store);
+    }
+
     public Store createStore(User user, String name, String content, String category, String roadAddress) {
         Store store = new Store();
         store.setAuthor(user);

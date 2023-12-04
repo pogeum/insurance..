@@ -106,7 +106,7 @@ public class UserController {
             return "owner_signup_form";
         }
 
-        userService.create(userCreateForm.getUserId(), userCreateForm.getEmail(), userCreateForm.getPassword1(), userCreateForm.getNickname(), "owner", file);
+        userService.create(userCreateForm.getUserId(), userCreateForm.getEmail(), userCreateForm.getPassword1(), userCreateForm.getNickname(), "owner");//, file
 
         return "login_form";
     }
@@ -125,7 +125,7 @@ public class UserController {
                     "2개의 패스워드가 일치하지 않습니다.");
             return "user_signup_form";
         }
-        userService.create(userCreateForm.getUserId(), userCreateForm.getEmail(), userCreateForm.getPassword1(), userCreateForm.getNickname(), "user", file);
+//        userService.create(userCreateForm.getUserId(), userCreateForm.getEmail(), userCreateForm.getPassword1(), userCreateForm.getNickname(), "user", file);
 
         return "login_form";
     }

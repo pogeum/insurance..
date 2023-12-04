@@ -29,23 +29,23 @@ public class UserService {
         return this.userRepository.findAll();
     }
 
-    public User create(String userId, String email, String password, String nickname, String role, MultipartFile file) throws Exception {
+    public User create(String userId, String email, String password, String nickname, String role) throws Exception { //, MultipartFile file
         String projectPath = imgLocation; // 파일 저장 위치 = projectPath
         UUID uuid = UUID.randomUUID(); // 식별자. 랜덤으로 이름 생성
         String fileName;
 
-        if (file == null || file.isEmpty()) {
-            fileName = "no_img.jpg"; // 기본 이미지 파일명
-            File defaultImageFile = new File(projectPath, fileName);
-
-            // 기본 이미지를 static 폴더에서 복사
-            ClassPathResource defaultImageResource = new ClassPathResource("static/no_img.jpg");
-            Files.copy(defaultImageResource.getInputStream(), defaultImageFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-        } else {
-            fileName = uuid + "_" + file.getOriginalFilename(); // 저장될 파일 이름 지정 = 랜덤 식별자_원래 파일 이름
-            File saveFile = new File(projectPath, fileName); // 빈 껍데기 생성, 이름은 fileName, projectPath라는 경로에 담김
-            file.transferTo(saveFile);
-        }
+//        if (file == null || file.isEmpty()) {
+//            fileName = "no_img.jpg"; // 기본 이미지 파일명
+//            File defaultImageFile = new File(projectPath, fileName);
+//
+//            // 기본 이미지를 static 폴더에서 복사
+//            ClassPathResource defaultImageResource = new ClassPathResource("static/no_img.jpg");
+//            Files.copy(defaultImageResource.getInputStream(), defaultImageFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+//        } else {
+//            fileName = uuid + "_" + file.getOriginalFilename(); // 저장될 파일 이름 지정 = 랜덤 식별자_원래 파일 이름
+//            File saveFile = new File(projectPath, fileName); // 빈 껍데기 생성, 이름은 fileName, projectPath라는 경로에 담김
+//            file.transferTo(saveFile);
+//        }
 
         User user = new User();
         user.setUserId(userId);
@@ -55,8 +55,8 @@ public class UserService {
         user.setRole(role);
         user.setCreateDate(LocalDateTime.now());
 
-        user.setFileName(fileName); // 파일 이름
-        user.setFilePath(projectPath + fileName); // 저장 경로, 파일 이름
+//        user.setFileName(fileName); // 파일 이름
+//        user.setFilePath(projectPath + fileName); // 저장 경로, 파일 이름
 
         this.userRepository.save(user);
         return user;
