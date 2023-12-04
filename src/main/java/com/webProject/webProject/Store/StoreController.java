@@ -113,10 +113,14 @@ public class StoreController {
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/create")
     public String createStore(StoreForm storeForm,Principal principal, Model model){
-        tempStore.setMenuList(tempmenuList);
-        User siteUser = this.userService.getUser(principal.getName()); // ?이거왜있는거
-        model.addAttribute("store",tempStore);
-        model.addAttribute("process", "create");
+
+        Store newstore = storeService.defaultStore(userService.getUser(principal.getName()));
+
+//        tempStore.setMenuList(tempmenuList);
+//        User siteUser = this.userService.getUser(principal.getName()); // ?이거왜있는거
+        model.addAttribute("store",newstore);
+//        model.addAttribute("process", "create");
+        System.out.println(newstore.getId());
         return "store_form";
     }
     @PreAuthorize("isAuthenticated()")
@@ -215,23 +219,13 @@ public class StoreController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/menuList/{storeid}")
-    public String menuList(@PathVariable("storeid")Integer storeid, Model model) {
+    public String menuList(@PathVariable(name = "storeid") Integer storeid, Model model) {
         Store store = storeService.findstoreById(storeid);
         List<Menu> menuList = menuService.getstoreMenu(store);
         model.addAttribute("menuList", menuList);
         model.addAttribute("store",store);
         return "menu_list";
     }
-//    @PreAuthorize("isAuthenticated()")
-//    @GetMapping("/addmenu")
-//    public String menuList(MenuForm menuForm) {
-//        return "menu_form";
-//    }
-
-
-
-
-
 
 
 }
