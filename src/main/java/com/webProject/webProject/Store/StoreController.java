@@ -119,7 +119,7 @@ public class StoreController {
 //        tempStore.setMenuList(tempmenuList);
 //        User siteUser = this.userService.getUser(principal.getName()); // ?이거왜있는거
         model.addAttribute("store",newstore);
-//        model.addAttribute("process", "create");
+        model.addAttribute("process", "create");
         System.out.println(newstore.getId());
         return "store_form";
     }
@@ -219,12 +219,18 @@ public class StoreController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/menuList/{storeid}")
-    public String menuList(@PathVariable(name = "storeid") Integer storeid, Model model) {
+    public String menuList(@PathVariable(name = "storeid") Integer storeid, Model model, @RequestParam String process) {
         Store store = storeService.findstoreById(storeid);
         List<Menu> menuList = menuService.getstoreMenu(store);
         model.addAttribute("menuList", menuList);
         model.addAttribute("store",store);
-        return "menu_list";
+
+        if (process.equals("create")) {
+            return "redirect:/store/create";
+        } else {
+            return "redirect:/store/" + process ;
+        }
+
     }
 
 

@@ -8,12 +8,12 @@
             <input type="hidden" name="storeid" th:value="${store.id}">
             <input type="submit" value="추가">
         </form>
+        <a class="btn btn-sm btn-light" th:href="@{|/store/?process=${process}|}">저장하기</a>
         <div th:each="menu : ${store.menuList}">
             <form th:action id="updatemenuForm" method="post">
 
                 <div class="card text-dark bg-light mb-3" style="width: 80%; display: flex; flex-direction: column;">
                     <div class="card-header">
-<!--                        여기에 스토어아이디도받아와야하나?-->
                         <div class="mb-3">
                             메뉴
                         </div>
