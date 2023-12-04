@@ -1,16 +1,57 @@
 <html layout:decorate="~{layout}" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:layout="http://www.w3.org/1999/xhtml">
-<head>
-    <link rel="stylesheet" type="text/css" th:href="@{/store_list.css}">
-</head>
 <div layout:fragment="content" class="content-area" style="display: flex;justify-content: center; align-items: center; height: 90vh;">
     <div class="button_group" style="padding: 15px 25px; text-decoration: none; color: white; background-color: #333;
         border: none;border-radius: 5px;cursor: pointer;margin: 0 10px;font-size: 16px;">
-        <a href="#">
-            <input class="btn btn-dark" value="상세위치 검색">
-        </a>
-        <a th:href="@{/store/list}">
-            <input class="btn btn-dark" style="margin-left: 20px;" value="내 위치 검색">
-        </a>
+        <div class="d-flex">
+            <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                상세위치 검색
+            </button>
+            <!-- 상세위치 검색 Modal -->
+            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="exampleModalLabel" style="color:black;">상세주소 검색</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form th:action="@{/store/findlist}" method="post">
+                            <div class="modal-body">
+                                <input type="text" id="findAddress" name="findAddress" style="width:100%;">
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-dark">검색</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <form th:action="@{/store/list}" method="post">
+                <input type="submit" class="btn btn-dark" style="margin-left: 20px;" value="내 위치 검색">
+                <input type="hidden" id="address" name="address" style="margin-left: 20px;">
+            </form>
+        </div>
     </div>
 </div>
+<script layout:fragment="script" type='text/javascript'>
+    document.addEventListener('DOMContentLoaded', function () {
+       if (navigator.geolocation) {
+           navigator.geolocation.getCurrentPosition(showPosition);
+       } else {
+           alert("Geolocation is not supported by this browser.");
+       }
+
+       function showPosition(position) {
+           var latitude = position.coords.latitude;
+           var longitude = position.coords.longitude;
+           var geocoder = new kakao.maps.services.Geocoder();
+           geocoder.coord2Address(longitude, latitude, function (result, status) {
+               if (status === kakao.maps.services.Status.OK) {
+                   var address = result[0].address.address_name;
+                   var storedAddress = window.localStorage.getItem('storedAddress');
+                   document.getElementById('address').value = address;
+               }
+           });
+       }
+   });
+</script>
 </html>
