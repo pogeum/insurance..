@@ -3,7 +3,7 @@ package com.webProject.webProject.Store;
 
 import com.webProject.webProject.CustomUser;
 import com.webProject.webProject.Menu.Menu;
-import com.webProject.webProject.Menu.MenuForm;
+
 import com.webProject.webProject.Menu.MenuService;
 import com.webProject.webProject.Photo.PhotoService;
 import com.webProject.webProject.Review.Review;
@@ -132,29 +132,27 @@ public class StoreController {
         return "redirect:/store/owner/list";
     }
 
-    @PreAuthorize("isAuthenticated()")
-    @GetMapping("/addmenu")
-    public String addmenu(MenuForm menuForm, @RequestParam String process, Model model) {
-        model.addAttribute("process", process);
-        return "menu_form";
-    }
-    @PreAuthorize("isAuthenticated()")
-    @PostMapping("/addmenu") //하나씩만됨..
-    public String addmenu(MenuForm menuForm, Principal principal, @RequestParam String process) {
-
-        Menu menu = new Menu();
-        menu.setMenuName(menuForm.getMenuName());
-        menu.setPrice(menuForm.getPrice());
-        tempmenuList.add(menu);
-
-        if (process.equals("create")) {
-            return "redirect:/store/create";
-        } else {
-            return "redirect:/store/" + process ;
-        }
-
-
-    }
+//    @PreAuthorize("isAuthenticated()")
+//    @GetMapping("/addmenu")
+//    public String addmenu(MenuForm menuForm, @RequestParam String process, Model model) {
+//        model.addAttribute("process", process);
+//        return "menu_form";
+//    }
+//    @PreAuthorize("isAuthenticated()")
+//    @PostMapping("/addmenu") //하나씩만됨..
+//    public String addmenu(MenuForm menuForm, Principal principal, @RequestParam String process) {
+//
+//        Menu menu = new Menu();
+//        menu.setMenuName(menuForm.getMenuName());
+//        menu.setPrice(menuForm.getPrice());
+//        tempmenuList.add(menu);
+//
+//        if (process.equals("create")) {
+//            return "redirect:/store/create";
+//        } else {
+//            return "redirect:/store/" + process ;
+//        }
+//    }
 
     @GetMapping("/owner/list")
     public String ownerpage_list(Model model,Principal principal) {
@@ -211,6 +209,26 @@ public class StoreController {
         storeService.deleteStore(store);
         return "redirect:/store/owner/list";
     }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/menuList/{storeid}")
+    public String menuList(@PathVariable("storeid")Integer storeid, Model model) {
+        Store store = storeService.findstoreById(storeid);
+        List<Menu> menuList = menuService.getstoreMenu(store);
+        model.addAttribute("menuList", menuList);
+        model.addAttribute("store",store);
+        return "menu_list";
+    }
+//    @PreAuthorize("isAuthenticated()")
+//    @GetMapping("/addmenu")
+//    public String menuList(MenuForm menuForm) {
+//        return "menu_form";
+//    }
+
+
+
+
+
 
 
 }
