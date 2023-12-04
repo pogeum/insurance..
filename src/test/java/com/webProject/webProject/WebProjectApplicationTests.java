@@ -15,5 +15,8 @@ class WebProjectApplicationTests {
 
 	@Test
 	void contextLoads() {
+		Tag t = new Tag();
+		t.setTagName("매장이 청결해요");
+		this.tagRepository.save(t);
 	}
 }
