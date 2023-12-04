@@ -54,20 +54,23 @@ public class StoreController {
     Store tempStore = new Store();
     List<Menu> tempmenuList = new ArrayList<>();
 
-    @GetMapping("/list")
-    public String list(Model model){
-        List<Store> storeList = this.storeRepository.findAll();
+    @RequestMapping("/list")
+    public String list(Model model, @RequestParam(value = "address", required = false) String jibunAddress) {        // required = false 초기값 공백
+        List<Store> storeList  = this.storeService.getAddressList(jibunAddress);
+        model.addAttribute("location", jibunAddress);
         model.addAttribute("storeList", storeList);
         return "store_list";
     }
 
-    @GetMapping("/list/findStores")
-    public ResponseEntity<List<Store>> findStoresByAddress(Model model, @RequestParam("jibunAddress") String jibunAddress) {
+    @RequestMapping("/findlist")
+    public String find_list(Model model, @RequestParam(value = "findAddress", required = false) String jibunAddress) {
         List<Store> storeList  = this.storeService.getAddressList(jibunAddress);
+        System.out.println(jibunAddress);
+        model.addAttribute("location", jibunAddress);
         model.addAttribute("storeList", storeList);
-
-        return ResponseEntity.ok(storeList);
+        return "store_list";
     }
+
 
     @GetMapping("/detail/{id}") // 해당 id는 store id
     public String detail(Model model, @PathVariable("id") Integer id) {
@@ -124,7 +127,7 @@ public class StoreController {
         if (bindingResult.hasErrors()) {
             return "store_owner_list";
         }
-        Store newStore = storeService.createStore(user, storeForm.getName(),storeForm.getContent(),storeForm.getCategory(),storeForm.getRoadAddress());
+        Store newStore = storeService.createStore(user, storeForm.getName(),storeForm.getContent(),storeForm.getCategory(),storeForm.getRoadAddress(), storeForm.getJibunAddress());
         menuService.saveMenus(newStore,tempmenuList);
         newStore.setMenuList(tempmenuList);
         photoService.saveImgsForStore(newStore, fileList);

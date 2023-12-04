@@ -48,13 +48,14 @@ public class StoreService {
         return bytes;
     }
 
-    public Store createStore(User user, String name, String content, String category, String roadAddress) {
+    public Store createStore(User user, String name, String content, String category, String roadAddress, String jibunAddress) {
         Store store = new Store();
         store.setAuthor(user);
         store.setName(name);
         store.setContent(content);
         store.setCategory(category);
         store.setRoadAddress(roadAddress);
+        store.setJibunAddress(jibunAddress);
         store.setCreateDate(LocalDateTime.now());
         return this.storeRepository.save(store);
     }
