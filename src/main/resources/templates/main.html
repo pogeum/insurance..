@@ -16,7 +16,25 @@
                         </div>
                         <form th:action="@{/store/findlist}" method="post">
                             <div class="modal-body">
-                                <input type="text" id="findAddress" name="findAddress" style="width:100%;">
+                                <select id="cities" onchange="updateDistricts()">
+                                    <option value="">시 선택</option>
+                                    <option value="대전">대전</option>
+                                    <!-- 다른 시/구를 추가할 수 있음 -->
+                                </select>
+                                <select id="districts" onchange="updateNeighborhoods()">
+                                    <option value="">구/군 선택</option>
+                                    <option value="서구">서구</option>
+                                    <option value="중구">중구</option>
+                                    <option value="동구">동구</option>
+                                    <option value="대덕구">대덕구</option>
+                                    <option value="유성구">유성구</option>
+                                    <!-- 해당 시/군에 맞는 구/군 옵션 추가 -->
+                                </select>
+                                <select id="neighborhoods" onchange="updateAddress()">
+                                    <option value="">동 선택</option>
+                                    <!-- 해당 구/군에 맞는 동 옵션 추가 -->
+                                </select>
+                                <input type="hidden" id="findAddress" name="findAddress" style="width:100%;">
                             </div>
                             <div class="modal-footer">
                                 <button type="submit" class="btn btn-dark">검색</button>
@@ -53,5 +71,221 @@
            });
        }
    });
+
+   function updateNeighborhoods() {
+      var selectedDistrict = document.getElementById("districts").value;
+      var neighborhoods = document.getElementById("neighborhoods");
+      neighborhoods.innerHTML = ""; // 기존의 옵션 제거
+
+      // 선택한 구/군에 따라 동적으로 옵션 추가
+      if (selectedDistrict === "서구") {
+          // 서구에 해당하는 동 옵션 추가
+          neighborhoods.add(new Option("동 선택", ""));
+          neighborhoods.add(new Option("복수동", "복수동"));
+          neighborhoods.add(new Option("도마동", "도마동"));
+          neighborhoods.add(new Option("정림동", "정림동"));
+          neighborhoods.add(new Option("괴곡동", "괴곡동"));
+          neighborhoods.add(new Option("변동", "변동"));
+          neighborhoods.add(new Option("용문동", "용문동"));
+          neighborhoods.add(new Option("탄방동", "탄방동"));
+          neighborhoods.add(new Option("둔산동", "둔산동"));
+          neighborhoods.add(new Option("괴정동", "괴정동"));
+          neighborhoods.add(new Option("가장동", "가장동"));
+          neighborhoods.add(new Option("내용동", "내용동"));
+          neighborhoods.add(new Option("갈마동", "갈마동"));
+          neighborhoods.add(new Option("월평동", "월평동"));
+          neighborhoods.add(new Option("만년동", "만년동"));
+          neighborhoods.add(new Option("가수원동", "가수원동"));
+          neighborhoods.add(new Option("도안동", "도안동"));
+          neighborhoods.add(new Option("관저동", "관저동"));
+          neighborhoods.add(new Option("흑석동", "흑석동"));
+          neighborhoods.add(new Option("매노동", "매노동"));
+          neighborhoods.add(new Option("산직동", "산직동"));
+          neighborhoods.add(new Option("장안동", "장안동"));
+          neighborhoods.add(new Option("평촌동", "평촌동"));
+          neighborhoods.add(new Option("오동", "오동"));
+          neighborhoods.add(new Option("우명동", "우명동"));
+          neighborhoods.add(new Option("원정동", "원정동"));
+          neighborhoods.add(new Option("용촌동", "용촌동"));
+          neighborhoods.add(new Option("봉곡동", "봉곡동"));
+      } else if (selectedDistrict === "중구") {
+          // 중구에 해당하는 동 옵션 추가
+          neighborhoods.add(new Option("동 선택", ""));
+          neighborhoods.add(new Option("은행동", "은행동"));
+          neighborhoods.add(new Option("선화동", "선화동"));
+          neighborhoods.add(new Option("목동", "목동"));
+          neighborhoods.add(new Option("중촌동", "중촌동"));
+          neighborhoods.add(new Option("대흥동", "대흥동"));
+          neighborhoods.add(new Option("문창동", "문창동"));
+          neighborhoods.add(new Option("석교동", "석교동"));
+          neighborhoods.add(new Option("옥계동", "옥계동"));
+          neighborhoods.add(new Option("호동", "호동"));
+          neighborhoods.add(new Option("대사동", "대사동"));
+          neighborhoods.add(new Option("부사동", "부사동"));
+          neighborhoods.add(new Option("용두동", "용두동"));
+          neighborhoods.add(new Option("오류동", "오류동"));
+          neighborhoods.add(new Option("태평동", "태평동"));
+          neighborhoods.add(new Option("유천동", "유천동"));
+          neighborhoods.add(new Option("문화동", "문화동"));
+          neighborhoods.add(new Option("산성동", "산성동"));
+          neighborhoods.add(new Option("사정동", "사정동"));
+          neighborhoods.add(new Option("안영동", "안영동"));
+          neighborhoods.add(new Option("구완동", "구완동"));
+          neighborhoods.add(new Option("무수동", "무수동"));
+          neighborhoods.add(new Option("침산동", "침산동"));
+          neighborhoods.add(new Option("목달동", "목달동"));
+          neighborhoods.add(new Option("정생동", "정생동"));
+          neighborhoods.add(new Option("어남동", "어남동"));
+          neighborhoods.add(new Option("금동", "금동"));
+      } else if (selectedDistrict === "동구") {
+          // 동구에 해당하는 동 옵션 추가
+          neighborhoods.add(new Option("동 선택", ""));
+          neighborhoods.add(new Option("원동", "원동"));
+          neighborhoods.add(new Option("정동", "정동"));
+          neighborhoods.add(new Option("중동", "중동"));
+          neighborhoods.add(new Option("소제동", "소제동"));
+          neighborhoods.add(new Option("신안동", "신안동"));
+          neighborhoods.add(new Option("인동", "인동"));
+          neighborhoods.add(new Option("신흥동", "신흥동"));
+          neighborhoods.add(new Option("효동", "효동"));
+          neighborhoods.add(new Option("천동", "천동"));
+          neighborhoods.add(new Option("가오동", "가오동"));
+          neighborhoods.add(new Option("판암동", "판암동"));
+          neighborhoods.add(new Option("삼정동", "삼정동"));
+          neighborhoods.add(new Option("용운동", "용운동"));
+          neighborhoods.add(new Option("대동", "대동"));
+          neighborhoods.add(new Option("자양동", "자양동"));
+          neighborhoods.add(new Option("가양동", "가양동"));
+          neighborhoods.add(new Option("용전동", "용전동"));
+          neighborhoods.add(new Option("성남동", "성남동"));
+          neighborhoods.add(new Option("홍도동", "홍도동"));
+          neighborhoods.add(new Option("삼성동", "삼성동"));
+          neighborhoods.add(new Option("추동", "추동"));
+          neighborhoods.add(new Option("효평동", "효평동"));
+          neighborhoods.add(new Option("직동", "직동"));
+          neighborhoods.add(new Option("비룡동", "비룡동"));
+          neighborhoods.add(new Option("주산동", "주산동"));
+          neighborhoods.add(new Option("용계동", "용계동"));
+          neighborhoods.add(new Option("마산동", "마산동"));
+          neighborhoods.add(new Option("세천동", "세천동"));
+          neighborhoods.add(new Option("신상동", "신상동"));
+          neighborhoods.add(new Option("신하동", "신하동"));
+          neighborhoods.add(new Option("신촌동", "신촌동"));
+          neighborhoods.add(new Option("사성동", "사성동"));
+          neighborhoods.add(new Option("내탑동", "내탑동"));
+          neighborhoods.add(new Option("오동", "오동"));
+          neighborhoods.add(new Option("주촌동", "주촌동"));
+          neighborhoods.add(new Option("낭월동", "낭월동"));
+          neighborhoods.add(new Option("대별동", "대별동"));
+          neighborhoods.add(new Option("이사동", "이사동"));
+          neighborhoods.add(new Option("대성동", "대성동"));
+          neighborhoods.add(new Option("장척동", "장척동"));
+          neighborhoods.add(new Option("소호동", "소호동"));
+          neighborhoods.add(new Option("구도동", "구도동"));
+          neighborhoods.add(new Option("삼괴동", "삼괴동"));
+          neighborhoods.add(new Option("상소동", "상소동"));
+          neighborhoods.add(new Option("하소동", "하소동"));
+      } else if (selectedDistrict === "대덕구") {
+          // 대덕구에 해당하는 동 옵션 추가
+          neighborhoods.add(new Option("동 선택", ""));
+          neighborhoods.add(new Option("오정동", "오정동"));
+          neighborhoods.add(new Option("대화동", "대화동"));
+          neighborhoods.add(new Option("읍내동", "읍내동"));
+          neighborhoods.add(new Option("연축동", "연축동"));
+          neighborhoods.add(new Option("신대동", "신대동"));
+          neighborhoods.add(new Option("와동", "와동"));
+          neighborhoods.add(new Option("장동", "장동"));
+          neighborhoods.add(new Option("비래동", "비래동"));
+          neighborhoods.add(new Option("송촌동", "송촌동"));
+          neighborhoods.add(new Option("중리동", "중리동"));
+          neighborhoods.add(new Option("법동", "법동"));
+          neighborhoods.add(new Option("신탄진동", "신탄진동"));
+          neighborhoods.add(new Option("삼정동", "삼정동"));
+          neighborhoods.add(new Option("용호동", "용호동"));
+          neighborhoods.add(new Option("이현동", "이현동"));
+          neighborhoods.add(new Option("갈전동", "갈전동"));
+          neighborhoods.add(new Option("부수동", "부수동"));
+          neighborhoods.add(new Option("황호동", "황호동"));
+          neighborhoods.add(new Option("미호동", "미호동"));
+          neighborhoods.add(new Option("석봉동", "석봉동"));
+          neighborhoods.add(new Option("덕암동", "덕암동"));
+          neighborhoods.add(new Option("상서동", "상서동"));
+          neighborhoods.add(new Option("평촌동", "평촌동"));
+          neighborhoods.add(new Option("목상동", "목상동"));
+          neighborhoods.add(new Option("문평동", "문평동"));
+          neighborhoods.add(new Option("신일동", "신일동"));
+      } else if (selectedDistrict === "유성구") {
+          // 유성구에 해당하는 동 옵션 추가
+          neighborhoods.add(new Option("동 선택", ""));
+          neighborhoods.add(new Option("성북동", "성북동"));
+          neighborhoods.add(new Option("세동", "세동"));
+          neighborhoods.add(new Option("송정동", "송정동"));
+          neighborhoods.add(new Option("원내동", "원내동"));
+          neighborhoods.add(new Option("방동", "방동"));
+          neighborhoods.add(new Option("교촌동", "교촌동"));
+          neighborhoods.add(new Option("대정동", "대정동"));
+          neighborhoods.add(new Option("용계동", "용계동"));
+          neighborhoods.add(new Option("학하동", "학하동"));
+          neighborhoods.add(new Option("계산동", "계산동"));
+          neighborhoods.add(new Option("덕명동", "덕명동"));
+          neighborhoods.add(new Option("복용동", "복용동"));
+          neighborhoods.add(new Option("원신흥동", "원신흥동"));
+          neighborhoods.add(new Option("봉명동", "봉명동"));
+          neighborhoods.add(new Option("상대동", "상대동"));
+          neighborhoods.add(new Option("구안동", "구안동"));
+          neighborhoods.add(new Option("장대동", "장대동"));
+          neighborhoods.add(new Option("죽동", "죽동"));
+          neighborhoods.add(new Option("노은동", "노은동"));
+          neighborhoods.add(new Option("궁동", "궁동"));
+          neighborhoods.add(new Option("어은동", "어은동"));
+          neighborhoods.add(new Option("구성동", "구성동"));
+          neighborhoods.add(new Option("갑동", "갑동"));
+          neighborhoods.add(new Option("지족동", "지족동"));
+          neighborhoods.add(new Option("하기동", "하기동"));
+          neighborhoods.add(new Option("수남동", "수남동"));
+          neighborhoods.add(new Option("안산동", "안산동"));
+          neighborhoods.add(new Option("외삼동", "외삼동"));
+          neighborhoods.add(new Option("반석동", "반석동"));
+          neighborhoods.add(new Option("신성동", "신성동"));
+          neighborhoods.add(new Option("가정동", "가정동"));
+          neighborhoods.add(new Option("도룡동", "도룡동"));
+          neighborhoods.add(new Option("장동", "장동"));
+          neighborhoods.add(new Option("방현동", "방현동"));
+          neighborhoods.add(new Option("화암동", "화암동"));
+          neighborhoods.add(new Option("덕진동", "덕진동"));
+          neighborhoods.add(new Option("추목동", "추목동"));
+          neighborhoods.add(new Option("자운동", "자운동"));
+          neighborhoods.add(new Option("신봉동", "신봉동"));
+          neighborhoods.add(new Option("전민동", "전민동"));
+          neighborhoods.add(new Option("문지동", "문지동"));
+          neighborhoods.add(new Option("원촌동", "원촌동"));
+          neighborhoods.add(new Option("봉산동", "봉산동"));
+          neighborhoods.add(new Option("송강동", "송강동"));
+          neighborhoods.add(new Option("금고동", "금고동"));
+          neighborhoods.add(new Option("대동", "대동"));
+          neighborhoods.add(new Option("금탄동", "금탄동"));
+          neighborhoods.add(new Option("신동", "신동"));
+          neighborhoods.add(new Option("둔곡동", "둔곡동"));
+          neighborhoods.add(new Option("구룡동", "구룡동"));
+          neighborhoods.add(new Option("관평동", "관평동"));
+          neighborhoods.add(new Option("용산동", "용산동"));
+          neighborhoods.add(new Option("탑립동", "탑립동"));
+      }
+   }
+
+   function updateAddress() {
+       var city = document.getElementById("cities").value;
+       var district = document.getElementById("districts").value;
+       var neighborhood = document.getElementById("neighborhoods").value;
+
+       var fullAddress = city + " " + district + " " + neighborhood;
+       document.getElementById("findAddress").value = fullAddress;
+   }
+
+   // 시/군 선택 시 동적으로 구/군을 업데이트
+   function updateDistricts() {
+       updateNeighborhoods();
+       updateAddress(); // 동적으로 주소를 업데이트하는 함수 호출
+   }
 </script>
 </html>
