@@ -1,17 +1,22 @@
 <html layout:decorate="~{layout}" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:layout="http://www.w3.org/1999/xhtml">
-<div layout:fragment="content" class="content-area" style="display: flex;justify-content: center; align-items: center; height: 90vh;">
-    <div class="button_group" style="padding: 15px 25px; text-decoration: none; color: white; background-color: #333;
-        border: none;border-radius: 5px;cursor: pointer;margin: 0 10px;font-size: 16px;">
-        <div class="d-flex">
-            <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                상세위치 검색
-            </button>
+<div layout:fragment="content" class="content-area d-flex justify-content-center align-items-center" style="width:100%; height: 93.8vh;">
+    <div style="width:80%; height:100%;">
+        <img src="food.jpg" style="width:100%; height: 100%;">
+    </div>
+    <div style="width: 40%; height: 100%; background: gray; display: flex; justify-content: center; align-items: center;">
+        <div class="button_group d-flex justify-content-center align-items-center" style="width: 400px;">
+            <div class="d-flex flex-column justify-content-center align-items-center">
+                <img src="search.png" style="width:40%; height: 40%; margin-bottom:10px;">
+                <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#exampleModal" style="height: 50px;">
+                    상세위치 검색
+                </button>
+            </div>
             <!-- 상세위치 검색 Modal -->
             <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h1 class="modal-title fs-5" id="exampleModalLabel" style="color:black;">상세주소 검색</h1>
+                            <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: black;">상세주소 검색</h1>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <form th:action="@{/store/findlist}" method="post">
@@ -43,10 +48,13 @@
                     </div>
                 </div>
             </div>
-            <form th:action="@{/store/list}" method="post">
-                <input type="submit" class="btn btn-dark" style="margin-left: 20px;" value="내 위치 검색">
-                <input type="hidden" id="address" name="address" style="margin-left: 20px;">
-            </form>
+            <div class="d-flex flex-column justify-content-center align-items-center">
+                <img src="mylocation.png" style="width:40%; height: 40%; margin-bottom:10px;">
+                <form th:action="@{/store/list}" method="post">
+                    <input type="submit" class="btn btn-light" value="내 위치 검색" style="height: 50px;">
+                    <input type="hidden" id="address" name="address">
+                </form>
+            </div>
         </div>
     </div>
 </div>
