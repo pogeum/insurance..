@@ -20,14 +20,14 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <form th:action="@{/store/findlist}" method="post">
-                            <div class="modal-body">
-                                <select id="cities" onchange="updateDistricts()">
-                                    <option value="">시 선택</option>
+                            <div class="modal-body d-flex">
+                                <select class="form-select" aria-label="Default select example" id="cities" style="margin:5px;" onchange="updateDistricts()">
+                                    <option value="">광역시도</option>
                                     <option value="대전">대전</option>
                                     <!-- 다른 시/구를 추가할 수 있음 -->
                                 </select>
-                                <select id="districts" onchange="updateNeighborhoods()">
-                                    <option value="">구/군 선택</option>
+                                <select class="form-select" aria-label="Default select example" id="districts" style="margin:5px;" onchange="updateNeighborhoods()">
+                                    <option value="">시/군/구</option>
                                     <option value="서구">서구</option>
                                     <option value="중구">중구</option>
                                     <option value="동구">동구</option>
@@ -35,8 +35,8 @@
                                     <option value="유성구">유성구</option>
                                     <!-- 해당 시/군에 맞는 구/군 옵션 추가 -->
                                 </select>
-                                <select id="neighborhoods" onchange="updateAddress()">
-                                    <option value="">동 선택</option>
+                                <select class="form-select" aria-label="Default select example" id="neighborhoods" style="margin:5px;" onchange="updateAddress()">
+                                    <option value="">음/면/동</option>
                                     <!-- 해당 구/군에 맞는 동 옵션 추가 -->
                                 </select>
                                 <input type="hidden" id="findAddress" name="findAddress" style="width:100%;">
@@ -83,12 +83,11 @@
    function updateNeighborhoods() {
       var selectedDistrict = document.getElementById("districts").value;
       var neighborhoods = document.getElementById("neighborhoods");
-      neighborhoods.innerHTML = ""; // 기존의 옵션 제거
+      neighborhoods.innerHTML = "<option value=''>음/면/동</option>"; // 기존의 옵션은 유지한 채로 "동 선택" 옵션을 먼저 추가합니다.
 
       // 선택한 구/군에 따라 동적으로 옵션 추가
       if (selectedDistrict === "서구") {
           // 서구에 해당하는 동 옵션 추가
-          neighborhoods.add(new Option("동 선택", ""));
           neighborhoods.add(new Option("복수동", "복수동"));
           neighborhoods.add(new Option("도마동", "도마동"));
           neighborhoods.add(new Option("정림동", "정림동"));
@@ -118,7 +117,6 @@
           neighborhoods.add(new Option("봉곡동", "봉곡동"));
       } else if (selectedDistrict === "중구") {
           // 중구에 해당하는 동 옵션 추가
-          neighborhoods.add(new Option("동 선택", ""));
           neighborhoods.add(new Option("은행동", "은행동"));
           neighborhoods.add(new Option("선화동", "선화동"));
           neighborhoods.add(new Option("목동", "목동"));
@@ -147,7 +145,6 @@
           neighborhoods.add(new Option("금동", "금동"));
       } else if (selectedDistrict === "동구") {
           // 동구에 해당하는 동 옵션 추가
-          neighborhoods.add(new Option("동 선택", ""));
           neighborhoods.add(new Option("원동", "원동"));
           neighborhoods.add(new Option("정동", "정동"));
           neighborhoods.add(new Option("중동", "중동"));
@@ -195,7 +192,6 @@
           neighborhoods.add(new Option("하소동", "하소동"));
       } else if (selectedDistrict === "대덕구") {
           // 대덕구에 해당하는 동 옵션 추가
-          neighborhoods.add(new Option("동 선택", ""));
           neighborhoods.add(new Option("오정동", "오정동"));
           neighborhoods.add(new Option("대화동", "대화동"));
           neighborhoods.add(new Option("읍내동", "읍내동"));
@@ -224,7 +220,6 @@
           neighborhoods.add(new Option("신일동", "신일동"));
       } else if (selectedDistrict === "유성구") {
           // 유성구에 해당하는 동 옵션 추가
-          neighborhoods.add(new Option("동 선택", ""));
           neighborhoods.add(new Option("성북동", "성북동"));
           neighborhoods.add(new Option("세동", "세동"));
           neighborhoods.add(new Option("송정동", "송정동"));
@@ -290,7 +285,7 @@
        document.getElementById("findAddress").value = fullAddress;
    }
 
-   // 시/군 선택 시 동적으로 구/군을 업데이트
+   // 시/군/구 선택 시 동적으로 음/면/동이 업데이트
    function updateDistricts() {
        updateNeighborhoods();
        updateAddress(); // 동적으로 주소를 업데이트하는 함수 호출
