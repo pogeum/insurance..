@@ -69,17 +69,17 @@
                             <div class="mb-3">
                                 <div id="parah">
 <!--                                    <a class="btn btn-sm btn-light" th:href="@{|/store/addmenu?process=${process}|}">메뉴등록하기</a>-->
-                                    <a class="btn btn-sm btn-light" th:href="@{|/store/menuList/${store.id}|}">메뉴등록하기</a> <!--RequestParam -> ?   PathVariable -> ${store.id}-->
-                                    <ul th:unless="${store.menuList == null}">
-                                        <li th:each="menu : ${store.menuList}">
-                                            <ul>
-                                                <li>
-                                                    <span th:text="${menu.menuName}"></span>
-                                                    <span th:text="${menu.price}"></span>
-                                                </li>
-                                            </ul>
-                                        </li>
-                                    </ul>
+<!--                                    <a class="btn btn-sm btn-light" th:href="@{|/store/menuList/${store.id}|}">메뉴등록하기</a> &lt;!&ndash;RequestParam -> ?   PathVariable -> ${store.id}&ndash;&gt;-->
+<!--                                    <ul th:unless="${store.menuList == null}">-->
+<!--                                        <li th:each="menu : ${store.menuList}">-->
+<!--                                            <ul>-->
+<!--                                                <li>-->
+<!--                                                    <span th:text="${menu.menuName}"></span>-->
+<!--                                                    <span th:text="${menu.price}"></span>-->
+<!--                                                </li>-->
+<!--                                            </ul>-->
+<!--                                        </li>-->
+<!--                                    </ul>-->
 
                                 </div>
                                 <!--<input type="button" value="추가" onclick="addInput();"/>-->

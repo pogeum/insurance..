@@ -56,6 +56,7 @@ public class StoreController {
     Store tempStore = new Store();
     List<Menu> tempmenuList = new ArrayList<>();
 
+
     @RequestMapping("/list")
     public String list(Model model, @RequestParam(value = "address", required = false) String jibunAddress) {        // required = false 초기값 공백
         List<Store> storeList  = this.storeService.getAddressList(jibunAddress);
@@ -116,15 +117,30 @@ public class StoreController {
     @GetMapping("/create")
     public String createStore(StoreForm storeForm,Principal principal, Model model){
 
-        Store newstore = storeService.defaultStore(userService.getUser(principal.getName()));
-
-//        tempStore.setMenuList(tempmenuList);
+//        Store newstore = storeService.defaultStore(userService.getUser(principal.getName()));
+//        List<Menu> menuList = new ArrayList<>();
 //        User siteUser = this.userService.getUser(principal.getName()); // ?이거왜있는거
-        model.addAttribute("store",newstore);
+//        model.addAttribute("menuList", tempmenuList);
 //        model.addAttribute("process", "create");
-        System.out.println(newstore.getId());
+//        System.out.println(newstore.getId());
         return "store_form";
     }
+
+//    @PreAuthorize("isAuthenticated()")
+//    @GetMapping("/create/addmenus")
+//    public String createStoreAddmenus(StoreForm storeForm,Principal principal, Model model){
+//
+////        Store newstore = storeService.defaultStore(userService.getUser(principal.getName()));
+//        List<Menu> menuList = new ArrayList<>();
+////        User siteUser = this.userService.getUser(principal.getName()); // ?이거왜있는거
+//        model.addAttribute("menuList", tempmenuList);
+//        model.addAttribute("process", "create");
+////        System.out.println(newstore.getId());
+//        return "store_form";
+//    }
+
+
+
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/create")
     public String createStore(Model model, StoreForm storeForm, BindingResult bindingResult, Principal principal, List<MultipartFile> fileList) throws Exception{
@@ -151,27 +167,20 @@ public class StoreController {
     @PostMapping("/addmenu")
     public String addmenu(@ModelAttribute MenuFormWrapper menuFormWrapper, Principal principal, @RequestParam String process) {
 
-        List<MenuForm> menuFormList = menuFormWrapper.getMenuFormList();
-        for (MenuForm menuForm : menuFormList) {
-            Menu menu = new Menu();
-            menu.setMenuName(menuForm.getMenuName());
-            menu.setPrice(menuForm.getPrice());
-            tempmenuList.add(menu);
-        }
-
-
-
-//        menu.setMenuName(menuForm.getMenuName());
-//        menu.setPrice(menuForm.getPrice());
-
-
+//        process if문처리 create면 거따가..modify면 거따가...
+//        create면 tempmenulist, modify면 해당스토어에. 밑에는 크리에이트일때->문제는 뒤로가기하면 clear가안됨 ㅜ
         if (process.equals("create")) {
+            List<MenuForm> menuFormList = menuFormWrapper.getMenuFormList();
+            for (MenuForm menuForm : menuFormList) {
+                Menu menu = new Menu();
+                menu.setMenuName(menuForm.getMenuName());
+                menu.setPrice(menuForm.getPrice());
+                tempmenuList.add(menu);
+            }
             return "redirect:/store/create";
         } else {
             return "redirect:/store/" + process ;
         }
-
-
     }
 
 //    @PreAuthorize("isAuthenticated()")
@@ -182,7 +191,7 @@ public class StoreController {
 //    }
 //    @PreAuthorize("isAuthenticated()")
 //    @PostMapping("/addmenu") //하나씩만됨..
-//    public String addmenu(MenuForm menuForm, Principal principal, @RequestParam String process) {
+//    public String addmenu(@ModelAttribute MenuFormWrapper menuFormWrapper, Principal principal, @RequestParam String process) {
 //
 //        Menu menu = new Menu();
 //        menu.setMenuName(menuForm.getMenuName());
@@ -220,6 +229,7 @@ public class StoreController {
         storeForm.setRoadAddress(store.getRoadAddress());
         storeForm.setJibunAddress(store.getJibunAddress());
         storeForm.setMenuList(store.getMenuList());
+
         model.addAttribute("store",store);
         model.addAttribute("process", "modify/"+ store.getId());
         return "store_form";
@@ -262,6 +272,7 @@ public class StoreController {
         model.addAttribute("store",store);
         return "menu_list";
     }
+
 
 
 }

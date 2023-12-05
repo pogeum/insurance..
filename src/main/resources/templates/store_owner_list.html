@@ -1,30 +1,82 @@
 <html layout:decorate="~{layout}" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:layout="http://www.w3.org/1999/xhtml">
-<div layout:fragment="content">
-    <div class="container my-3">
-        <div class="col-6">
-            <a class="btn btn-sm btn-light" th:href="@{/store/create}" style="display: flex; flex-direction: column; width: 20%;" >가게 등록</a>
+<div layout:fragment="content" class="content-area" style="height:90%;">
+    <div class="d-flex" style="width:100%; height:100%;">
+        <div class="d-flex flex-column" style="width: 10%; height: 20%; margin: 20px; padding: 10px; border: 1px solid gray; border-radius:10px; background: #f8f9fa;">
+            <ul class="list-group">
+                <li>
+                    <h3 style="font-size: 1.2em; font-weight: bold;">내 정보 관리</h3>
+                    <ol class="d-flex flex-column">
+                        <li><a class="btn btn-sm btn-dark" style="margin:10px;" th:href="@{/user/profile}">계정관리</a></li>
+                        <li th:if="${#authorization.expression('hasRole(''ROLE_OWNER'')')}"><a class="btn btn-sm btn-dark" style="margin:10px;" th:href="@{/store/owner/list}">내 가게 보기</a></li>
+                    </ol>
+                </li>
+            </ul>
         </div>
-        <div th:each="store : ${ownerStoreList}">
-            <div class="card text-dark bg-light mb-3" style="width: 80%; display: flex; flex-direction: column;">
-                <div class="card-header">
-                    <a  th:href="@{|/store/detail/${store.id}|}" th:text="${store.name}"></a>
-                </div>
-                <div class="card-body">
-                    <h5 class="card-title" th:text="${store.category}" ></h5>
-                    <p class="card-text" th:text="${store.content}"></p>
-                    <p class="card-text" th:text="${#temporals.format(store.createDate, 'yyyy-MM-dd HH:mm')}"></p>
-                </div>
-                <div style="position: absolute; bottom: 0; right: 0;">
-                    <a th:href="@{|/store/modify/${store.id}|}" class="update btn btn-sm btn-outline-secondary"
-                       th:text="수정"></a>
-
-                    <a href="javascript:void(0);" th:data-uri="@{|/store/delete/${store.id}|}"
-                       class="delete btn btn-sm btn-outline-secondary" th:text="삭제"></a>
+        <div style="width: 90%; height: 100%; padding: 30px;">
+            <h2 class="title" style="padding: 10px 0 10px 0;">내 가게 보기</h2>
+            <div class="store_form">
+                <div class="container" style="margin:0;padding:0;">
+                    <div class="col-6" style="margin-bottom:10px;">
+                        <a class="btn btn-sm btn-light" th:href="@{/store/create}" style="display: flex; flex-direction: column; width: 20%;" >가게 등록</a>
+                    </div>
+                    <div th:each="store : ${ownerStoreList}" style="margin-bottom:20px;">
+                        <div class="card text-dark bg-light" style="width:100%; display: flex; flex-direction: column;">
+                            <div class="card-header">
+                                <a  th:href="@{|/store/detail/${store.id}|}">
+                                    <h3 th:text="${store.name}" style="font-weight: bold; margin:0;"></h3>
+                                </a>
+                            </div>
+                            <div class="card-body d-flex flex-column">
+                                <h5 class="card-title" th:text="${store.category}" style="margin:5px;" ></h5>
+                                <p class="card-text" th:text="${store.content}" style="margin:5px;"></p>
+                                <p class="card-text" th:text="${#temporals.format(store.createDate, 'yyyy-MM-dd HH:mm')}" style="margin:5px;"></p>
+                                <div class="d-flex justify-content-end">
+                                    <a th:href="@{|/store/menuList/${store.id}|}" class="update btn btn-sm btn-outline-secondary"
+                                       th:text="메뉴관리" style="margin:0 5px 0 5px;"></a>
+                                    <a th:href="@{|/store/modify/${store.id}|}" class="update btn btn-sm btn-outline-secondary"
+                                       th:text="수정" style="margin:0 5px 0 5px;"></a>
+                                    <a href="javascript:void(0);" th:data-uri="@{|/store/delete/${store.id}|}"
+                                       class="delete btn btn-sm btn-outline-secondary" th:text="삭제" style="margin:0 5px 0 5px;"></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+</html>
+
+
+<!--<html layout:decorate="~{layout}" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:layout="http://www.w3.org/1999/xhtml">-->
+<!--<div layout:fragment="content">-->
+<!--    <div class="container my-3">-->
+<!--        <div class="col-6">-->
+<!--            <a class="btn btn-sm btn-light" th:href="@{/store/create}" style="display: flex; flex-direction: column; width: 20%;" >가게 등록</a>-->
+<!--        </div>-->
+<!--        <div th:each="store : ${ownerStoreList}">-->
+<!--            <div class="card text-dark bg-light mb-3" style="width: 80%; display: flex; flex-direction: column;">-->
+<!--                <div class="card-header">-->
+<!--                    <a  th:href="@{|/store/detail/${store.id}|}" th:text="${store.name}"></a>-->
+<!--                </div>-->
+<!--                <div class="card-body">-->
+<!--                    <h5 class="card-title" th:text="${store.category}" ></h5>-->
+<!--                    <p class="card-text" th:text="${store.content}"></p>-->
+<!--                    <p class="card-text" th:text="${#temporals.format(store.createDate, 'yyyy-MM-dd HH:mm')}"></p>-->
+<!--                </div>-->
+<!--                <div style="position: absolute; bottom: 0; right: 0;">-->
+<!--                    <a th:href="@{|/store/menuList/${store.id}|}" class="update btn btn-sm btn-outline-secondary"-->
+<!--                       th:text="메뉴관리"></a>-->
+<!--                    <a th:href="@{|/store/modify/${store.id}|}" class="update btn btn-sm btn-outline-secondary"-->
+<!--                       th:text="수정"></a>-->
+<!--                    <a href="javascript:void(0);" th:data-uri="@{|/store/delete/${store.id}|}"-->
+<!--                       class="delete btn btn-sm btn-outline-secondary" th:text="삭제"></a>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
 <script layout:fragment="script" type='text/javascript'>
     const delete_elements = document.getElementsByClassName("delete");
     Array.from(delete_elements).forEach(function(element) {
