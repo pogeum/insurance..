@@ -26,13 +26,13 @@ public class MenuController {
     public String update(Integer menuid, String menuName, String pricestring) {
         Menu menu = menuService.findMenu(menuid);
         if (menuName == null || menuName.isEmpty()) {
-            menu.setMenuName("메뉴명을입력하세요");
+            menu.setMenuName("");
         }else {
             menu.setMenuName(menuName);
         }
 
         if (pricestring == null || pricestring.isEmpty()) {
-            menu.setPrice(000);
+            menu.setPrice(0);
         }else {
             menu.setPrice(Integer.valueOf(pricestring));
         }

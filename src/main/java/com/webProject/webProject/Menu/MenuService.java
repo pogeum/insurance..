@@ -35,7 +35,7 @@ public class MenuService {
 
     public void setDefaultMenu(Store store) {
         Menu menu = new Menu();
-        menu.setMenuName(">>메뉴명을 입력하세요");
+        menu.setMenuName("");
         menu.setPrice(0);
         menu.setStore(store);
         this.menuRepository.save(menu);
