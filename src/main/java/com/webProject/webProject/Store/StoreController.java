@@ -4,6 +4,7 @@ package com.webProject.webProject.Store;
 import com.webProject.webProject.CustomUser;
 import com.webProject.webProject.Menu.Menu;
 import com.webProject.webProject.Menu.MenuForm;
+import com.webProject.webProject.Menu.MenuFormWrapper;
 import com.webProject.webProject.Menu.MenuService;
 import com.webProject.webProject.Photo.PhotoService;
 import com.webProject.webProject.Review.Review;
@@ -135,13 +136,22 @@ public class StoreController {
         return "menu_form";
     }
     @PreAuthorize("isAuthenticated()")
-    @PostMapping("/addmenu") //하나씩만됨..
-    public String addmenu(MenuForm menuForm, Principal principal, @RequestParam String process) {
+    @PostMapping("/addmenu")
+    public String addmenu(@ModelAttribute MenuFormWrapper menuFormWrapper, Principal principal, @RequestParam String process) {
 
-        Menu menu = new Menu();
-        menu.setMenuName(menuForm.getMenuName());
-        menu.setPrice(menuForm.getPrice());
-        tempmenuList.add(menu);
+        List<MenuForm> menuFormList = menuFormWrapper.getMenuFormList();
+        for (MenuForm menuForm : menuFormList) {
+            Menu menu = new Menu();
+            menu.setMenuName(menuForm.getMenuName());
+            menu.setPrice(menuForm.getPrice());
+            tempmenuList.add(menu);
+        }
+
+
+
+//        menu.setMenuName(menuForm.getMenuName());
+//        menu.setPrice(menuForm.getPrice());
+
 
         if (process.equals("create")) {
             return "redirect:/store/create";
