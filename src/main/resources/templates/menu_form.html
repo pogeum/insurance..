@@ -5,27 +5,61 @@
         <div class="d-flex align-items-center p-2" style="height:5%; padding:10px;margin: 20px 10px 0 10px;">
             <h4 class="fw-bold" style="flex:6;margin: 0 10px 0 10px;">메뉴 등록</h4>
             <button type="submit" class="btn btn-sm btn-dark">저장하기</button>
+            <input type="button" onclick="clone();" value="추가">
         </div>
         <div style="height:70%">
             <div class="m-3">
                 <div style="background: white; box-shadow:0px 0px 10px rgba(0,0,0,0.2);border-radius: 10px; padding : 10px; margin-bottom:20px;">
                     <!-- CSRF 토큰 -->
                     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-                    <!-- 이름 입력 -->
-                    <div class="mb-3">
-                        <label for="menuName" class="form-label">메뉴명</label>
-                        <input type="text" name="menuName" placeholder="메뉴">
-<!--                        <textarea th:field="*{menuName}" class="form-control" rows="1" placeholder="이름"></textarea>-->
-                    </div>
-                    <!-- 내용 입력 -->
-                    <div class="mb-3">
-                        <label for="price" class="form-label">가격</label>
-                        <input type="text" name="price" placeholder="가격">
-<!--                        <textarea th:field="*{price}" class="form-control" rows="15"></textarea>-->
+                    <div id="input-area">
+                        <!-- 이`름 입력 -->
+                        <div class="menu-item">
+                            <div class="mb-3">
+                                <label for="menuName" class="form-label">메뉴명</label>
+                                <input id="menuName" type="text" name="menuFormList[0].menuName" placeholder="메뉴">
+                                <!--                        <textarea th:field="*{menuName}" class="form-control" rows="1" placeholder="이름"></textarea>-->
+                            </div>
+                            <!-- 내용 입력 -->
+                            <div class="mb-3">
+                                <label for="price" class="form-label">가격</label>
+                                <input id="price" type="text" name="menuFormList[0].price" placeholder="가격">
+                                <!--                        <textarea th:field="*{price}" class="form-control" rows="15"></textarea>-->
+                            </div>
+                            <hr>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </form>
+    <script>
+
+        let idx = 1;
+
+        function clone(){
+            let inputArea = document.getElementById('input-area');
+            let menuItem = document.querySelector('.menu-item');
+
+            const newNode = menuItem.cloneNode(true);
+
+            menuName = newNode.querySelector('#menuName');
+            price = newNode.querySelector('#price');
+
+            menuName.value = "";
+            price.value = "";
+
+            menuName.setAttribute("name", "menuFormList[" + idx + "].menuName");
+            price.setAttribute("name", "menuFormList[" + idx + "].price");
+
+            console.log(menuName);
+            console.log(price);
+
+            inputArea.appendChild(newNode);
+            idx++;
+        }
+
+
+    </script>
 </div>
 </html>

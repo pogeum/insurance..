@@ -3,6 +3,8 @@ package com.webProject.webProject.Store;
 
 import com.webProject.webProject.CustomUser;
 import com.webProject.webProject.Menu.Menu;
+import com.webProject.webProject.Menu.MenuForm;
+import com.webProject.webProject.Menu.MenuFormWrapper;
 
 import com.webProject.webProject.Menu.MenuService;
 import com.webProject.webProject.Photo.PhotoService;
@@ -139,6 +141,39 @@ public class StoreController {
         return "redirect:/store/owner/list";
     }
 
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/addmenu")
+    public String addmenu(MenuForm menuForm, @RequestParam String process, Model model) {
+        model.addAttribute("process", process);
+        return "menu_form";
+    }
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/addmenu")
+    public String addmenu(@ModelAttribute MenuFormWrapper menuFormWrapper, Principal principal, @RequestParam String process) {
+
+        List<MenuForm> menuFormList = menuFormWrapper.getMenuFormList();
+        for (MenuForm menuForm : menuFormList) {
+            Menu menu = new Menu();
+            menu.setMenuName(menuForm.getMenuName());
+            menu.setPrice(menuForm.getPrice());
+            tempmenuList.add(menu);
+        }
+
+
+
+//        menu.setMenuName(menuForm.getMenuName());
+//        menu.setPrice(menuForm.getPrice());
+
+
+        if (process.equals("create")) {
+            return "redirect:/store/create";
+        } else {
+            return "redirect:/store/" + process ;
+        }
+
+
+    }
+
 //    @PreAuthorize("isAuthenticated()")
 //    @GetMapping("/addmenu")
 //    public String addmenu(MenuForm menuForm, @RequestParam String process, Model model) {
@@ -160,6 +195,7 @@ public class StoreController {
 //            return "redirect:/store/" + process ;
 //        }
 //    }
+
 
     @GetMapping("/owner/list")
     public String ownerpage_list(Model model,Principal principal) {
