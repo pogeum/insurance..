@@ -12,9 +12,16 @@ import java.util.List;
 public class StoreForm {
 
     private String name;
+
     private String content; //설명 없을시 설명이 없습니다. 라고 뜨도록?
+
     private String category;
+
+    private String postcode;
+
     private String roadAddress;
+
+    private String jibunAddress;
 
     private List<Menu> menuList;
 

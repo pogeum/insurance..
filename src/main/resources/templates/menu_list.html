@@ -1,0 +1,65 @@
+<html layout:decorate="~{layout}" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:layout="http://www.w3.org/1999/xhtml">
+<div layout:fragment="content">
+    <div class="container my-3">
+<!--        <div class="col-6">-->
+<!--            <a class="btn btn-sm btn-light" th:href="@{/store/addmenu}" style="position: absolute; bottom: 0; right: 0;" >메뉴추가</a>-->
+<!--        </div>-->
+        <form th:action="@{|/menu/addmenu|}" method="post">
+            <input type="hidden" name="storeid" th:value="${store.id}">
+            <input type="submit" value="추가">
+        </form>
+        <div th:each="menu : ${store.menuList}">
+            <form th:action id="updatemenuForm" method="post">
+
+                <div class="card text-dark bg-light mb-3" style="width: 80%; display: flex; flex-direction: column;">
+                    <div class="card-header">
+<!--                        여기에 스토어아이디도받아와야하나?-->
+                        <div class="mb-3">
+                            메뉴
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <input type="hidden" name="menuid" th:value="${menu.id}">
+                                <label for="menuName" class="form-label">메뉴명</label>
+                                <input type="text" name="menuName" th:value="${menu.menuName}">
+                                <label for="price" class="form-label">가격</label>
+                                <input type="text" name="pricestring" th:value="${menu.price}">
+
+                                <div style="position: absolute; bottom: 0; right: 0;">
+
+                                    <div>
+                                        <input type="button" value="수정"  class="update btn btn-sm btn-outline-secondary" onclick="updatemenuFormAction(this, ACTIONS_MENUUPDATE)">
+                                    </div>
+                                    <div>
+                                        <input type="button" value="삭제" class="delete btn btn-sm btn-outline-secondary" onclick="updatemenuFormAction(this, ACTIONS_MENUDELETE)">
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script layout:fragment="script" type='text/javascript'>
+    ACTIONS_MENUUPDATE = {
+        'url' : '/menu/update',
+        'msg' : '수정 할까요?'
+    };
+
+    ACTIONS_MENUDELETE = {
+        'url' : '/menu/delete',
+        'msg' : '삭제 할까요?'
+    };
+
+    function updatemenuFormAction(input, action) {
+        if(confirm(action.msg)) {
+            input.form.action = action.url;
+            input.form.submit();
+        }
+    }
+</script>
+</html>

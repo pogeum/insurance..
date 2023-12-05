@@ -33,4 +33,24 @@ public class MenuService {
         return storeMenu;
     }
 
+    public void setDefaultMenu(Store store) {
+        Menu menu = new Menu();
+        menu.setMenuName(">>메뉴명을 입력하세요");
+        menu.setPrice(0);
+        menu.setStore(store);
+        this.menuRepository.save(menu);
+    }
+
+    public void setMenu(Menu menu) {
+        this.menuRepository.save(menu);
+    }
+
+    public Menu findMenu(Integer menuid) {
+        return this.menuRepository.findById(menuid).get();
+    }
+
+    public void deleteMenu(Menu menu) {
+        this.menuRepository.delete(menu);
+    }
+
 }

@@ -12,9 +12,13 @@ import java.util.Collection;
 
 @Controller
 public class MainController {
+    @RequestMapping("/main")
+    public String main(){
+        return "main";
+    }
     @RequestMapping("/")
     public String root() {
-        return "redirect:/store/list";
+        return "redirect:/main";
     }
 
     @RequestMapping("/test")

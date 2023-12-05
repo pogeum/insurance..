@@ -111,17 +111,6 @@ public class UserService {
         return null;
     }
 
-    public String uploadImg(MultipartFile file, String projectPath, String projectUploadPath) throws IOException {
-        if (file != null && !file.isEmpty()) {
-            UUID uuid = UUID.randomUUID();
-            String fileName = uuid + "_" + file.getOriginalFilename();
-            File saveFile = new File(projectPath, fileName);
-            file.transferTo(saveFile);
-            return fileName;
-        }
-        return null;
-    }
-
     public void modifyPw(User user, String pw) {
         user.setPassword(passwordEncoder.encode(pw));
         user.setModifyDate(LocalDateTime.now());
