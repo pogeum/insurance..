@@ -1,7 +1,7 @@
 <html layout:decorate="~{layout}" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:layout="http://www.w3.org/1999/xhtml">
-<div layout:fragment="content" class="content-area" style="height:90%;">
-    <div class="d-flex flex-column" style="height:100%;">
-        <div style="height:95%; margin-top:30px;">
+<div layout:fragment="content" class="content-area" style="height:93.8%;">
+    <div class="d-flex flex-column" style="height:100%;background:gray;">
+        <div style="height:93%; margin-top:30px;">
             <div class="d-flex" style="height:100%;width:100%;">
                 <div style="width:60%;">
                     <div style="padding:0 10px 0 10px;width:100%; height:100%;">
@@ -9,7 +9,7 @@
                     </div>
                 </div>
                 <div style="width:40%;">
-                    <div style="width:99%;height:100%; border:1px solid black; border-radius: 10px; overflow-y:scroll;">
+                    <div style="width:99%;height:100%; border:1px solid black;overflow-y:scroll;background:white;">
                         <div th:if="${storeList}" th:each="store : ${storeList}">
                             <div class="card" style="margin:10px; width:95%;height:100%;">
                                 <div class="card-body d-flex flex-column" style="width:100%; height:100%;">
@@ -46,6 +46,17 @@
                 };
 
                 var map = new kakao.maps.Map(mapContainer, mapOption);
+
+                // 일반 지도와 스카이뷰로 지도 타입을 전환할 수 있는 지도타입 컨트롤을 생성합니다
+                var mapTypeControl = new kakao.maps.MapTypeControl();
+
+                // 지도에 컨트롤을 추가해야 지도위에 표시됩니다
+                // kakao.maps.ControlPosition은 컨트롤이 표시될 위치를 정의하는데 TOPRIGHT는 오른쪽 위를 의미합니다
+                map.addControl(mapTypeControl, kakao.maps.ControlPosition.TOPRIGHT);
+
+                // 지도 확대 축소를 제어할 수 있는  줌 컨트롤을 생성합니다
+                var zoomControl = new kakao.maps.ZoomControl();
+                map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
 
                 var geocoder = new kakao.maps.services.Geocoder();
 
