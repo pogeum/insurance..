@@ -1,5 +1,6 @@
 package com.webProject.webProject.Photo;
 
+import com.webProject.webProject.Menu.Menu;
 import com.webProject.webProject.Review.Review;
 import com.webProject.webProject.Review.ReviewRepository;
 import com.webProject.webProject.Review_tag.Review_tag;
@@ -96,4 +97,28 @@ public class PhotoService {
             }
         }
     }
+
+    public void saveImgsForMenu(Menu menu, List<MultipartFile> files) throws Exception {
+        if (menu != null && files != null && !files.isEmpty()) {
+            for (MultipartFile file : files) {
+                if (!file.isEmpty()) {
+                    String projectPath = imgLocation;
+                    UUID uuid = UUID.randomUUID();
+                    String fileName = uuid + "_" + file.getOriginalFilename();
+                    File saveFile = new File(projectPath, fileName);
+                    file.transferTo(saveFile);
+
+                    Photo photo = new Photo();
+                    photo.setFileName(fileName);
+                    photo.setFilePath(saveFile.getAbsolutePath());
+                    photo.setMenu(menu);
+
+                    this.photoRepository.save(photo);
+                }
+            }
+        }
+    }
+
+
+
 }

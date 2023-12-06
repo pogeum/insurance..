@@ -1,5 +1,6 @@
 package com.webProject.webProject.Photo;
 
+import com.webProject.webProject.Menu.Menu;
 import com.webProject.webProject.Review.Review;
 import com.webProject.webProject.Store.Store;
 import jakarta.persistence.*;
@@ -17,12 +18,17 @@ public class Photo {
     @ManyToOne
     private Review review;
 
+    @ManyToOne
+    private Store store;
+
+    @ManyToOne
+    private Menu menu;
+
     @Column(columnDefinition = "TEXT NOT NULL")
     private String fileName;  // 파일 원본명
 
     @Column(columnDefinition = "TEXT NOT NULL")
     private String filePath;  // 파일 저장 경로
 
-    @ManyToOne
-    private Store store;
+
 }
