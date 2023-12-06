@@ -98,6 +98,10 @@ public class PhotoService {
         }
     }
 
+    public Photo getStoreById(Integer id) {
+        return this.photoRepository.findStoreById(id);
+    }
+
     public void saveImgsForMenu(Menu menu, List<MultipartFile> files) throws Exception {
         if (menu != null && files != null && !files.isEmpty()) {
             for (MultipartFile file : files) {
@@ -118,7 +122,4 @@ public class PhotoService {
             }
         }
     }
-
-
-
 }
