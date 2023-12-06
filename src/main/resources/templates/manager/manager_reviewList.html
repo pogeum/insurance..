@@ -1,0 +1,42 @@
+<html layout:decorate="~{layout}" xmlns:layout="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml">
+<div layout:fragment="content" class="content-area d-flex justify-content-center" style="width:100%; height: 93.8vh;">
+    <div class="d-flex flex-column" style="width:100%;padding:20px;">
+        <div class="row flex-nowrap justify-content-between" style="border-bottom : 2px solid black; padding-bottom:20px;">
+            <div class="col-4 d-flex justify-content-start">
+                <a th:href="@{/manager/store}" style="display: flex; justify-content: center;text-align: center;">
+                    <button class="btn btn-dark">뒤로가기</button>
+                </a>
+            </div>
+            <div class="col-4 text-center">
+                <p style="font-weight: bold; font-size: 2rem;margin:0;">리뷰 관리</p>
+            </div>
+            <div class="col-4 d-flex justify-content-end">
+                <div style="padding:0; display:flex;">
+                    <input class="form-control me-2" type="text" id="search_kw" th:value="${kw}" style="width:200px;" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-outline-secondary" style="padding:0;" type="button" id="btn_search">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor"
+                             stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="mx-3" role="img"
+                             viewBox="0 0 24 24"><title>Search</title>
+                            <circle cx="10.5" cy="10.5" r="7.5"></circle>
+                            <path d="M21 21l-5.2-5.2"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="row" style="margin-top:20px;">
+            <!-- Thymeleaf를 사용하여 사용자 카드 3개씩 반복 -->
+            <div th:each="review : ${reviewList}">
+                <div class="col mb-4">
+                    <div class="card h-100" style="width: 100%;">
+                        <div class="row g-0">
+                            <span th:text="'작성자 : ' + ${review.author.nickname}" style="margin-bottom: 5px;white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%;"></span>
+                            <span th:text="'리뷰 내용 : ' + ${review.content}" style="margin-bottom: 5px;white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%;"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</html>

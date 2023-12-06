@@ -1,9 +1,15 @@
 package com.webProject.webProject.User;
 
 import com.webProject.webProject.DataNotFoundException;
+import jakarta.persistence.criteria.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -13,6 +19,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -68,7 +75,7 @@ public class UserService {
         if (user.isPresent()) {
             return user.get();
         } else {
-            throw new DataNotFoundException("siteuser not found");
+            throw new DataNotFoundException("user not found");
         }
     }
 
@@ -115,5 +122,24 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(pw));
         user.setModifyDate(LocalDateTime.now());
         this.userRepository.save(user);
+    }
+
+    public List<User> getOwnerListByRole(String role) {
+        return this.userRepository.findByRole(role);
+    }
+
+    public List<User> getUserListByRole(String role) {
+        return this.userRepository.findByRole(role);
+    }
+
+    public void delete(User user) {
+        this.userRepository.delete(user);
+    }
+
+    public Page<User> getList(int page, String kw, String role) {
+        List<Sort.Order> sorts = new ArrayList<>();
+        sorts.add(Sort.Order.desc("createDate"));
+        Pageable pageable = PageRequest.of(page, 3, Sort.by(sorts));
+        return this.userRepository.findAllByRoleAndNicknameContaining(role, kw, pageable);
     }
 }

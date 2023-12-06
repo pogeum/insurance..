@@ -16,6 +16,12 @@ public class MainController {
     public String main(){
         return "main";
     }
+
+    @RequestMapping("/manager")
+    public String manager(){
+        return "manager/manager";
+    }
+
     @RequestMapping("/")
     public String root() {
         return "redirect:/main";
