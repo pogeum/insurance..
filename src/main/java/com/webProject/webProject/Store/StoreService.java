@@ -7,10 +7,15 @@ import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.awt.print.PageFormat;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -125,9 +130,13 @@ public class StoreService {
         };
     }
 
-    public List<Store> getList() {
-        return this.storeRepository.findAll();
+    public Page<Store> getList(int page, String kw) {
+        List<Sort.Order> sorts = new ArrayList<>();
+        sorts.add(Sort.Order.desc("createDate"));
+        Pageable pageable = PageRequest.of(page, 9, Sort.by(sorts));
+        return this.storeRepository.findStoreByKeyword(kw, pageable);
     }
+
 //    // 데이터베이스에서 음식점 목록을 가져오는 메서드
 //    public List<Store> getRestaurantsNearby(double userLatitude, double userLongitude) {
 //        // 데이터베이스에서 모든 음식점 정보를 가져옴
