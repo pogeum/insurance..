@@ -183,38 +183,20 @@ public class StoreController {
         }
     }
 
-//    @PreAuthorize("isAuthenticated()")
-//    @GetMapping("/addmenu")
-//    public String addmenu(MenuForm menuForm, @RequestParam String process, Model model) {
-//        model.addAttribute("process", process);
-//        return "menu_form";
-//    }
-//    @PreAuthorize("isAuthenticated()")
-//    @PostMapping("/addmenu") //하나씩만됨..
-//    public String addmenu(@ModelAttribute MenuFormWrapper menuFormWrapper, Principal principal, @RequestParam String process) {
-//
-//        Menu menu = new Menu();
-//        menu.setMenuName(menuForm.getMenuName());
-//        menu.setPrice(menuForm.getPrice());
-//        tempmenuList.add(menu);
-//
-//        if (process.equals("create")) {
-//            return "redirect:/store/create";
-//        } else {
-//            return "redirect:/store/" + process ;
-//        }
-//    }
 
 
     @GetMapping("/owner/list")
-    public String ownerpage_list(Model model,Principal principal) {
+    public String ownerpage_list(Model model,Principal principal, @RequestParam(value ="page", defaultValue = "0")int page) {
+
         if (principal == null ) {
             return "redirect:/user/login";
         } else {
             User siteUser = this.userService.getUser(principal.getName());
-            List<Store> ownerStoreList = storeService.getstoreList_owner(siteUser.getNickname());
-            model.addAttribute("ownerStoreList", ownerStoreList);
+//          List<Store> ownerStoreList = storeService.getstoreList_owner(siteUser.getNickname());
+            Page<Store> paging = this.storeService.getList(page);
+//            Page<Store> paging = this.storeService.getList(page, siteUser);
 
+            model.addAttribute("paging",paging);
             return "store_owner_list";
         }
     }
@@ -253,7 +235,8 @@ public class StoreController {
         store.setMenuList(tempmenuList);
         this.storeService.modifyStore(store, storeForm.getName(), storeForm.getContent(), storeForm.getCategory(), storeForm.getPostcode(), storeForm.getRoadAddress(), storeForm.getJibunAddress());
         tempmenuList.clear();
-        return "redirect:/store/owner/list";
+        return String.format("redirect:/store/owner/list#answer_%s", store.getId());
+//        return "redirect:/store/owner/list";
     }
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/delete/{storeid}")
