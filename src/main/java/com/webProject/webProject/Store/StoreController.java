@@ -7,6 +7,7 @@ import com.webProject.webProject.Menu.MenuForm;
 import com.webProject.webProject.Menu.MenuFormWrapper;
 
 import com.webProject.webProject.Menu.MenuService;
+import com.webProject.webProject.Photo.Photo;
 import com.webProject.webProject.Photo.PhotoService;
 import com.webProject.webProject.Review.Review;
 import com.webProject.webProject.Review.ReviewService;

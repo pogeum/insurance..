@@ -1,8 +1,12 @@
 package com.webProject.webProject.Manager;
 
 import com.mysql.cj.x.protobuf.MysqlxCrud;
+import com.webProject.webProject.Comment.Comment;
+import com.webProject.webProject.Comment.CommentService;
+import com.webProject.webProject.Photo.PhotoService;
 import com.webProject.webProject.Review.Review;
 import com.webProject.webProject.Review.ReviewService;
+import com.webProject.webProject.Review_tag.Review_tagService;
 import com.webProject.webProject.Store.Store;
 import com.webProject.webProject.Store.StoreService;
 import com.webProject.webProject.User.User;
@@ -26,6 +30,9 @@ public class ManagerController {
     private final StoreService storeService;
     private final UserService userService;
     private final ReviewService reviewService;
+    private final CommentService commentService;
+    private final PhotoService photoService;
+    private final Review_tagService reviewTagService;
 
     @GetMapping("/member")
     public String memberlist(Model model, @RequestParam(value="page", defaultValue="0") int page, @RequestParam(value = "kw", defaultValue = "") String kw){
@@ -72,5 +79,18 @@ public class ManagerController {
         List<Review> reviewList = this.reviewService.getreviewList(store);
         model.addAttribute("reviewList", reviewList);
         return "manager/manager_reviewList";
+    }
+
+    @GetMapping("/review/delete/{id}")
+    public String reviewdelete(@PathVariable("id") Integer id) {
+        Review review = this.reviewService.getReview(id);
+        List<Comment> commentsToDelete = review.getCommentList();
+        for (Comment comment : commentsToDelete) {
+            this.commentService.delete(comment);
+        }
+        this.photoService.deletePhotosByReview(review);
+        this.reviewTagService.deleteTagsByReviewId(id);
+        this.reviewService.delete(review);
+        return String.format("redirect:/manager/review/%s", review.getStore().getId());
     }
 }

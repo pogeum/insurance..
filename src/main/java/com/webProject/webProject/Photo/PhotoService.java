@@ -96,4 +96,8 @@ public class PhotoService {
             }
         }
     }
+
+    public Photo getStoreById(Integer id) {
+        return this.photoRepository.findStoreById(id);
+    }
 }
