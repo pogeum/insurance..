@@ -1,0 +1,55 @@
+<html layout:decorate="~{layout}" xmlns:layout="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml">
+<div layout:fragment="content" class="content-area d-flex justify-content-center" style="width:100%; height: 93.8vh;">
+    <div class="d-flex flex-column" style="width:100%;padding:20px;">
+        <div class="row flex-nowrap justify-content-between" style="border-bottom : 2px solid black; padding-bottom:20px;">
+            <div class="col-4 d-flex justify-content-start">
+                <a th:href="@{/manager}" style="display: flex; justify-content: center;text-align: center;">
+                    <button class="btn btn-dark">뒤로가기</button>
+                </a>
+            </div>
+            <div class="col-4 text-center">
+                <p style="font-weight: bold; font-size: 2rem;margin:0;">Store 관리</p>
+            </div>
+            <div class="col-4 d-flex justify-content-end">
+                <div style="padding:0; display:flex;">
+                    <input class="form-control me-2" type="text" id="search_kw" th:value="${kw}" style="width:200px;" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-outline-secondary" style="padding:0;" type="button" id="btn_search">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor"
+                             stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="mx-3" role="img"
+                             viewBox="0 0 24 24"><title>Search</title>
+                            <circle cx="10.5" cy="10.5" r="7.5"></circle>
+                            <path d="M21 21l-5.2-5.2"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3" style="margin-top:20px;">
+            <!-- Thymeleaf를 사용하여 사용자 카드 4개씩 반복 -->
+            <div th:each="store : ${storeList}">
+                <div class="col mb-4">
+                    <div class="card h-100" style="width: 100%;">
+                        <div class="row g-0">
+                            <div class="col-md-4" style="width:30%;">
+<!--                                <img th:src="@{|/photo/${store.fileName}|}" class="img-fluid rounded-start" alt="..." style="border-radius: 50%;object-fit: cover; width: 100%; height: 100%;">-->
+                            </div>
+                            <div class="col-md-8" style="width:70%;">
+                                <div class="card-body d-flex flex-column h-100" style="padding-top: 40px;padding-bottom: 10px;">
+                                    <h5 th:text="'음식점 이름 : ' + ${store.name}" style="margin-bottom: 16px;"></h5>
+                                    <span class="text-secondary small ms-2" th:text="'주소(도로명) : ' + ${store.roadAddress}"></span>
+                                    <span class="text-secondary small ms-2" th:text="'주소(지번) : ' + ${store.jibunAddress}"></span>
+                                    <span class="text-secondary small ms-2" th:text="'사장 : ' + ${store.author.nickname}"></span>
+                                    <span th:text="'등록일시 : ' + ${#temporals.format(store.createDate, 'yyyy-MM-dd HH:mm')}"></span>
+                                    <div class="d-flex justify-content-end" style="margin-top:20px;">
+                                        <a href="#" class="btn btn-sm btn-outline-danger" th:text="'식당 ' + '삭제'"></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</html>

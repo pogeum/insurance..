@@ -124,6 +124,10 @@ public class StoreService {
             }
         };
     }
+
+    public List<Store> getList() {
+        return this.storeRepository.findAll();
+    }
 //    // 데이터베이스에서 음식점 목록을 가져오는 메서드
 //    public List<Store> getRestaurantsNearby(double userLatitude, double userLongitude) {
 //        // 데이터베이스에서 모든 음식점 정보를 가져옴

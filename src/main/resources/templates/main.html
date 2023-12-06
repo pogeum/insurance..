@@ -3,58 +3,61 @@
     <div style="width:80%; height:100%;">
         <img src="food.jpg" style="width:100%; height: 100%;">
     </div>
-    <div style="width: 40%; height: 100%; background: gray; display: flex; justify-content: center; align-items: center;">
-        <div class="button_group d-flex justify-content-center align-items-center" style="width: 400px;">
-            <div class="d-flex flex-column justify-content-center align-items-center">
-                <img src="search.png" style="width:40%; height: 40%; margin-bottom:10px;">
-                <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#exampleModal" style="height: 50px;">
-                    상세위치 검색
-                </button>
-            </div>
-            <!-- 상세위치 검색 Modal -->
-            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: black;">상세주소 검색</h1>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <div style="width: 50%; height: 100%; background: gray; display: flex; justify-content: center; align-items: center;">
+        <div class="d-flex flex-column">
+            <div class="button_group d-flex justify-content-center align-items-center" style="width: 550px;background:white; padding:20px; border-radius:10px; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);">
+                <div class="d-flex flex-column justify-content-center align-items-center">
+                    <img src="search.png" style="width:40%; height: 40%; margin-bottom:10px;">
+                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal" style="height: 50px;">
+                        상세위치 검색
+                    </button>
+                </div>
+                <!-- 상세위치 검색 Modal -->
+                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: black;">상세주소 검색</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <form th:action="@{/store/findlist}" method="post">
+                                <div class="modal-body d-flex">
+                                    <select class="form-select" aria-label="Default select example" id="cities" style="margin:5px;" onchange="updateDistricts()">
+                                        <option value="">광역시도</option>
+                                        <option value="대전">대전</option>
+                                        <!-- 다른 시/구를 추가할 수 있음 -->
+                                    </select>
+                                    <select class="form-select" aria-label="Default select example" id="districts" style="margin:5px;" onchange="updateNeighborhoods()">
+                                        <option value="">시/군/구</option>
+                                        <option value="서구">서구</option>
+                                        <option value="중구">중구</option>
+                                        <option value="동구">동구</option>
+                                        <option value="대덕구">대덕구</option>
+                                        <option value="유성구">유성구</option>
+                                        <!-- 해당 시/군에 맞는 구/군 옵션 추가 -->
+                                    </select>
+                                    <select class="form-select" aria-label="Default select example" id="neighborhoods" style="margin:5px;" onchange="updateAddress()">
+                                        <option value="">음/면/동</option>
+                                        <!-- 해당 구/군에 맞는 동 옵션 추가 -->
+                                    </select>
+                                    <input type="hidden" id="findAddress" name="findAddress" style="width:100%;">
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-dark">검색</button>
+                                </div>
+                            </form>
                         </div>
-                        <form th:action="@{/store/findlist}" method="post">
-                            <div class="modal-body d-flex">
-                                <select class="form-select" aria-label="Default select example" id="cities" style="margin:5px;" onchange="updateDistricts()">
-                                    <option value="">광역시도</option>
-                                    <option value="대전">대전</option>
-                                    <!-- 다른 시/구를 추가할 수 있음 -->
-                                </select>
-                                <select class="form-select" aria-label="Default select example" id="districts" style="margin:5px;" onchange="updateNeighborhoods()">
-                                    <option value="">시/군/구</option>
-                                    <option value="서구">서구</option>
-                                    <option value="중구">중구</option>
-                                    <option value="동구">동구</option>
-                                    <option value="대덕구">대덕구</option>
-                                    <option value="유성구">유성구</option>
-                                    <!-- 해당 시/군에 맞는 구/군 옵션 추가 -->
-                                </select>
-                                <select class="form-select" aria-label="Default select example" id="neighborhoods" style="margin:5px;" onchange="updateAddress()">
-                                    <option value="">음/면/동</option>
-                                    <!-- 해당 구/군에 맞는 동 옵션 추가 -->
-                                </select>
-                                <input type="hidden" id="findAddress" name="findAddress" style="width:100%;">
-                            </div>
-                            <div class="modal-footer">
-                                <button type="submit" class="btn btn-dark">검색</button>
-                            </div>
-                        </form>
                     </div>
                 </div>
+                <div class="d-flex flex-column justify-content-center align-items-center">
+                    <img src="mylocation.png" style="width:40%; height: 40%; margin-bottom:10px;">
+                    <form th:action="@{/store/list}" method="post">
+                        <input type="submit" class="btn btn-info" value="내 위치 검색" style="height: 50px;">
+                        <input type="hidden" id="address" name="address">
+                    </form>
+                </div>
             </div>
-            <div class="d-flex flex-column justify-content-center align-items-center">
-                <img src="mylocation.png" style="width:40%; height: 40%; margin-bottom:10px;">
-                <form th:action="@{/store/list}" method="post">
-                    <input type="submit" class="btn btn-light" value="내 위치 검색" style="height: 50px;">
-                    <input type="hidden" id="address" name="address">
-                </form>
-            </div>
+            <a class="btn btn-dark" th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}" th:href="@{|/manager|}" style="margin-top: 20px;">관리자 페이지</a>
         </div>
     </div>
 </div>
