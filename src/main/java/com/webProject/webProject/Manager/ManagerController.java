@@ -1,5 +1,8 @@
 package com.webProject.webProject.Manager;
 
+import com.mysql.cj.x.protobuf.MysqlxCrud;
+import com.webProject.webProject.Review.Review;
+import com.webProject.webProject.Review.ReviewService;
 import com.webProject.webProject.Store.Store;
 import com.webProject.webProject.Store.StoreService;
 import com.webProject.webProject.User.User;
@@ -22,6 +25,7 @@ import java.util.List;
 public class ManagerController {
     private final StoreService storeService;
     private final UserService userService;
+    private final ReviewService reviewService;
 
     @GetMapping("/member")
     public String memberlist(Model model, @RequestParam(value="page", defaultValue="0") int page, @RequestParam(value = "kw", defaultValue = "") String kw){
@@ -50,9 +54,23 @@ public class ManagerController {
     }
 
     @GetMapping("/store")
-    public String storelist(Model model){
-        List<Store> storeList = this.storeService.getList();
-        model.addAttribute("storeList", storeList);
+    public String storelist(Model model,  @RequestParam(value="page", defaultValue="0") int page, @RequestParam(value = "kw", defaultValue = "") String kw){
+        Page<Store> paging = this.storeService.getList(page, kw);
+        model.addAttribute("paging", paging);
         return "manager/manager_storeList";
+    }
+    @GetMapping("/store/delete/{id}")
+    public String storedelete(@PathVariable("id") Integer id){
+        Store store = this.storeService.getStore(id);
+        this.storeService.deleteStore(store);
+        return "redirect:/manager/store";
+    }
+
+    @GetMapping("/review/{id}")
+    public String reviewlist(Model model, @PathVariable("id") Integer id) {
+        Store store = storeService.getStore(id);
+        List<Review> reviewList = this.reviewService.getreviewList(store);
+        model.addAttribute("reviewList", reviewList);
+        return "manager/manager_reviewList";
     }
 }

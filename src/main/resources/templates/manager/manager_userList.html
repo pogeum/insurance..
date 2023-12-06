@@ -26,7 +26,7 @@
             </div>
         </div>
         <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3" style="margin-top:20px;">
-            <!-- Thymeleaf를 사용하여 사용자 카드 4개씩 반복 -->
+            <!-- Thymeleaf를 사용하여 사용자 카드 3개씩 반복 -->
             <div th:each="user : ${paging}" th:unless="${user.role == 'admin'}">
                 <div class="col mb-4">
                     <div class="card h-100" style="width: 100%;">
@@ -55,7 +55,7 @@
         </div>
         <!-- 페이징처리 시작 -->
         <div th:if="${!paging.isEmpty()}" class="d-flex justify-content-center align-items-center text-center" style="width:100%;">
-            <ul class="pagination justify-content-center" style="width: auto;">
+            <ul class="pagination justify-content-center" style="width: auto;margin: 20px;">
                 <li class="page-item" th:classappend="${!paging.hasPrevious} ? 'disabled'">
                     <a class="page-link" href="javascript:void(0)" th:data-page="${paging.number-1}">
                         <span aria-hidden="true">&laquo;</span>
