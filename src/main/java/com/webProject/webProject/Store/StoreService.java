@@ -7,10 +7,13 @@ import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.*;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -29,16 +32,6 @@ public class StoreService {
 
     private final StoreRepository storeRepository;
     private List<MultipartFile> files;
-
-    public List<Store> getstoreList_owner(String authorname) {
-        List<Store> targetstoreList = new ArrayList<>();
-        for (Store store : this.storeRepository.findAll()){
-            if (store.getAuthor().getNickname().equals(authorname)) {
-                targetstoreList.add(store);
-            }
-        }
-        return targetstoreList;
-    }
 
     public void setFiles(List<MultipartFile> files) {
         this.files=files;
@@ -130,12 +123,47 @@ public class StoreService {
         };
     }
 
+
+    public List<Store> getstoreList_owner(String authorname) {
+        List<Store> targetstoreList = new ArrayList<>();
+        for (Store store : this.storeRepository.findAll()){
+            if (store.getAuthor().getNickname() == null ) {
+                store.getAuthor().setNickname("unknown");
+            }
+
+            if (store.getAuthor().getNickname().equals(authorname)) {
+                targetstoreList.add(store);
+            }
+        }
+        return targetstoreList;
+    }
+//    페이징처리 메서드
+    public Page<Store> getList(int page, User author) {
+        List<Sort.Order> sorts = new ArrayList<>();
+        sorts.add(Sort.Order.desc("createDate"));
+        Pageable pageable = PageRequest.of(page,10, Sort.by(sorts));
+
+//        List<Store> ownerstore = getstoreList_owner(nickname);
+
+        return this.storeRepository.findAllById(author.getId(), pageable);
+    }
+
+    public Page<Store> getList(int page) {
+        List<Sort.Order> sorts = new ArrayList<>();
+        sorts.add(Sort.Order.desc("createDate"));
+        Pageable pageable = PageRequest.of(page,10, Sort.by(sorts));
+        return this.storeRepository.findAll(pageable);
+    }
+
+
+
     public Page<Store> getList(int page, String kw) {
         List<Sort.Order> sorts = new ArrayList<>();
         sorts.add(Sort.Order.desc("createDate"));
         Pageable pageable = PageRequest.of(page, 9, Sort.by(sorts));
         return this.storeRepository.findStoreByKeyword(kw, pageable);
     }
+
 
 //    // 데이터베이스에서 음식점 목록을 가져오는 메서드
 //    public List<Store> getRestaurantsNearby(double userLatitude, double userLongitude) {

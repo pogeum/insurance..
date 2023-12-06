@@ -26,6 +26,12 @@
                                 <input id="price" type="text" name="menuFormList[0].price" placeholder="가격">
                                 <!--                        <textarea th:field="*{price}" class="form-control" rows="15"></textarea>-->
                             </div>
+                            <!--사진 첨부-->
+                            <div style="width:40%; background: white; box-shadow:0px 0px 10px rgba(0,0,0,0.2);border-radius: 10px; padding : 10px; ">
+                                <input type="file" name="files" id="fileInput" multiple/>
+                                <div id="imagePreview"></div>
+                                <button onclick="deleteSelectedFile()">삭제</button>
+                            </div>
                             <hr>
                         </div>
                     </div>
