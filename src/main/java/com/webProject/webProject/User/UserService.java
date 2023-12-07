@@ -137,7 +137,7 @@ public class UserService {
     public Page<User> getList(int page, String kw, String role) {
         List<Sort.Order> sorts = new ArrayList<>();
         sorts.add(Sort.Order.desc("createDate"));
-        Pageable pageable = PageRequest.of(page, 3, Sort.by(sorts));
+        Pageable pageable = PageRequest.of(page, 6, Sort.by(sorts));
         return this.userRepository.findAllByRoleAndNicknameContaining(role, kw, pageable);
     }
 }
