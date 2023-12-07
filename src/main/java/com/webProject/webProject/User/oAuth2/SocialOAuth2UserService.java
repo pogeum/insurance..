@@ -4,11 +4,8 @@ import com.webProject.webProject.CustomUser;
 import com.webProject.webProject.User.User;
 import com.webProject.webProject.User.UserRepository;
 import com.webProject.webProject.User.UserRole;
-import com.webProject.webProject.User.UserService;
-import jakarta.servlet.ServletContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -25,10 +22,6 @@ import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
 import java.nio.channels.ReadableByteChannel;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,16 +32,23 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class SocialOAuth2UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
     private final UserRepository userRepository;
-    private final ServletContext servletContext;
 
     @Value("${ImgLocation}")
     public String imgLocation;
+
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2UserService<OAuth2UserRequest, OAuth2User> delegate = new DefaultOAuth2UserService();
         String clientName = userRequest.getClientRegistration().getClientName();
+        System.out.println("============" + clientName);
         OAuth2User oAuth2User = delegate.loadUser(userRequest);
         CustomUser customUser = null;
+
+        if (clientName.equals("kakao")) {
+            System.out.println("kakao");
+        } else if (clientName.equals("Google")) {
+            System.out.println("google");
+        }
 
         if (clientName.equals("Google")) {
             String googleId = oAuth2User.getAttribute("sub");
@@ -62,14 +62,19 @@ public class SocialOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
                 throw new RuntimeException(e);
             }
             System.out.println("Google User Saved: " + googleId + ", " + email + ", " + nickname);
-        } else if (clientName.equals("Kakao")) {
-            String kakaoId = oAuth2User.getAttribute("id");
+        } else if (clientName.equals("kakao")) {
+            System.out.println("Asdasd");
+            Long kakaoId = oAuth2User.getAttribute("id");
             Map<String, Object> attributes = oAuth2User.getAttribute("properties");
-            String email = (String)attributes.get("kakao_account.email");
             String nickname = (String) attributes.get("nickname");
-
-            customUser = saveOrUpdateKakao(kakaoId, email, nickname);
-            System.out.println("Kakao User Saved: " + kakaoId + ", " + email + ", " + nickname);
+            String picture = (String) attributes.get("profile_image");
+            String img = saveImageFromUrl(nickname, clientName, picture);
+            try {
+                customUser = saveOrUpdateKakao(String.valueOf(kakaoId), nickname, img);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            System.out.println("Kakao User Saved: " + kakaoId + ", " + nickname);
         } else if (clientName.equals("Naver")) {
             Map<String, Object> attributes = oAuth2User.getAttribute("response");
             String naverId = (String) attributes.get("id");
@@ -109,6 +114,7 @@ public class SocialOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         user.setNickname(nickname);
         user.setRole("user");
         user.setCreateDate(LocalDateTime.now());
+        user.setProvider("Google");
         user.setFileName(img); // 파일 이름
         user.setFilePath(projectPath + img); // 저장 경로, 파일 이름
         this.userRepository.save(user);
@@ -133,13 +139,28 @@ public class SocialOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
 
 
     //카카오
-    public CustomUser saveOrUpdateKakao(String kakaoId, String email, String name) {
+    public CustomUser saveOrUpdateKakao(String kakaoId, String name, String img) throws IOException {
+        String projectPath = imgLocation;
+
         User user = this.userRepository.findByuserId(kakaoId).orElse(new User());
+        String existingFilePath = user.getFilePath();
+
+        // 기존 파일 삭제
+        if (existingFilePath != null && !existingFilePath.isEmpty()) {
+            java.nio.file.Path fileToDelete = java.nio.file.Paths.get(existingFilePath);
+            try {
+                java.nio.file.Files.delete(fileToDelete);
+            } catch (IOException e) {
+                System.out.println("기존 파일 삭제 실패: " + e.getMessage());
+            }
+        }
         user.setUserId(kakaoId);
-        user.setEmail(email);
         user.setNickname(name);
         user.setRole("user");
         user.setCreateDate(LocalDateTime.now());
+        user.setProvider("Kakao");
+        user.setFileName(img); // 파일 이름
+        user.setFilePath(projectPath + img); // 저장 경로, 파일 이름
         this.userRepository.save(user);
 
         List<GrantedAuthority> authorities = new ArrayList<>();
@@ -181,6 +202,7 @@ public class SocialOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         user.setNickname(nickname);
         user.setRole("user");
         user.setCreateDate(LocalDateTime.now());
+        user.setProvider("Naver");
         user.setFileName(img); // 파일 이름
         user.setFilePath(projectPath + img); // 저장 경로, 파일 이름
         this.userRepository.save(user);
