@@ -138,23 +138,13 @@ public class StoreService {
         return targetstoreList;
     }
 //    페이징처리 메서드
-    public Page<Store> getList(int page, User author) {
+    public Page<Store> getownerList(int page, User owner) {
         List<Sort.Order> sorts = new ArrayList<>();
         sorts.add(Sort.Order.desc("createDate"));
         Pageable pageable = PageRequest.of(page,10, Sort.by(sorts));
 
-//        List<Store> ownerstore = getstoreList_owner(nickname);
-
-        return this.storeRepository.findAllById(author.getId(), pageable);
+        return this.storeRepository.findAllByownerId(owner.getNickname(), pageable);
     }
-
-    public Page<Store> getList(int page) {
-        List<Sort.Order> sorts = new ArrayList<>();
-        sorts.add(Sort.Order.desc("createDate"));
-        Pageable pageable = PageRequest.of(page,10, Sort.by(sorts));
-        return this.storeRepository.findAll(pageable);
-    }
-
 
 
     public Page<Store> getList(int page, String kw) {
