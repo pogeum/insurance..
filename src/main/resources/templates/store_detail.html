@@ -41,7 +41,8 @@
                                 <!--부트스트랩카드-->
                                     <div class="card" style="width: 18rem;">
                                         <div th:each="photo : ${menu.photoList}" style="width:100%; height:50%;">
-                                            <img class="card-img-top" th:src="@{'/img/' + ${photo.fileName}}" alt="Menu Photo" />
+                                            <img class="card-img-top" th:src="@{|/photo/${photo.fileName}|}" alt="Menu Photo" style="object-fit: cover; width: 50%; height: 30%;"/>
+<!--                                            th:src="@{|/photo/${photo.fileName}|}"-->
                                         </div>
                                         <div class="card-body" style="display:flex; flex-direction: column;">
                                             <p th:text="${menu.menuName}" style="display:block; "></p>
