@@ -53,4 +53,9 @@ public class MenuService {
         this.menuRepository.delete(menu);
     }
 
+    public List<Menu> searchedmenu_storelist(String keyword) {
+        return this.menuRepository.findMenusByKeyword(keyword);
+    }
+
+
 }

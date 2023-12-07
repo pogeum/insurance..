@@ -1,6 +1,18 @@
 <html layout:decorate="~{layout}" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:layout="http://www.w3.org/1999/xhtml">
 <div layout:fragment="content" class="content-area" style="height:93.8%;">
     <div class="d-flex flex-column" style="height:100%;background:gray;">
+        <form th:action="@{|/store/search_list|}" method="post">
+            <div class="search">
+                <input type="text" name="keyword" id="keyword" placeholder="가게이름">
+                <button type="submit">검색</button>
+            </div>
+        </form>
+        <form th:action="@{|/store/search_list_menu|}" method="post">
+            <div class="search">
+                <input type="text" name="keyword"  placeholder="메뉴이름">
+                <button type="submit">검색</button>
+            </div>
+        </form>
         <div style="height:93%; margin-top:30px;">
             <div class="d-flex" style="height:100%;width:100%;">
                 <div style="width:60%;">
