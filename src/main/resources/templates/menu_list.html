@@ -8,7 +8,7 @@
             <input type="hidden" name="storeid" th:value="${store.id}">
             <input class="btn btn-sm btn-light" type="submit" value="메뉴추가하기">
         </form>
-        <a class="btn btn-sm btn-light" th:href="@{|/store/owner/list|}">저장하기</a>
+        <a class="btn btn-sm btn-light" th:href="@{|/store/owner/list|}">뒤로가기</a>
         <div th:each="menu : ${store.menuList}">
             <form th:action id="updatemenuForm" method="post" enctype="multipart/form-data">
                 <div class="card text-dark bg-light mb-3" style="width: 80%; display: flex; flex-direction: column;">
@@ -35,7 +35,7 @@
                                 <div style="position: absolute; bottom: 0; right: 0;">
 
                                     <div>
-                                        <input type="button" value="수정"  class="update btn btn-sm btn-outline-secondary" onclick="updatemenuFormAction(this, ACTIONS_MENUUPDATE)">
+                                        <input type="button" value="저장"  class="update btn btn-sm btn-outline-secondary" onclick="updatemenuFormAction(this, ACTIONS_MENUUPDATE)">
                                     </div>
                                     <div>
                                         <input type="button" value="삭제" class="delete btn btn-sm btn-outline-secondary" onclick="updatemenuFormAction(this, ACTIONS_MENUDELETE)">

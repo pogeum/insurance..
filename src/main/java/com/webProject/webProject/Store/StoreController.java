@@ -159,6 +159,20 @@ public class StoreController {
     }
 
     @PreAuthorize("isAuthenticated()")
+    @GetMapping("/owner/list")
+    public String ownerpage_list(Model model,Principal principal, @RequestParam(value ="page", defaultValue = "0")int page) {
+
+        if (principal == null ) {
+            return "redirect:/user/login";
+        } else {
+            User siteUser = this.userService.getUser(principal.getName());
+            Page<Store> paging = this.storeService.getownerList(page, siteUser);
+            model.addAttribute("paging",paging);
+            return "store_owner_list";
+        }
+    }
+
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/addmenu")
     public String addmenu(MenuForm menuForm, @RequestParam String process, Model model) {
         model.addAttribute("process", process);
@@ -186,22 +200,6 @@ public class StoreController {
 
 
 
-    @GetMapping("/owner/list")
-    public String ownerpage_list(Model model,Principal principal, @RequestParam(value ="page", defaultValue = "0")int page) {
-
-        if (principal == null ) {
-            return "redirect:/user/login";
-        } else {
-            User siteUser = this.userService.getUser(principal.getName());
-//          List<Store> ownerStoreList = storeService.getstoreList_owner(siteUser.getNickname());
-//            Page<Store> paging = this.storeService.getList(page);
-//            Page<Store> paging = this.storeService.getList(page, siteUser);
-            Page<Store> paging = this.storeService.getownerList(page, siteUser);
-
-            model.addAttribute("paging",paging);
-            return "store_owner_list";
-        }
-    }
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/modify/{storeid}")
     public String modifystore(Model model, StoreForm storeForm, @PathVariable("storeid")Integer id ,Principal principal) {
@@ -222,6 +220,7 @@ public class StoreController {
     @PostMapping("/modify/{storeid}")
     public String modifystore(StoreForm storeForm ,@PathVariable("storeid")Integer id, BindingResult bindingResult, List<MultipartFile> fileList, Principal principal) throws Exception{
         Store store = storeService.findstoreById(id);
+        int anchor = id;
 
         photoService.saveImgsForStore(store, fileList);
 
@@ -237,15 +236,17 @@ public class StoreController {
         store.setMenuList(tempmenuList);
         this.storeService.modifyStore(store, storeForm.getName(), storeForm.getContent(), storeForm.getCategory(), storeForm.getPostcode(), storeForm.getRoadAddress(), storeForm.getJibunAddress());
         tempmenuList.clear();
-        return String.format("redirect:/store/owner/list#answer_%s", store.getId());
-//        return "redirect:/store/owner/list";
+//        return String.format("redirect:/store/owner/list/#store_%s", anchor);
+        return "redirect:/store/owner/list";
     }
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/delete/{storeid}")
     public String deletestore(@PathVariable("storeid")Integer id,Principal principal) {
+//        int anchor = id-1;
         Store store = this.storeService.getStore(id);
         storeService.deleteStore(store);
-        return "redirect:/store/owner/list";
+        return "redirect:/store/owner/list/";
+//        return String.format("redirect:/store/owner/list/#%s", anchor);
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -258,6 +259,17 @@ public class StoreController {
         return "menu_list";
     }
 
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/owner/search_list")
+    public String owner_storesearch(Principal principal, String keyword, Model model, @RequestParam(value ="page", defaultValue = "0")int page) {
+        if (principal == null ) {
+            return "redirect:/user/login";
+        } else {
+            Page<Store> paging = this.storeService.getList(page, keyword);
+            model.addAttribute("paging",paging);
+            return "store_owner_list";
+        }
+    }
 
 
 }

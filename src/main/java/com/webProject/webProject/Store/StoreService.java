@@ -96,7 +96,6 @@ public class StoreService {
         store.setPostcode(postcode);
         store.setRoadAddress(roadAddress);
         store.setJibunAddress(jibunAddress);
-        store.setCreateDate(LocalDateTime.now());
         this.storeRepository.save(store);
     }
 
