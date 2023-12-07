@@ -34,4 +34,6 @@ public class User {
     private String fileName;  // 파일 원본명
 
     private String filePath;  // 파일 저장 경로
+
+    private String provider;
 }
