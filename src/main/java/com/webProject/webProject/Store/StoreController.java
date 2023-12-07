@@ -117,30 +117,8 @@ public class StoreController {
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/create")
     public String createStore(StoreForm storeForm,Principal principal, Model model){
-
-//        Store newstore = storeService.defaultStore(userService.getUser(principal.getName()));
-//        List<Menu> menuList = new ArrayList<>();
-//        User siteUser = this.userService.getUser(principal.getName()); // ?이거왜있는거
-//        model.addAttribute("menuList", tempmenuList);
-//        model.addAttribute("process", "create");
-//        System.out.println(newstore.getId());
         return "store_form";
     }
-
-//    @PreAuthorize("isAuthenticated()")
-//    @GetMapping("/create/addmenus")
-//    public String createStoreAddmenus(StoreForm storeForm,Principal principal, Model model){
-//
-////        Store newstore = storeService.defaultStore(userService.getUser(principal.getName()));
-//        List<Menu> menuList = new ArrayList<>();
-////        User siteUser = this.userService.getUser(principal.getName()); // ?이거왜있는거
-//        model.addAttribute("menuList", tempmenuList);
-//        model.addAttribute("process", "create");
-////        System.out.println(newstore.getId());
-//        return "store_form";
-//    }
-
-
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/create")
@@ -171,34 +149,6 @@ public class StoreController {
             return "store_owner_list";
         }
     }
-
-    @PreAuthorize("isAuthenticated()")
-    @GetMapping("/addmenu")
-    public String addmenu(MenuForm menuForm, @RequestParam String process, Model model) {
-        model.addAttribute("process", process);
-        return "menu_form";
-    }
-    @PreAuthorize("isAuthenticated()")
-    @PostMapping("/addmenu")
-    public String addmenu(@ModelAttribute MenuFormWrapper menuFormWrapper, Principal principal, @RequestParam String process) {
-
-//        process if문처리 create면 거따가..modify면 거따가...
-//        create면 tempmenulist, modify면 해당스토어에. 밑에는 크리에이트일때->문제는 뒤로가기하면 clear가안됨 ㅜ
-        if (process.equals("create")) {
-            List<MenuForm> menuFormList = menuFormWrapper.getMenuFormList();
-            for (MenuForm menuForm : menuFormList) {
-                Menu menu = new Menu();
-                menu.setMenuName(menuForm.getMenuName());
-                menu.setPrice(menuForm.getPrice());
-                tempmenuList.add(menu);
-            }
-            return "redirect:/store/create";
-        } else {
-            return "redirect:/store/" + process ;
-        }
-    }
-
-
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/modify/{storeid}")
@@ -270,6 +220,33 @@ public class StoreController {
             return "store_owner_list";
         }
     }
+
+
+    @PostMapping("/search_list")
+    public String search_list(Model model, String keyword) {//, @RequestParam(value = "findAddress", required = false) String jibunAddress
+        List<Store> storeList = this.storeService.searchStoreList(keyword);
+//        List<Store> storeList  = this.storeService.getAddressList(jibunAddress);
+//        System.out.println(jibunAddress);
+        model.addAttribute("location", "location");
+        model.addAttribute("storeList", storeList);
+        return "store_list";
+    }
+
+    @PostMapping("/search_list_menu")
+    public String search_list_menu(Model model, String keyword) {//, @RequestParam(value = "findAddress", required = false) String jibunAddress
+        List<Menu> menuList = this.menuService.searchedmenu_storelist(keyword);
+
+        List<Store> storeList = new ArrayList<>();
+        for (Menu menu : menuList) {
+            storeList.add(storeService.findstoreById(menu.getStore().getId()));
+        }
+//        List<Store> storeList  = this.storeService.getAddressList(jibunAddress);
+//        System.out.println(jibunAddress);
+        model.addAttribute("location", "location");
+        model.addAttribute("storeList", storeList);
+        return "store_list";
+    }
+
 
 
 }

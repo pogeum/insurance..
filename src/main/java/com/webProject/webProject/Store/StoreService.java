@@ -33,26 +33,6 @@ public class StoreService {
     private final StoreRepository storeRepository;
     private List<MultipartFile> files;
 
-    public void setFiles(List<MultipartFile> files) {
-        this.files=files;
-    }
-
-    public List<byte[]> convertMultipartFIleToByteArray() throws IOException {
-        List<byte[]> bytes = new ArrayList<>();
-        for (MultipartFile file : this.files) {
-            bytes.add(file.getBytes());
-        }
-
-        return bytes;
-    }
-
-    public Store defaultStore(User user) {
-        Store store = new Store();
-        store.setAuthor(user);
-        return this.storeRepository.save(store);
-    }
-
-
     public Store createStore(User user, String name, String content, String category, String roadAddress, String jibunAddress) {
         Store store = new Store();
         store.setAuthor(user);
@@ -122,21 +102,6 @@ public class StoreService {
         };
     }
 
-
-    public List<Store> getstoreList_owner(String authorname) {
-        List<Store> targetstoreList = new ArrayList<>();
-        for (Store store : this.storeRepository.findAll()){
-            if (store.getAuthor().getNickname() == null ) {
-                store.getAuthor().setNickname("unknown");
-            }
-
-            if (store.getAuthor().getNickname().equals(authorname)) {
-                targetstoreList.add(store);
-            }
-        }
-        return targetstoreList;
-    }
-//    페이징처리 메서드
     public Page<Store> getownerList(int page, User owner) {
         List<Sort.Order> sorts = new ArrayList<>();
         sorts.add(Sort.Order.desc("createDate"));
@@ -151,6 +116,10 @@ public class StoreService {
         sorts.add(Sort.Order.desc("createDate"));
         Pageable pageable = PageRequest.of(page, 9, Sort.by(sorts));
         return this.storeRepository.findStoreByKeyword(kw, pageable);
+    }
+
+    public List<Store> searchStoreList(String keyword) {
+        return this.storeRepository.findStoresByKeyword(keyword);
     }
 
 
