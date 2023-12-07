@@ -20,7 +20,11 @@
                     <img onerror="this.style.visibility='hidden'" th:src="@{|/photo/${userinfo.fileName}|}" class="img-fluid" style="width: 20%; height: 20%; border-radius: 50%; margin-bottom: 30px;">
                     <h4 th:text="${userinfo.nickname}" style="width: 250px; padding: 10px;"></h4>
                     <span th:text="${userinfo.email}" style="width: 250px; padding: 10px;"></span>
-                    <a th:href="@{/user/profile/modify}" class="btn btn-dark" style="padding: 10px;">수정</a>
+                    <div th:if="${userinfo != null}">
+                        <div th:if="${userinfo.provider == 'web'}">
+                            <a th:href="@{/user/profile/modify}" class="btn btn-dark" style="padding: 10px;">수정</a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

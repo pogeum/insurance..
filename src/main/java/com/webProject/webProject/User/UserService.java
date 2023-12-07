@@ -59,7 +59,7 @@ public class UserService {
         user.setNickname(nickname);
         user.setRole(role);
         user.setCreateDate(LocalDateTime.now());
-
+        user.setProvider("web");  // 홈페이지에서 회원가입했을시 -> 소셜로그인 X
         user.setFileName(fileName); // 파일 이름
         user.setFilePath(projectPath + fileName); // 저장 경로, 파일 이름
 

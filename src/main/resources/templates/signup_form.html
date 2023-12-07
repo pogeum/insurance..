@@ -13,14 +13,30 @@
                         </div>
                     </div>
                     <div style="height:90%; padding:20px;">
-                        <div class="d-flex" style="height: 100%; width: 100%;">
-                            <div class="d-flex flex-column" style="width:90%; margin-right:10px; padding: 10px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4); background-color: #ffffff;">
-                                <img src="/user.png" style="width: 100%; height: 100%;">
-                                <a class="btn btn-dark" style="flex: 1; width: 100%;" th:href="@{/user/user_signup}" role="button">일반 회원가입</a>
+                        <div class="d-flex flex-column">
+                            <div class="d-flex" style="height: 100%; width: 100%;margin-bottom: 20px;">
+                                <div class="d-flex flex-column" style="width:90%; margin-right:10px; padding: 10px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4); background-color: #ffffff;">
+                                    <img src="/user.png" style="width: 100%; height: 100%;">
+                                    <a class="btn btn-dark" style="flex: 1; width: 100%;" th:href="@{/user/user_signup}" role="button">일반 회원가입</a>
+                                </div>
+                                <div class="d-flex flex-column" style="width:90%; margin-left:10px; padding: 10px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4); background-color: #ffffff;">
+                                    <img src="/boss.png" style="width: 100%; height: 100%;">
+                                    <a class="btn btn-dark" style="flex: 1; width: 100%;" th:href="@{/user/owner_check_bno}" role="button">사장 회원가입</a>
+                                </div>
                             </div>
-                            <div class="d-flex flex-column" style="width:90%; margin-left:10px; padding: 10px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4); background-color: #ffffff;">
-                                <img src="/boss.png" style="width: 100%; height: 100%;">
-                                <a class="btn btn-dark" style="flex: 1; width: 100%;" th:href="@{/user/owner_check_bno}" role="button">사장 회원가입</a>
+                            <div style="width: 100%; text-align: center; border-bottom: 1px solid #ccc; line-height: 0.1em; margin: 30px 0 30px 0;">
+                                <span style="background-color: #fff; padding: 0 10px; font-size: 14px; color: #333;font-weight: bold;">다른 계정으로 로그인 하기</span>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <a href="/oauth2/authorization/google">
+                                    <img src="/oAuth2/google_icon.png" alt="Google Login" style="width: 80px; height: 80px;">
+                                </a>
+                                <a href="/oauth2/authorization/kakao">
+                                    <img src="/oAuth2/kakao_icon.png" alt="Kakao Login" style="width: 80px; height: 80px;">
+                                </a>
+                                <a href="/oauth2/authorization/naver">
+                                    <img src="/oAuth2/naver_icon.png" alt="Naver Login" style="width: 80px; height: 80px;">
+                                </a>
                             </div>
                         </div>
                     </div>
