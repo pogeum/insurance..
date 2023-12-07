@@ -194,8 +194,9 @@ public class StoreController {
         } else {
             User siteUser = this.userService.getUser(principal.getName());
 //          List<Store> ownerStoreList = storeService.getstoreList_owner(siteUser.getNickname());
-            Page<Store> paging = this.storeService.getList(page);
+//            Page<Store> paging = this.storeService.getList(page);
 //            Page<Store> paging = this.storeService.getList(page, siteUser);
+            Page<Store> paging = this.storeService.getownerList(page, siteUser);
 
             model.addAttribute("paging",paging);
             return "store_owner_list";
