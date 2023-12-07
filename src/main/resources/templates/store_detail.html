@@ -27,13 +27,13 @@
                                 </div>
                                 <div th:each="menu : ${menuList}" style="flex: 2; border:1px solid gray; margin-left:10px; display:flex;">
                                     <div th:each="photo : ${menu.photoList}">
-                                        <img th:src="@{'/img/' + ${photo.fileName}}" alt="Menu Photo" style="border-radius: 10px; "/>
+                                        <img th:src="@{'/img/' + ${photo.fileName}}" alt="Menu Photo" style="border-radius: 10px; width:100%; height:100%; "/>
                                     </div>
                                     <p th:text="${menu.menuName}" style="font-weight:bold;"></p>
                                     <span th:text="${menu.price} + '원' "></span>
                                 </div>
                                 <!-- 모달버튼 -->
-                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">더보기</button>
+                                <button type="button" class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#exampleModal">더보기</button>
                                 <!-- 모달 -->
                                 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                     <div class="modal-dialog modal-dialog-scrollable"> <!--스크롤왜적용이안됨?-->
@@ -45,7 +45,7 @@
                                             <div class="modal-body" >
                                                 <div th:each="menu : ${menuList}" style="flex: 2; border:1px solid gray; margin-left:10px; display:flex;">
                                                     <div th:each="photo : ${menu.photoList}">
-                                                        <img th:src="@{'/img/' + ${photo.fileName}}" alt="Menu Photo" style="border-radius: 10px; "/>
+                                                        <img th:src="@{'/img/' + ${photo.fileName}}" alt="Menu Photo" style="border-radius: 10px; width:100%; height:100%; "/>
                                                     </div>
                                                     <p th:text="${menu.menuName}" style="font-weight:bold;"></p>
                                                     <span th:text="${menu.price} + '원' "></span>
