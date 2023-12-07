@@ -1,9 +1,6 @@
 <html layout:decorate="~{layout}" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:layout="http://www.w3.org/1999/xhtml">
 <div layout:fragment="content">
     <div class="container my-3">
-<!--        <div class="col-6">-->
-<!--            <a class="btn btn-sm btn-light" th:href="@{/store/addmenu}" style="position: absolute; bottom: 0; right: 0;" >메뉴추가</a>-->
-<!--        </div>-->
         <form th:action="@{|/menu/addmenu|}" method="post">
             <input type="hidden" name="storeid" th:value="${store.id}">
             <input class="btn btn-sm btn-light" type="submit" value="메뉴추가하기">
@@ -29,7 +26,7 @@
                                     <div th:each="photo : ${menu.photoList}">
                                         <img th:src="@{'/img/' + ${photo.fileName}}" alt="Menu Photo"/>
                                     </div>
-                                    <button type="button" class="book-img-remove color_st05" onClick="">삭제</button>
+<!--                      보류 첨부파일 삭제기능 만드는중..<button type="button" class="book-img-remove color_st05" onClick="">삭제</button>-->
 
                                 </div>
 
@@ -70,12 +67,12 @@
         }
     }
 
-    function removeImage(fileInput, fileTag) {
-        document.querySelector('.'+fileTag+'-img-section').style.display = "none";
-        document.querySelector('.'+fileTag+'-img-preview').setAttribute('src', '#');
-        fileInput.value = '';
-        fileInput.required = true;
-    }
+<!--    function removeImage(fileInput, fileTag) {-->
+<!--        document.querySelector('.'+fileTag+'-img-section').style.display = "none";-->
+<!--        document.querySelector('.'+fileTag+'-img-preview').setAttribute('src', '#');-->
+<!--        fileInput.value = '';-->
+<!--        fileInput.required = true;-->
+<!--    }-->
 
 </script>
 </html>
