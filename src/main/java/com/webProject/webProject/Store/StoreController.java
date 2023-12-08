@@ -190,7 +190,17 @@ public class StoreController {
         return "redirect:/store/owner/list";
     }
 
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/delete/{storeid}")
+    public String deletestore(@PathVariable("storeid")Integer id,Principal principal) {
+//        int anchor = id-1;
+        Store store = this.storeService.getStore(id);
+        storeService.deleteStore(store);
+        return "redirect:/store/owner/list/";
+//        return String.format("redirect:/store/owner/list/#%s", anchor);
+    }
 
+//====================가게사진 수정, 삭제, 저장============================
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/updatephoto/{storeid}")
     public String addphoto(@PathVariable("storeid")Integer storeid, Model model) {
@@ -212,18 +222,8 @@ public class StoreController {
         return "redirect:/store/updatephoto/"+ storeid;
     }
 
+//=============================================================================
 
-
-
-    @PreAuthorize("isAuthenticated()")
-    @GetMapping("/delete/{storeid}")
-    public String deletestore(@PathVariable("storeid")Integer id,Principal principal) {
-//        int anchor = id-1;
-        Store store = this.storeService.getStore(id);
-        storeService.deleteStore(store);
-        return "redirect:/store/owner/list/";
-//        return String.format("redirect:/store/owner/list/#%s", anchor);
-    }
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/menuList/{storeid}")
