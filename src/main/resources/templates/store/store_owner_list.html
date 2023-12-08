@@ -21,31 +21,6 @@
                 </div>
             </form>
 
-            <!--태원님 페이징처리 ui수정 부탁-->
-
-<!--            <div th:if="${!paging.isEmpty()}">-->
-<!--                <ul class="pagination justify-content-center">-->
-<!--                    <li class="page-item" th:classappend="${!paging.hasPrevious} ? 'disabled'">-->
-<!--                        <a class="page-link" th:href="@{|?page=${paging.number-1 > 0 ? paging.number-1 : 0}|}">-->
-<!--                            <span>이전</span>-->
-<!--                        </a>-->
-<!--                    </li>-->
-<!--                    <li th:each="page: ${#numbers.sequence(paging.number, paging.number + 9)}"-->
-<!--                        th:if="${page >= 0 and page < paging.totalPages}"-->
-<!--                        th:classappend="${page == paging.number} ? 'active'" class="page-item">-->
-<!--                        <a th:text="${page + 1}" class="page-link" th:href="@{|?page=${page}|}"></a>-->
-<!--                    </li>-->
-<!--                    <li class="page-item" th:classappend="${!paging.hasNext} ? 'disabled'">-->
-<!--                        <a class="page-link" th:href="@{|?page=${paging.number+1 < paging.totalPages ? paging.number : paging.totalPages-1}|}">-->
-<!--                            <span>다음</span>-->
-<!--                        </a>-->
-<!--                    </li>-->
-<!--                </ul>-->
-<!--            </div>-->
-            <!--태원님 페이징처리 ui수정 부탁 끝         -->
-
-
-
             <!-- 페이징처리 시작 -->
             <div th:if="${!paging.isEmpty()}" style="display:flex; width: 50%;">
                 <ul class="pagination justify-content-center">
@@ -55,11 +30,29 @@
                             <span>&laquo;</span>
                         </a>
                     </li>
-                    <li th:each="page: ${#numbers.sequence(0, paging.totalPages-1)}" th:if="${page >= paging.number-5 and page <= paging.number+5}"
-                        th:classappend="${page == paging.number} ? 'active'"
-                        class="page-item">
+
+
+                    <!--수정한 코드--><!--태원님 페이징처리 ui수정 부탁-->
+                    <li th:each="page: ${#numbers.sequence((paging.number <= 5 ? 1 : (paging.number - 5)),
+                                 (paging.number <= 5 ? 10 : (paging.number + 5 < paging.totalPages ? paging.number + 4 : paging.totalPages))
+                                  )}" th:classappend="${page == paging.number} ? 'active'" class="page-item">
                         <a th:text="${page}" class="page-link" th:href="@{|?page=${page}|}"></a>
                     </li>
+                    <!--        (paging.number <= 5 ? 1 : (paging.number - 5))
+                                : 시작 범위를 결정하는 부분입니다.  현재 페이지 번호(paging.number)가 5 이하이면 1부터 시작하고, 그렇지 않으면 현재 페이지에서 5를 뺀 값으로 시작합니다.  -->
+
+                    <!--        (paging.number <= 5 ? 10 : (paging.number + 5 < paging.totalPages ? paging.number + 5 : paging.totalPages))
+                                : 현재 페이지 번호(paging.number)가 5 이하이면 10까지 표시하고, 그렇지 않으면 현재 페이지에서 5를 더한 값으로 끝내거나,
+                                  총 페이지 수를 넘어가면 총 페이지 수까지만 표시합니다. -->
+
+                    <!-- 여기까지--><!--태원님 페이징처리 ui수정 부탁 끝         -->
+
+<!--                    <li th:each="page: ${#numbers.sequence(0, paging.totalPages-1)}" th:if="${page >= paging.number-5 and page <= paging.number+5}"-->
+<!--                        th:classappend="${page == paging.number} ? 'active'"-->
+<!--                        class="page-item">-->
+<!--                        <a th:text="${page}" class="page-link" th:href="@{|?page=${page}|}"></a>-->
+<!--                    </li>-->
+
                     <li class="page-item" th:classappend="${!paging.hasNext} ? 'disabled'">
                         <a class="page-link" th:href="@{|?page=${paging.number+1}|}">
                             <span>&raquo;</span>
@@ -89,6 +82,8 @@
                                 <p class="card-text" th:text="${store.content}" style="margin:5px;"></p>
                                 <p class="card-text" th:text="'가게등록일시 : ' + ${#temporals.format(store.createDate, 'yyyy-MM-dd HH:mm')}" style="margin:5px;"></p>
                                 <div class="d-flex justify-content-end">
+                                    <a th:href="@{|/store/updatephoto/${store.id}|}" class="update btn btn-sm btn-outline-secondary"
+                                       th:text="가게사진" style="margin:0 5px 0 5px;"></a>
                                     <a th:href="@{|/store/menuList/${store.id}|}" class="update btn btn-sm btn-outline-secondary"
                                        th:text="메뉴관리" style="margin:0 5px 0 5px;"></a>
                                     <a th:href="@{|/store/modify/${store.id}|}" class="update btn btn-sm btn-outline-secondary"

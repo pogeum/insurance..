@@ -189,6 +189,26 @@ public class StoreController {
 //        return String.format("redirect:/store/owner/list/#store_%s", anchor);
         return "redirect:/store/owner/list";
     }
+
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/updatephoto/{storeid}")
+    public String addphoto(@PathVariable("storeid")Integer storeid, Model model) {
+        Store store = storeService.findstoreById(storeid);
+
+        model.addAttribute("store",store);
+        return "store/store_photo";
+    }
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/deletephoto")
+    public String deletephoto(Integer photoid, Integer storeid) {
+        photoService.deletephotoById(photoid);
+        return "redirect:/store/updatephoto/"+ storeid;
+    }
+
+
+
+
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/delete/{storeid}")
     public String deletestore(@PathVariable("storeid")Integer id,Principal principal) {
@@ -246,4 +266,6 @@ public class StoreController {
         model.addAttribute("storeList", storeList);
         return "store/store_list";
     }
+
+
 }
