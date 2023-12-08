@@ -1,0 +1,60 @@
+body {
+    background-color: #f0f0f0;
+}
+
+section.container {
+    margin: 40px;
+    position: relative;
+    background-color: #fff;
+    width: 86%;
+    flex-direction: column;
+    gap: 12px;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    border-radius: 8px;
+    height: 189px;
+}
+
+.carousel-container {
+    position: relative;
+    width: 87%
+    margin: 10px;
+    overflow:hidden;
+}
+
+.carousel {
+    width: 348%;
+    display: flex;
+    --img-size: 170px;
+    height: var(--img-size);
+    grid-template-columns: repeat(4, var(--img-size));
+    transition: transform 1.3s ease-in-out;
+}
+
+.carousel img {
+    aspect-ratio: 1/1;
+    object-fit: cover;
+    width: 170px;
+    width: 100%;
+    border: solid 1px;
+}
+
+.left, .right {
+    z-index: 5;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    position: absolute;
+    top: 37%;
+    cursor: pointer;
+}
+
+.left {
+    left: -3%;
+}
+
+.right {
+    right: -5%;
+}
+.menubox > div:nth-child(n+3) {
+    display: none;
+}
