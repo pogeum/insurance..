@@ -17,10 +17,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -139,5 +136,28 @@ public class UserService {
         sorts.add(Sort.Order.desc("createDate"));
         Pageable pageable = PageRequest.of(page, 6, Sort.by(sorts));
         return this.userRepository.findAllByRoleAndNicknameContaining(role, kw, pageable);
+    }
+
+    public List<User> findIdByEmail(String email) {
+        return this.userRepository.findByEmail(email);
+    }
+
+    public String generateTemporaryPassword() {
+        // 임시 비밀번호를 랜덤으로 생성 (이 부분을 보안적으로 강화할 수 있음)
+        int length = 10;
+        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        StringBuilder temporaryPassword = new StringBuilder();
+
+        Random random = new Random();
+        for (int i = 0; i < length; i++) {
+            temporaryPassword.append(characters.charAt(random.nextInt(characters.length())));
+        }
+
+        return temporaryPassword.toString();
+    }
+
+    public User updatePassword(User user, String newPassword) {
+        user.setPassword(passwordEncoder.encode(newPassword));
+        return userRepository.save(user);
     }
 }

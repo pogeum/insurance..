@@ -1,0 +1,74 @@
+<html layout:decorate="~{layout}" xmlns:layout="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml">
+<div layout:fragment="content" class="content-area" style="height: 93.8%;">
+    <div class="container d-flex justify-content-center align-items-center" style="width:100%; height: 100%;">
+        <div class="d-flex flex-column justify-content-center align-items-center" style="border: 2px solid gray; border-radius: 20px; width: 70%;height: 70%;">
+            <div style="height:40%;">
+                <form th:action="@{/user/sendVerificationCode}" class="text-center" method="post" style="width:100%; height:100%; padding:5%;">
+                    <h2>아이디 찾기</h2>
+                <!-- 이메일 입력 폼 -->
+                    <input type="hidden" name="findCommon" value="findId">
+                    <div class="d-flex justify-content-center" style="margin-top: 20px;">
+                        <input type="email" id="email" name="email" class="form-control" th:value="${email}" style="width: 500px; margin-right: 20px;" placeholder="이메일로 찾기" required>
+                        <button type="submit" id="verificationCodeButton" class="reset-btn btn btn-dark" style="width:100px;" formaction="/user/sendVerificationCode">인증요청</button>
+                    </div>
+                </form>
+                <!-- 인증 코드 입력 폼 -->
+                <form th:action="@{/user/findId}" method="post" class="mt-5 text-center" th:if="${verificationCodeForm}">
+                    <input type="hidden" name="verificationCodeForm" th:value="${verificationCodeForm}">
+                    <div class="d-flex justify-content-center">
+                        <div class="form-group">
+                            <label for="verificationCode" class="d-flex justify-content-start">인증 코드:</label>
+                            <div class="d-flex justify-content-center">
+                                <input type="text" id="verificationCode" name="verificationCode" class="form-control" style="width: 350px; margin-right: 20px;" placeholder="인증 코드" required>
+                                <button type="submit" class="reset-btn btn btn-dark">인증확인</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- 아이디 찾기 결과가 있을 때에만 보여줌 -->
+            <div style="height:40%;">
+                <div th:if="${verificationCodeMismatch != null and verificationCodeMismatch != true}">
+                    <p style="margin: 16px 0 5px 0;">찾은 아이디:</p>
+                    <div class="alert alert-success text-center" style="width:460px; height:100%;">
+                        <table class="table">
+                            <tbody>
+                            <tr th:each="user, stat : ${userList}">
+                                <td>
+                                    <span th:text="${stat.index + 1} + '.'" style="margin-right:5px;"></span>
+                                </td>
+                                <td>
+                                    <span th:if="${user.provider == 'Google'}">Google 소셜로그인</span>
+                                    <span th:if="${user.provider == 'Naver'}">Naver 소셜로그인</span>
+                                    <span th:if="${user.provider == 'Kakao'}">Kakao 소셜로그인</span>
+                                    <span th:unless="${user.provider == 'Google' || user.provider == 'Naver' || user.provider == 'Kakao'}" th:text="${user.userId}" style="margin-right:5px;"></span>
+                                </td>
+                                <td>
+                                    <span th:text="${#temporals.format(user.createDate, 'yyyy-MM-dd')} + ' <가입>'" style="margin-right:5px;"></span>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- 아이디를 찾지 못한 경우 -->
+                <div th:if="${notFound}" class="mt-4">
+                    <div class="row mt-3">
+                        <p class="alert alert-warning" style="background: white; border: none; text-align: center; color: black; width: 41%; margin-left: auto; margin-right: auto;" th:text="${errorMessage}"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script th:if="${verificationCodeMismatch}" th:inline="javascript">
+    window.alert('인증 코드가 일치하지 않습니다.');
+</script>
+<script th:if="${notFound}" th:inline="javascript">
+    window.alert('이메일에 해당하는 회원이 없습니다.');
+</script>
+<script th:if="${showConfirmationScript}" th:inline="javascript">
+    alert('인증번호가 이메일로 전송되었습니다.');
+</script>
+</html>

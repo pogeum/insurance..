@@ -23,7 +23,53 @@
                                 <!-- ID 찾기 버튼 -->
                                 <div class="d-flex justify-content-between align-items-center" style="margin-bottom: 10px;">
                                     <label for="username" class="form-label text-center mb-0">사용자ID</label>
-                                    <a href="#" class="find-common-button btn btn-sm btn-secondary" style="font-size: 12px;">아이디 찾기</a>
+<!--                                    <a th:href="@{/user/findIdMethodSelect}" class="find-common-button btn btn-sm btn-secondary" setyle="font-siz: 12px;">아이디 찾기</a>-->
+                                    <!-- Button trigger modal -->
+                                    <button type="button" class="find-common-button btn btn-sm btn-secondary" style="font-size: 11px;" data-bs-toggle="modal" data-bs-target="#exampleModal">아이디 찾기</button>
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Find ID</h1>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="d-flex justify-content-center" style="padding: 2%; font-weight: bold;">아이디 찾는 방법을 선택해 주세요.</div>
+                                                    <div class="d-flex justify-content-center" style="padding: 5%;">
+                                                        <div class="form-group">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="findMethod" value="1" id="flexRadioDefaultEmail" style="width: 20px; height: 20px; margin-top: 1px;">
+                                                                <label for="flexRadioDefaultEmail">이메일로 찾기</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div style="width: 100%; text-align: center; border-bottom: 1px solid #ccc; line-height: 0.1em; margin: 10px 0;"></div>
+                                                    <div class="d-flex justify-content-center" style="padding: 5%;">
+                                                        <div class="form-group">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="findMethod" value="2" id="flexRadioDefaultPhone" style="width: 20px; height: 20px; margin-top: 1px;">
+                                                                <label for="flexRadioDefaultPhone">휴대전화번호로 찾기</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-dark" onclick="checkIDRadio()">선택</button>
+                                                </div>
+                                                <script>
+                                                    function checkIDRadio() {
+                                                        var selectedValue = document.querySelector('input[name="findMethod"]:checked').value;
+                                                        if (selectedValue === '1') {
+                                                            window.location.href = '/user/findIdMethod?type=email';
+                                                        } else if (selectedValue === '2') {
+                                                            window.location.href = '/user/findIdMethod?type=phone';
+                                                        }
+                                                    }
+                                                </script>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="input-group">
                                     <input type="text" name="username" id="username" class="form-control" placeholder="ID" required style="border-top-right-radius: 0; border-bottom-right-radius: 0;">
@@ -39,7 +85,52 @@
                                 <!-- PW 찾기 버튼 -->
                                 <div class="d-flex justify-content-between align-items-center" style="margin-bottom: 10px;">
                                     <label for="password" class="form-label text-center mb-0">비밀번호</label>
-                                    <a href="#" class="find-common-button btn btn-sm btn-secondary" style="font-size: 12px;">비밀번호 찾기</a>
+<!--                                    <a href="#" class="find-common-button btn btn-sm btn-secondary" style="font-size: 11px;">비밀번호 찾기</a>-->
+                                    <button type="button" class="find-common-button btn btn-sm btn-secondary" style="font-size: 11px;" data-bs-toggle="modal" data-bs-target="#exampleModal2">비밀번호 찾기</button>
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabelPw" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h1 class="modal-title fs-5" id="exampleModalLabelPw">Find PW</h1>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="d-flex justify-content-center" style="padding: 2%; font-weight: bold;">아이디 찾는 방법을 선택해 주세요.</div>
+                                                    <div class="d-flex justify-content-center" style="padding: 5%;">
+                                                        <div class="form-group">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="findPwMethod" value="1" id="PwflexRadioDefaultEmail" style="width: 20px; height: 20px; margin-top: 1px;">
+                                                                <label for="PwflexRadioDefaultEmail">이메일로 찾기</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div style="width: 100%; text-align: center; border-bottom: 1px solid #ccc; line-height: 0.1em; margin: 10px 0;"></div>
+                                                    <div class="d-flex justify-content-center" style="padding: 5%;">
+                                                        <div class="form-group">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="findPwMethod" value="2" id="PwflexRadioDefaultPhone" style="width: 20px; height: 20px; margin-top: 1px;">
+                                                                <label for="PwflexRadioDefaultPhone">휴대전화번호로 찾기</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-dark" onclick="checkPWRadio()">선택</button>
+                                                </div>
+                                                <script>
+                                                    function checkPWRadio() {
+                                                        var selectedValue = document.querySelector('input[name="findPwMethod"]:checked').value;
+                                                        if (selectedValue === '1') {
+                                                            window.location.href = '/user/findPwMethod?type=email';
+                                                        } else if (selectedValue === '2') {
+                                                            window.location.href = '/user/findPwMethod?type=phone';
+                                                        }
+                                                    }
+                                                </script>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="input-group">
                                     <input type="password" name="password" id="password" class="form-control" placeholder="Password">

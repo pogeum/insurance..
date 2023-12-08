@@ -17,4 +17,6 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     @Query("SELECT DISTINCT u FROM User u WHERE u.role = :role AND u.nickname LIKE %:kw%")
     Page<User> findAllByRoleAndNicknameContaining(@Param("role") String role, @Param("kw") String kw, Pageable pageable);
+
+    List<User> findByEmail(String email);
 }
