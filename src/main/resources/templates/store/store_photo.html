@@ -1,45 +1,78 @@
 <html layout:decorate="~{layout}" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:layout="http://www.w3.org/1999/xhtml">
 <div layout:fragment="content">
     <div class="container my-3">
-        <div style="width:40%; background: white; box-shadow:0px 0px 10px rgba(0,0,0,0.2);border-radius: 10px; padding : 10px; ">
-            <input type="file" name="fileList" id="fileList" multiple/>
-            <div id="imagePreview"></div>
-            <button onclick="deleteSelectedFile()">삭제</button>
-        </div>
+
         <a class="btn btn-sm btn-light" th:href="@{|/store/owner/list|}">뒤로가기</a>
+        <input class="btn btn-sm btn-light" type="button" onclick="clone();" value="사진추가">
+
+        <form th:action id="save-photo-form" method="post" enctype="multipart/form-data">
+            <input type="hidden" name="storeid" th:value="${store.id}">
+            <div id="input-area">
+                <div class="photo-item"
+                     style="width:40%; background: white; box-shadow:0px 0px 10px rgba(0,0,0,0.2);border-radius: 10px; padding : 10px; ">
+                    <input class="btn btn-sm btn-light" type="file" name="fileList" id="fileList" multiple/>
+                    <div id="imagePreview"></div>
+                </div>
+            </div>
+            <div>
+                <input type="button" value="저장하기" class="btn btn-sm btn-light" onclick="savePhoto()">
+            </div>
+        </form>
 
         <div th:each="photo : ${store.photoList}">
             <form th:action id="updatephotoForm" method="post" enctype="multipart/form-data">
-                <div class="card text-dark bg-light mb-3" style="width: 80%; display: flex; flex-direction: column;">
-                    <div class="card-header">
-                        <div class="card-body">
-                            <div class="mb-3">
+                <div class="photo-item"
+                     style="width:40%; background: white; box-shadow:0px 0px 10px rgba(0,0,0,0.2);border-radius: 10px; padding : 10px; ">
+                    <div class="container">
+                        <div class="row row-cols-4">
+                            <div class="col">
                                 <img th:src="@{'/img/' + ${photo.fileName}}" alt="Menu Photo"/>
-                                <div style="position: absolute; bottom: 0; right: 0;">
-                                    <div>
-                                        <input type="hidden" name="storeid" th:value="${photo.store.getId()}">
-                                        <input type="hidden" name="photoid" th:value="${photo.id}">
-                                        <input type="button" value="삭제" class="delete btn btn-sm btn-outline-secondary" onclick="deletePhoto()">
-                                    </div>
-                                </div>
-
+                                <input type="hidden" name="storeid" th:value="${photo.store.getId()}">
+                                <input type="hidden" name="photoid" th:value="${photo.id}">
+                                <input type="button" value="삭제" class="delete btn btn-sm btn-outline-secondary"
+                                       onclick="deletePhoto()">
                             </div>
                         </div>
-
                     </div>
                 </div>
+
+
+
+<!--                <div class="card text-dark bg-light mb-3" style="width: 80%; display: flex; flex-direction: column;">-->
+<!--                    <div class="card-header">-->
+<!--                        <div class="card-body">-->
+<!--                            <div class="mb-3">-->
+<!--                                <img th:src="@{'/img/' + ${photo.fileName}}" alt="Menu Photo"/>-->
+<!--                                <div style="position: absolute; bottom: 0; right: 0;">-->
+<!--                                    <div>-->
+<!--                                        <input type="hidden" name="storeid" th:value="${photo.store.getId()}">-->
+<!--                                        <input type="hidden" name="photoid" th:value="${photo.id}">-->
+<!--                                        <input type="button" value="삭제" class="delete btn btn-sm btn-outline-secondary"-->
+<!--                                               onclick="deletePhoto()">-->
+<!--&lt;!&ndash;                                        <input type="button" value="저장" class="delete btn btn-sm btn-outline-secondary"&ndash;&gt;-->
+<!--&lt;!&ndash;                                               onclick="savePhoto()">&ndash;&gt;-->
+<!--                                    </div>-->
+<!--                                </div>-->
+
+<!--                            </div>-->
+<!--                        </div>-->
+
+<!--                    </div>-->
+<!--                </div>-->
             </form>
         </div>
     </div>
 </div>
 <script layout:fragment="script" type='text/javascript'>
 
-<!--    function savePhoto() {-->
-<!--        saveUrl = '/store/deletephoto';-->
-<!--        form = document.getElementById('updatephotoForm');-->
-<!--        form.action = saveUrl;-->
-<!--        form.submit();-->
-<!--    }-->
+    function savePhoto() {
+        console.log('aaa');
+        saveUrl = '/store/savephoto';
+        form = document.getElementById('save-photo-form');
+        console.log(form);
+        form.action = saveUrl;
+        form.submit();
+    }
 
     function deletePhoto() {
         saveUrl = '/store/deletephoto';
@@ -47,6 +80,25 @@
         form.action = saveUrl;
         form.submit();
     }
+
+    let idx = 1;
+
+        function clone(){
+            let inputArea = document.getElementById('input-area');
+            let photoItem = document.querySelector('.photo-item');
+
+            const newNode = photoItem.cloneNode(true);
+            // 고유한 ID를 생성하기 위해 현재 시간을 사용
+            var timestamp = new Date().getTime();
+            newNode.id = 'input-area-' + timestamp;
+            inputArea.appendChild(newNode);
+
+
+<!--             var timestamp = new Date().getTime();-->
+<!--            clone.id = 'input-area-' + timestamp;-->
+<!--            inputArea.appendChild(newNode);-->
+            idx++;
+        }
 
 </script>
 </html>

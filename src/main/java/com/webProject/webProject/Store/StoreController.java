@@ -205,6 +205,12 @@ public class StoreController {
         photoService.deletephotoById(photoid);
         return "redirect:/store/updatephoto/"+ storeid;
     }
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/savephoto")
+    public String savephoto(Integer storeid, List<MultipartFile> fileList) throws Exception {
+        photoService.saveImgsForStore(storeService.findstoreById(storeid), fileList);
+        return "redirect:/store/updatephoto/"+ storeid;
+    }
 
 
 

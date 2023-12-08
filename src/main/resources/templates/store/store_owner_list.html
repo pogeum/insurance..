@@ -33,7 +33,7 @@
 
 
                     <!--수정한 코드--><!--태원님 페이징처리 ui수정 부탁-->
-                    <li th:each="page: ${#numbers.sequence((paging.number <= 5 ? 1 : (paging.number - 5)),
+                    <li th:each="page: ${#numbers.sequence((paging.number <= 5 ? 0 : (paging.number - 5)),
                                  (paging.number <= 5 ? 10 : (paging.number + 5 < paging.totalPages ? paging.number + 4 : paging.totalPages))
                                   )}" th:classappend="${page == paging.number} ? 'active'" class="page-item">
                         <a th:text="${page}" class="page-link" th:href="@{|?page=${page}|}"></a>
