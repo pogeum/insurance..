@@ -2,6 +2,9 @@ package com.webProject.webProject.User;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.webProject.webProject.CustomUser;
+import com.webProject.webProject.DataNotFoundException;
+import com.webProject.webProject.User.IdorPassword.EmailService;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.apache.http.client.ResponseHandler;
@@ -14,12 +17,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,24 +30,19 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.HtmlUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.security.Principal;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/user")
 public class UserController {
     private final UserService userService;
-
+    private final EmailService emailService;
 
     @GetMapping("/owner_check_bno")
     public String owner_check_bno(OwnerCreateForm ownerCreateForm){
@@ -257,6 +253,198 @@ public class UserController {
             }
         } else {
             return ResponseEntity.ok("NO"); // 실패 시 응답
+        }
+    }
+
+    @RequestMapping("/findIdMethod")
+    public String findIdMethod(@RequestParam("type") String type){
+        if (type.equals("email")){
+            return "user/findId_form";
+        }
+        return "/";
+    }
+    @RequestMapping("/findPwMethod")
+    public String findPwMethod(@RequestParam("type") String type){
+        if (type.equals("email")){
+            return "user/findPw_form";
+        }
+        return "/";
+    }
+    @PostMapping("/findId")
+    public String findId(@RequestParam("verificationCode") String verificationCode, HttpSession session,
+                         @RequestParam(value = "verificationCodeForm", required = false) boolean verificationCodeForm,
+                         Model model) {
+        // 세션에서 저장된 이메일 가져오기
+        String userEmail = (String) session.getAttribute("userEmail");
+        String storedVerificationCode = (String) session.getAttribute("verificationCode");
+
+
+        List<User> userList = this.userService.findIdByEmail(userEmail);
+
+        model.addAttribute("verificationCodeMismatch", false);
+        model.addAttribute("verificationCodeForm", verificationCodeForm);
+        model.addAttribute("email", userEmail);
+
+        if(verificationCode.equals(storedVerificationCode)){
+            model.addAttribute("userList",userList);
+            model.addAttribute("verificationCodeForm",false);
+        }
+
+        if(!verificationCode.equals(storedVerificationCode)) {
+            // 인증 코드 불일치 처리 (예: 에러 메시지 전달)
+            model.addAttribute("verificationCodeMismatch", true);
+            return "user/findId_form";
+        }
+
+        // 찾는 아이디 없을 때
+        if(!userList.isEmpty()) {
+            model.addAttribute("userList", userList);
+        }
+        return "user/findId_form";
+    }
+
+    @PostMapping("/sendVerificationCode")
+    public String sendVerificationCode(@RequestParam("email") String email, Model model, HttpSession session) {
+        String verificationCode = String.valueOf((int) (Math.random() * 9000) + 1000);
+
+        try {
+            List<User> members = this.userService.findIdByEmail(email);
+
+            emailService.sendVerificationCode(email, verificationCode);
+            session.setAttribute("userEmail", email);
+            session.setAttribute("verificationCode", verificationCode);
+
+            model.addAttribute("verificationCode", verificationCode);
+            model.addAttribute("email", email);
+            model.addAttribute("members", members);
+            model.addAttribute("verificationCodeForm", true);
+            model.addAttribute("showConfirmationScript", true);
+        } catch (DataNotFoundException e) {
+            model.addAttribute("notFound", true);
+        }
+        return "user/findId_form";
+    }
+    @GetMapping("/findPassword")
+    public String findPassword(@RequestParam(value = "resetSuccess", required = false) String resetSuccess,
+                               Model model) {
+
+        model.addAttribute("resetSuccess", resetSuccess);
+
+        return "user/findPw_form";
+    }
+
+    @PostMapping("/findPassword")
+    public String findPassword(@RequestParam("userId") String userId, Model model,
+                               @RequestParam(name = "inputVerificationCode", defaultValue = "") String inputVerificationCode,
+                               @RequestParam(name = "verificationCodeSent", defaultValue = "false") boolean verificationCodeSent,
+                               @RequestParam(name = "verificationCode", defaultValue = "") String verificationCode,
+                               HttpSession session) {
+        try {
+            User user = this.userService.getUser(userId);
+
+            model.addAttribute("userId", userId);
+
+            // 첫 시도 -> 인증코드 보낸 적 없음
+            if (!verificationCodeSent) {
+                String userEmail = user.getEmail();
+                String temporaryPassword = this.userService.generateTemporaryPassword();
+                emailService.sendVerificationCode(userEmail, temporaryPassword);
+                model.addAttribute("verificationCode", temporaryPassword);
+                model.addAttribute("verificationCodeSent", true);
+                model.addAttribute("userEmail", userEmail); // 이메일 정보를 모델에 추가
+                model.addAttribute("message", "임시번호가 이메일로 전송되었습니다.");
+
+                // JavaScript로 확인 메시지를 보여주는 스크립트 추가
+                model.addAttribute("showConfirmationScript", true);
+                return "user/findPw_form";
+            }
+
+            boolean matched = verificationCode.equals(inputVerificationCode);
+
+            if (matched) {
+                model.addAttribute("verificationCodeValid", true);
+                model.addAttribute("userEmail", user.getEmail()); // 여기에 userEmail 추가
+            } else {
+                model.addAttribute("message", "인증번호가 틀렸습니다.");
+                model.addAttribute("verificationCodeValid", false);
+                model.addAttribute("verificationCodeSent", true);
+                model.addAttribute("verificationCode", verificationCode);
+            }
+            return "user/findPw_form";
+
+        } catch (DataNotFoundException e) {
+            model.addAttribute("message", "존재하지 않는 아이디입니다.");
+            model.addAttribute("userId", userId);
+        }
+
+        return "user/findPw_form";
+    }
+
+    @PostMapping("/resendVerificationCode")
+    private String resendVerificationCode(Model model, @RequestParam("userId") String userId) {
+
+        User user = this.userService.getUser(userId);
+        String userEmail = user.getEmail();
+
+        String temporaryPassword = this.userService.generateTemporaryPassword();
+        emailService.sendVerificationCode(userEmail, temporaryPassword);
+        model.addAttribute("verificationCode", temporaryPassword);
+        model.addAttribute("verificationCodeSent", true);
+        model.addAttribute("userEmail", userEmail); // 이메일 정보를 모델에 추가
+        model.addAttribute("userId", userId); // 이메일 정보를 모델에 추가
+
+
+        model.addAttribute("showConfirmationScript", true);
+        model.addAttribute("message", "인증번호 재전송 성공");
+
+        return "user/findPw_form";
+    }
+
+    @GetMapping("/passwordReset")
+    private String passwordReset(Model model) {
+        model.addAttribute("verificationCode", "");
+        model.addAttribute("newPassword", "");
+        model.addAttribute("newPassword1", "");
+        model.addAttribute("message", ""); // 메시지 초기화
+        return "user/findPw_form";
+    }
+
+    @PostMapping("/passwordReset")
+    public String passwordReset(@RequestParam("userId") String userId,
+                                @RequestParam("verificationCode") String verificationCode,
+                                @RequestParam("verificationCodeValid") String verificationCodeValid,
+                                @RequestParam("newPassword") String newPassword,
+                                @RequestParam("newPassword1") String newPassword1,
+                                Model model) {
+
+        System.out.println(userId);
+        System.out.println(newPassword);
+        System.out.println(newPassword1);
+        System.out.println(verificationCodeValid);
+
+        if (!newPassword.equals(newPassword1)) {
+            // Passwords don't match
+            model.addAttribute("verificationCode", verificationCode);
+            model.addAttribute("verificationCodeValid", verificationCodeValid);
+            model.addAttribute("newPassword", newPassword);
+            model.addAttribute("newPassword1", newPassword1);
+            model.addAttribute("userId", userId);
+            return "user/findPw_form";
+        }
+
+        try {
+            User user = this.userService.getUser(userId);
+            this.userService.updatePassword(user, newPassword);
+            model.addAttribute("message", "비밀번호가 재설정되었습니다.");
+            return "redirect:/user/login";
+        } catch (DataNotFoundException e) {
+            // Handle if the user ID does not exist
+            model.addAttribute("message", "존재하지 않는 아이디입니다.");
+            return "user/findPw_form";
+        } catch (Exception e) {
+            // Handle other exceptions
+            model.addAttribute("message", "비밀번호 업데이트에 실패했습니다.");
+            return "user/findPw_form";
         }
     }
 }
