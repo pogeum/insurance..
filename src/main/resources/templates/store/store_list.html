@@ -54,7 +54,7 @@
                 var mapContainer = document.getElementById('map');
                 var mapOption = {
                     center: new kakao.maps.LatLng(latitude, longitude),
-                    level: 4 // 지도의 확대 레벨
+                    level: 3// 지도의 확대 레벨
                 };
 
                 var map = new kakao.maps.Map(mapContainer, mapOption);
@@ -68,7 +68,12 @@
                 var geocoder = new kakao.maps.services.Geocoder();
 
                 var addressElements = document.querySelectorAll(".address");
-                var markers = []; // 마커 배열
+
+                var clusterer = new kakao.maps.MarkerClusterer({
+                    map: map, // 마커들을 클러스터로 관리하고 표시할 지도 객체
+                    averageCenter: true, // 클러스터에 포함된 마커들의 평균 위치를 클러스터 마커 위치로 설정
+                    minLevel: 3 // 클러스터 할 최소 지도 레벨
+                });
 
                 addressElements.forEach(function(element) {
                     var address = element.textContent;
@@ -80,8 +85,8 @@
                                 map: map,
                                 position: coords
                             });
+                            clusterer.addMarker(marker);
 
-                            markers.push(marker); // 마커를 배열에 추가
                             var infowindow = new kakao.maps.InfoWindow({
                                 content: element.parentElement.querySelector('.card-title').innerText,
                                 maxWidth: 250 // infowindow 최대 너비 설정
@@ -97,26 +102,6 @@
                         }
                     });
                 });
-                console.log(markers);
-
-                // 모든 마커를 사용하여 MarkerClusterer 객체를 만들고 클러스터러에 추가
-                var clusterer = new kakao.maps.MarkerClusterer({
-                    map: map,
-                    averageCenter: true,
-                    gridSize: 35,
-                    minLevel: 5,
-                    markers: markers,
-                    disableClickZoom: true,
-                    styles: [{
-                        width : '53px', height : '52px',
-                        background: 'url(cluster.png) no-repeat',
-                        color: '#fff',
-                        textAlign: 'center',
-                        lineHeight: '54px'
-                    }]
-                });
-                // 클러스터러에 모든 마커를 추가
-                clusterer.addMarkers(markers);
             }
         });
     });
