@@ -189,6 +189,7 @@ public class StoreController {
 //        return String.format("redirect:/store/owner/list/#store_%s", anchor);
         return "redirect:/store/owner/list";
     }
+
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/delete/{storeid}")
     public String deletestore(@PathVariable("storeid")Integer id,Principal principal) {
@@ -198,6 +199,31 @@ public class StoreController {
         return "redirect:/store/owner/list/";
 //        return String.format("redirect:/store/owner/list/#%s", anchor);
     }
+
+//====================가게사진 수정, 삭제, 저장============================
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/updatephoto/{storeid}")
+    public String addphoto(@PathVariable("storeid")Integer storeid, Model model) {
+        Store store = storeService.findstoreById(storeid);
+
+        model.addAttribute("store",store);
+        return "store/store_photo";
+    }
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/deletephoto")
+    public String deletephoto(Integer photoid, Integer storeid) {
+        photoService.deletephotoById(photoid);
+        return "redirect:/store/updatephoto/"+ storeid;
+    }
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/savephoto")
+    public String savephoto(Integer storeid, List<MultipartFile> fileList) throws Exception {
+        photoService.saveImgsForStore(storeService.findstoreById(storeid), fileList);
+        return "redirect:/store/updatephoto/"+ storeid;
+    }
+
+//=============================================================================
+
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/menuList/{storeid}")
@@ -246,4 +272,6 @@ public class StoreController {
         model.addAttribute("storeList", storeList);
         return "store/store_list";
     }
+
+
 }

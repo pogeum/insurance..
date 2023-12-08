@@ -32,7 +32,7 @@ public class MenuController {
     public String update(Integer menuid, String menuName, String pricestring, List<MultipartFile> fileList) throws Exception {
         Menu menu = menuService.findMenu(menuid);
         if (menuName == null || menuName.isEmpty()) {
-            menu.setMenuName("");
+            menu.setMenuName("--MENU--");
         }else {
             menu.setMenuName(menuName);
         }
