@@ -83,6 +83,10 @@ public class PhotoService {
         }
     }
 
+    public void deletephotoById(Integer photoid) {
+        this.photoRepository.delete(photoRepository.findById(photoid).get());
+    }
+
     public void deletePhotosByStore(Store store) {
         List<Photo> photos = store.getPhotoList();
 
