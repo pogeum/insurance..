@@ -43,7 +43,7 @@ public class CommentController {
         User user = this.userService.getUser(principal.getName());
         if (bindingResult.hasErrors()) {
             model.addAttribute("review", review);
-            return "store_detail";
+            return "store/store_detail";
         }
 
         Comment comment = this.commentService.create(review, commentForm.getContent(), user);
@@ -58,7 +58,7 @@ public class CommentController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정 권한이 없습니다.");
         }
         commentForm.setContent(comment.getContent());
-        return "comment_form";
+        return "comment/comment_form";
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -66,7 +66,7 @@ public class CommentController {
     public String modifyComment(@Valid CommentForm commentForm, BindingResult bindingResult, Principal principal,
                                 @PathVariable("id") Integer id) {
         if (bindingResult.hasErrors()) {
-            return "comment_form";
+            return "comment/comment_form";
         }
         Comment comment = this.commentService.getComment(id);
         if (!comment.getAuthor().getUserId().equals(principal.getName())) {

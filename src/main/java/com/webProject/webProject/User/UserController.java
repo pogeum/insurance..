@@ -50,7 +50,7 @@ public class UserController {
 
     @GetMapping("/owner_check_bno")
     public String owner_check_bno(OwnerCreateForm ownerCreateForm){
-        return "owner_check_bno";
+        return "user/owner_check_bno";
     }
 
     @PostMapping("/owner_check_bno")
@@ -91,53 +91,53 @@ public class UserController {
 
     @GetMapping("/owner_signup")
     public String owner_signup(UserCreateForm userCreateForm){
-        return "owner_signup_form";
+        return "user/owner_signup_form";
     }
 
     @PostMapping("/owner_signup")
     public String owner_signup(@Valid UserCreateForm userCreateForm, BindingResult bindingResult, MultipartFile file) throws Exception {
         if (bindingResult.hasErrors()) {
-            return "owner_signup_form";
+            return "user/owner_signup_form";
         }
 
         if (!userCreateForm.getPassword1().equals(userCreateForm.getPassword2())) {
             bindingResult.rejectValue("password2", "passwordInCorrect",
                     "2개의 패스워드가 일치하지 않습니다.");
-            return "owner_signup_form";
+            return "user/owner_signup_form";
         }
 
         userService.create(userCreateForm.getUserId(), userCreateForm.getEmail(), userCreateForm.getPassword1(), userCreateForm.getNickname(), "owner", file);
 
-        return "login_form";
+        return "user/login_form";
     }
     @GetMapping("/user_signup")
     public String user_signup(UserCreateForm userCreateForm){
-        return "user_signup_form";
+        return "user/user_signup_form";
     }
     @PostMapping("/user_signup")
     public String user_signup(@Valid UserCreateForm userCreateForm, BindingResult bindingResult, MultipartFile file) throws Exception {
         if (bindingResult.hasErrors()) {
-            return "user_signup_form";
+            return "user/user_signup_form";
         }
 
         if (!userCreateForm.getPassword1().equals(userCreateForm.getPassword2())) {
             bindingResult.rejectValue("password2", "passwordInCorrect",
                     "2개의 패스워드가 일치하지 않습니다.");
-            return "user_signup_form";
+            return "user/user_signup_form";
         }
         userService.create(userCreateForm.getUserId(), userCreateForm.getEmail(), userCreateForm.getPassword1(), userCreateForm.getNickname(), "user", file);
 
-        return "login_form";
+        return "user/login_form";
     }
 
     @GetMapping("/signup")
     public String signup() {
-        return "signup_form";
+        return "user/signup_form";
     }
 
     @GetMapping("/login")
     public String login() {
-        return "login_form";
+        return "user/login_form";
     }
 
     @GetMapping("/profile")
@@ -146,7 +146,7 @@ public class UserController {
         User userinfo = this.userService.getUser(userId);
         model.addAttribute("userinfo", userinfo);
 
-        return "profile";
+        return "userProfile/profile";
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -159,7 +159,7 @@ public class UserController {
         userUpdateForm.setNickname(userinfo.getNickname());
         userUpdateForm.setEmail(userinfo.getEmail());
         userPasswordForm.setPassword(userinfo.getPassword());
-        return "update_profile"; // 수정 폼으로 이동합니다.
+        return "userProfile/update_profile"; // 수정 폼으로 이동합니다.
     }
 
     // 사용자 프로필 정보 수정
@@ -169,7 +169,7 @@ public class UserController {
         String userId = principal.getName();
         User userinfo = this.userService.getUser(userId);
         if (bindingResult.hasErrors()) {
-            return "update_profile";
+            return "userProfile/update_profile";
         }
 
         if (userUpdateForm.getImage() != null) {
@@ -201,7 +201,7 @@ public class UserController {
         User userinfo = this.userService.getUser(userId);
 
         if (bindingResult.hasErrors()) {
-            return "update_profile";
+            return "userProfile/update_profile";
         }
         this.userService.modifyPw(userinfo, userPasswordForm.getNewPassword2());
 

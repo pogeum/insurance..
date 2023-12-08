@@ -51,7 +51,7 @@ public class ReviewController {
     private String reviewCreate(Model model, ReviewForm reviewForm) {
         List<Tag> allTags = this.tagService.getAllTags();
         model.addAttribute("allTags", allTags);
-        return "review_form";
+        return "review/review_form";
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -63,7 +63,7 @@ public class ReviewController {
 
         if (bindingResult.hasErrors()) {
             model.addAttribute("store", store);
-            return "store_list";
+            return "store/store_list";
         }
         Review review = this.reviewService.create(user, store, reviewForm.getContent(), reviewForm.getRating());
 
@@ -90,7 +90,7 @@ public class ReviewController {
         reviewForm.setRating(review.getRating());
         List<Integer> tagIds = this.reviewService.getTagIdsForReview(id);
         reviewForm.setTagList(tagIds);
-        return "review_form";
+        return "review/review_form";
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -98,7 +98,7 @@ public class ReviewController {
     public String reviewModify(@Valid ReviewForm reviewForm, BindingResult bindingResult,
                                @PathVariable("id") Integer id, Principal principal) throws Exception {
         if (bindingResult.hasErrors()) {
-            return "review_form";
+            return "review/review_form";
         }
         Review review = this.reviewService.getReview(id);
         if (!review.getAuthor().getUserId().equals(principal.getName())) {

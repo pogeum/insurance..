@@ -63,7 +63,7 @@ public class StoreController {
         List<Store> storeList  = this.storeService.getAddressList(jibunAddress);
         model.addAttribute("location", jibunAddress);
         model.addAttribute("storeList", storeList);
-        return "store_list";
+        return "store/store_list";
     }
 
     @RequestMapping("/findlist")
@@ -72,7 +72,7 @@ public class StoreController {
         System.out.println(jibunAddress);
         model.addAttribute("location", jibunAddress);
         model.addAttribute("storeList", storeList);
-        return "store_list";
+        return "store/store_list";
     }
 
 
@@ -97,7 +97,7 @@ public class StoreController {
         model.addAttribute("menuList", menuList);
         model.addAttribute("reviewList", reviewList);
         model.addAttribute("store", store);
-        return "store_detail";
+        return "store/store_detail";
     }
 
     @PostMapping("/mylocation") // POST 요청을 처리하기 위한 애노테이션 추가
@@ -109,7 +109,7 @@ public class StoreController {
         model.addAttribute("storeList", storeList);
         model.addAttribute("location", location);
 
-        return "store_list";
+        return "store/store_list";
     }
 
     //------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -117,7 +117,7 @@ public class StoreController {
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/create")
     public String createStore(StoreForm storeForm,Principal principal, Model model){
-        return "store_form";
+        return "store/store_form";
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -126,7 +126,7 @@ public class StoreController {
         User user = this.userService.getUser(principal.getName());
 
         if (bindingResult.hasErrors()) {
-            return "store_owner_list";
+            return "store/store_owner_list";
         }
         Store newStore = storeService.createStore(user, storeForm.getName(),storeForm.getContent(),storeForm.getCategory(),storeForm.getRoadAddress(), storeForm.getJibunAddress());
         menuService.saveMenus(newStore,tempmenuList);
@@ -146,7 +146,7 @@ public class StoreController {
             User siteUser = this.userService.getUser(principal.getName());
             Page<Store> paging = this.storeService.getownerList(page, siteUser);
             model.addAttribute("paging",paging);
-            return "store_owner_list";
+            return "store/store_owner_list";
         }
     }
 
@@ -164,7 +164,7 @@ public class StoreController {
 
         model.addAttribute("store",store);
         model.addAttribute("process", "modify/"+ store.getId());
-        return "store_form";
+        return "store/store_form";
     }
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/modify/{storeid}")
@@ -206,7 +206,7 @@ public class StoreController {
         List<Menu> menuList = menuService.getstoreMenu(store);
         model.addAttribute("menuList", menuList);
         model.addAttribute("store",store);
-        return "menu_list";
+        return "menu/menu_list";
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -217,7 +217,7 @@ public class StoreController {
         } else {
             Page<Store> paging = this.storeService.getList(page, keyword);
             model.addAttribute("paging",paging);
-            return "store_owner_list";
+            return "store/store_owner_list";
         }
     }
 
@@ -229,7 +229,7 @@ public class StoreController {
 //        System.out.println(jibunAddress);
         model.addAttribute("location", "location");
         model.addAttribute("storeList", storeList);
-        return "store_list";
+        return "store/store_list";
     }
 
     @PostMapping("/search_list_menu")
@@ -244,9 +244,6 @@ public class StoreController {
 //        System.out.println(jibunAddress);
         model.addAttribute("location", "location");
         model.addAttribute("storeList", storeList);
-        return "store_list";
+        return "store/store_list";
     }
-
-
-
 }
