@@ -37,10 +37,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.w3c.dom.ls.LSException;
 
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 @Controller
 @RequestMapping("/store")
@@ -249,14 +246,34 @@ public class StoreController {
     public String search_list_menu(Model model, String keyword) {//, @RequestParam(value = "findAddress", required = false) String jibunAddress
         List<Menu> menuList = this.menuService.searchedmenu_storelist(keyword);
 
+        List<Integer> storeid = new ArrayList<>();
+
         List<Store> storeList = new ArrayList<>();
+
         for (Menu menu : menuList) {
             storeList.add(storeService.findstoreById(menu.getStore().getId()));
         }
+        for (Store store:storeList) {
+            storeid.add(store.getId());
+        }
+
+        Set<Integer> set = new HashSet<Integer>(storeid);
+        List<Integer> newstoreid = new ArrayList<Integer>(set); //중복된거 없앤 가게 아이디 리스트..
+
+        List<Store> newstoreList = new ArrayList<>();
+        for (Integer id : newstoreid) {
+            newstoreList.add(storeService.findstoreById(id));
+        }
+
+
+
+
+
+
 //        List<Store> storeList  = this.storeService.getAddressList(jibunAddress);
 //        System.out.println(jibunAddress);
         model.addAttribute("location", "대전");
-        model.addAttribute("storeList", storeList);
+        model.addAttribute("storeList", newstoreList);
         return "store/store_list";
     }
 
