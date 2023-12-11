@@ -43,7 +43,6 @@
                                     </p>
                                     <span th:text="'가입일시 : ' + ${#temporals.format(user.createDate, 'yyyy-MM-dd HH:mm')}"></span>
                                     <div class="d-flex justify-content-end" style="margin-top:20px;">
-                                        <a href="#" class="btn btn-sm btn-outline-secondary" th:text="멤버등급UP" style="margin-right:10px;"></a>
                                         <a href="javascript:void(0);" th:data-uri="@{|/manager/member/delete/${user.userId}|}" class="delete btn btn-sm btn-outline-danger" th:text="'유저 ' + '탈퇴'"></a>
                                     </div>
                                 </div>
