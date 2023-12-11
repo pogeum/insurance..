@@ -1,260 +1,242 @@
 <html layout:decorate="~{layout}" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:layout="http://www.w3.org/1999/xhtml"
       xmlns:sec="http://www.w3.org/1999/xhtml">
-<div layout:fragment="content" class="content-area" style="height:90%;">
-    <div class="d-flex flex-column" style="height:100%;">
-        <div style="height:95%;">
-            <div class="d-flex" style="width:100%;height:100%;">
-                <div style="width:65%;height:100%;padding: 20px 20px 0 20px;">
-                    <div class="d-flex flex-column" style="width:100%;height:100%;">
-                        <section class="container">
-                            <div class="carousel-container">
-                                <div class="carousel">
-                                    <div th:each="photo : ${store.photoList}">
-                                        <img th:src="@{|/photo/${photo.fileName}|}" class="img-fluid"
-                                             style="object-fit: cover; width: 170px; height: 170px; border: solid 1px; overflow: hidden;">
+<div layout:fragment="content" class="content-area" style="height:93.8%;">
+    <div class="d-flex" style="width:100%;height:93.8%;">
+        <div style="width:65%;height:100%; margin: 20px 20px 0 20px;">
+            <div class="d-flex flex-column" style="width:100%;height:100%;">
+                <div style="height: 35%;">
+                    <div id="carouselExampleIndicators" class="carousel slide d-flex align-items-center justify-content-center" style="width: 100%; height: 100%;" data-bs-ride="carousel">
+                        <div class="carousel-inner" style="width: 100%; height: 100%;">
+                            <div th:each="photo, iterStat : ${store.photoList}" th:if="${iterStat.index % 3 == 0}" class="carousel-item" th:classappend="${iterStat.index == 0} ? 'active'">
+                                <div class="row">
+                                    <div class="col d-flex justify-content-center" style="padding:0;">
+                                        <img th:src="@{|/photo/${photo.fileName}|}" style="object-fit: cover; width: 100%; height: 350.625px;" />
                                     </div>
-                                </div>
-                            </div>
-                            <div class="left">&lt;</div>
-                            <div class="right">&gt;</div>
-                        </section>
-                        <script>
-                            var page = 1;
-                            var perPage = 4; // Adjust the number of images per page as needed
-                            var carousel = document.querySelector('.carousel');
-                            var left = document.querySelector('.left');
-                            var right = document.querySelector('.right');
-
-                            right.addEventListener("click", () => {
-                                if (page < Math.ceil(carousel.children.length / perPage)) {
-                                    page += 1;
-                                    updateCarousel();
-                                }
-                            });
-
-                            left.addEventListener("click", () => {
-                                if (page > 1) {
-                                    page -= 1;
-                                    updateCarousel();
-                                }
-                            });
-
-                            function updateCarousel() {
-                                var slideWidth = (170 * (page - 1) * -1);
-                                carousel.style.transform = `translateX(${slideWidth}px)`;
-                            }
-                        </script>
-
-                        <div class="d-flex flex-column" style="height:45%;">
-                            <div class="d-flex align-items-end" style="height:20%;">
-                                <div class="store-name">
-                                    <h3 class="title" style="margin: 0 40px 0 0; font-weight: bold; display: flex; align-items: center;">
-                                        <span th:text="${store.name}"></span>
-                                    </h3>
-                                </div>
-                                <div style="align-self: flex-end;" >
-                                    <span class="text-secondary small align-items-end" th:text="${store.category}"></span>
-                                </div>
-                                <div style="align-self: flex-end;" >
-                                    <span></span>
-                                    <span class="text-secondary small address align-items-end" th:text="${'/주소 : ' + store.roadAddress}" ></span>
-                                </div>
-                            </div>
-                            <div class="menu-box" style="width:100%; height:80%; display: flex;">
-                                <div class="menu-card" th:each="menu : ${menuList}" style="position:relative; margin-left:10px; margin-bottom:10px;">
-                                    <!--부트스트랩 카드 메뉴사진 리스트-->
-                                    <div  style="width: 11rem;">
-                                        <div th:each="photo : ${menu.photoList}" style="width:100%; height:50%; margin-top:10px;">
-                                            <img class="card-img-top" th:if="${photo.fileName != null}" th:src="@{|/photo/${photo.fileName}|}" alt="Menu Photo" style="object-fit: cover; width: 170px; height: 170px; border-radius:10px;    "/>
-                                            <img class="card-img-top" th:if="${photo.fileName == null or #strings.isEmpty(photo.fileName)}" src="../../static/no_img.jpg" alt="random image">
-<!--                                            <span th:unless="${photo.fileName != null}">이미지 없음</span>-->
-                                        </div>
-
-                                        <div style="display:flex; flex-direction: column; ">
-                                            <div style="display: flex; align-items: baseline; height: 20px; margin-top:5px;">
-                                                <p th:text="${menu.menuName}" style="display:block; "></p>
-                                            </div>
-                                            <div style="display: flex; align-items: baseline;">
-                                                <p th:text="${menu.price}" style="font-weight: bold; margin-right: 4px;"></p>
-                                                <span>원</span>
-                                            </div>
-                                        </div>
+                                    <div class="col d-flex justify-content-center" th:if="${iterStat.index + 1 lt store.photoList.size()}" style="padding:0;">
+                                        <img th:src="@{|/photo/${store.photoList[iterStat.index + 1].fileName}|}" style="object-fit: cover; width: 100%; height: 350.625px;" />
                                     </div>
-                                </div>
-
-                                <!-- 모달버튼 -->
-                                <div class="more-button" style="align-self: flex-end; margin-left:auto;">
-                                    <button type="button" class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#exampleModal" >더보기</button>
-                                </div>
-                                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog modal-dialog-scrollable"> <!--스크롤왜적용이안됨?-->
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="exampleModalLabel">메뉴</h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body" >
-                                                <div th:each="menu : ${menuList}">
-                                                    <div class="card mb-3" style="max-width: 540px;">
-<!--                                                        <div class="form-check">-->
-<!--                                                            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">-->
-<!--                                                            <label class="form-check-label" for="flexCheckDefault">-->
-<!--                                                                담기-->
-<!--                                                            </label>-->
-<!--                                                        </div>-->
-                                                        <div class="row g-0">
-                                                            <div class="col-md-4" th:each="photo : ${menu.photoList}" style="width:30%;">
-                                                                <div class="menu-photo-box">
-                                                                    <img th:src="@{'/img/' + ${photo.fileName}}" alt="Menu Photo" style="border-radius: 10px; width:100%; height:100%; "/>
-                                                                    <span th:unless="${photo.fileName != null}">이미지 없음</span>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-8">
-                                                                <div class="card-body">
-                                                                    <h5 class="card-title" th:text="${menu.menuName}"></h5>
-                                                                    <p class="card-text" th:text="${menu.price} + '원' "></p>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-<!--                                                <button type="button" class="btn btn-primary">먹어보고싶어요/장바구니같은..</button>-->
-                                            </div>
-                                        </div>
+                                    <div class="col d-flex justify-content-center" th:if="${iterStat.index + 2 lt store.photoList.size()}" style="padding:0;">
+                                        <img th:src="@{|/photo/${store.photoList[iterStat.index + 2].fileName}|}" style="object-fit: cover; width: 100%; height: 350.625px;" />
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div style="height:50%; margin-top:20px;">
-                            <div id="map" style="width:100%;height:100%;"></div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true" style="filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(200%);}"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true" style="filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(200%);}"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="d-flex flex-column" style="height:45%;">
+                    <div class="d-flex justify-content-start align-items-center" style="height:20%;">
+                        <div class="store-name">
+                            <h3 class="title" style="margin: 0 40px 0 0; font-weight: bold; display: flex; align-items: center;">
+                                <span th:text="${store.name}"></span>
+                            </h3>
+                        </div>
+                        <div class="d-flex flex-column" style="align-self: flex-end;" >
+                            <div class="d-flex">
+                                <span class="text-secondary small">카테고리 : </span> &nbsp;
+                                <span class="text-secondary small align-items-end" th:text="${store.category}"></span>
+                            </div>
+                            <div class="d-flex">
+                                <span class="text-secondary small">주소 : </span> &nbsp;
+                                <span class="text-secondary small address align-items-end" th:text="${store.roadAddress}" ></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="menu-box" style="width:100%; height:80%; display: flex;">
+                        <div class="menu-card" th:each="menu : ${menuList}" style="position:relative; margin-left:10px; margin-bottom:10px;">
+                            <!--부트스트랩카드-->
+                            <div  style="width: 11rem;">
+                                <div th:each="photo : ${menu.photoList}" style="width:100%; height:50%; margin-top:10px;">
+                                    <img class="card-img-top" th:if="${photo.fileName != null}" th:src="@{|/photo/${photo.fileName}|}" alt="Menu Photo" style="object-fit: cover; width: 170px; height: 170px; border-radius:10px;    "/>
+                                    <img class="card-img-top" th:if="${photo.fileName == null or #strings.isEmpty(photo.fileName)}" src="/static/no_img.jpg" alt="No Image">
+                                </div>
+                                <div style="display:flex; flex-direction: column; ">
+                                    <div style="display: flex; align-items: baseline; height: 20px; margin-top:5px;">
+                                        <p th:text="${menu.menuName}" style="display:block; "></p>
+                                    </div>
+                                    <div style="display: flex; align-items: baseline;">
+                                        <p th:text="${menu.price}" style="font-weight: bold; margin-right: 4px;"></p>
+                                        <span>원</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!----------------------------------- -->
+                        <!-- 모달버튼 -->
+                        <div class="more-button" style="align-self: flex-end; margin-left:auto;">
+                            <button type="button" class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#exampleModal" >더보기</button>
+                        </div>
+                        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-scrollable"> <!--스크롤왜적용이안됨?-->
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">메뉴</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body" >
+                                        <div th:each="menu : ${menuList}">
+                                            <div class="card mb-3" style="max-width: 540px;">
+<!--                                                <div class="form-check">-->
+<!--                                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">-->
+<!--                                                    <label class="form-check-label" for="flexCheckDefault">-->
+<!--                                                        담기-->
+<!--                                                    </label>-->
+<!--                                                </div>-->
+                                                <div class="row g-0">
+                                                    <div class="col-md-4" th:each="photo : ${menu.photoList}">
+                                                        <img th:src="@{'/img/' + ${photo.fileName}}" alt="Menu Photo" style="border-radius: 10px; width:100%; height:100%; "/>
+                                                    </div>
+                                                    <div class="col-md-8">
+                                                        <div class="card-body">
+                                                            <h5 class="card-title" th:text="${menu.menuName}"></h5>
+                                                            <p class="card-text" th:text="${menu.price} + '원' "></p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+<!--                                <button type="button" class="btn btn-primary">먹어보고싶어요/장바구니같은..</button>-->
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div style="width:35%;height:100%;">
-                    <div style="width: 98%; height: 100%; border: 1px solid gray; margin-top: 20px; overflow-y: auto;">
-                        <div class="d-flex flex-column">
-                            <div style="height:10%; padding:10px; border-bottom:2px solid black;">
-                                <div class="d-flex align-items-center">
-                                    <h5 class="fw-bold" style="flex:4;margin: 0 10px 0 10px;" th:text="|${#lists.size(store.reviewList)}개의 답변이 있습니다.|"></h5>
-                                    <a th:href="@{|/review/create/${store.id}|}"
-                                       sec:authorize="isAuthenticated() and hasRole('USER')"
-                                       class="btn btn-sm btn-dark" style="flex:1;">평가하기</a>
-                                </div>
-                            </div>
-                            <div style="height: 90%; overflow-y: auto;">
-                                <div th:each="review : ${reviewList}">
-                                    <div class="card" style="margin:10px; width:95%;height:100%;">
-                                        <div class="card-body d-flex flex-column" style="width:100%; height:100%;">
-                                            <div class="d-flex justify-content-between align-items-center m-2">
-                                                <h3 class="w-50" style="margin:0;" th:if="${review.author != null}" th:text="${review.author.nickname}"></h3>
-                                                <div class="d-flex" style="margin:0; justify-content:end; align-items: center;">
-                                                    <a href="javascript:void(0);" class="recommend" th:data-uri="@{|/review/vote/${review.id}|}">
-                                                        <svg width="15" height="15" viewBox="0 0 24 24" style="margin-right: 5px">
-                                                            <path fill="currentColor" d="M18 1l-6 4-6-4-6 5v7l12 10 12-10v-7z"></path>
-                                                        </svg>
-                                                    </a>
-                                                    <span style="margin-right: 5px" th:classappend="${#lists.size(review.voter) == 0} ? 'likes' : ''" th:text="${#lists.size(review.voter)}"></span>
-                                                    <svg width="20" height="20" viewBox="0 0 24 24" style="margin-right: 5px">
-                                                        <path fill="currentColor" d="M12 2l1.598 5.196H20.75l-4.791 3.699L17.402 22 12 17.49 6.598 22l1.791-11.105L3.25 7.196h6.152z"></path>
-                                                    </svg>
-                                                    <span th:text="${review.rating}"></span>
-                                                </div>
-                                            </div>
-                                            <p class="card-title" style="border: 1px solid gray; border-radius: 10px; padding: 8px; margin-bottom: 5%;" th:text="${review.content}"></p>
-                                            <div class="d-flex flex-column">
-                                                <div th:each="reviewPhoto, iterStat : ${review.photoList}" style="position: relative; display: inline-block; padding-left: 5px; padding-right: 5px;">
-                                                    <a data-bs-toggle="modal" th:data-bs-target="'#exampleModal' + ${iterStat.index}" style="display: block;">
-                                                        <img th:if="${iterStat.index == 0}" onerror="this.style.visibility='hidden'" th:src="@{|/photo/${reviewPhoto.fileName}|}" class="img-fluid" style="object-fit: cover; width: 100%;">
-                                                    </a>
-                                                    <div th:if="${#lists.size(review.photoList) > 0}" style="position: absolute; bottom: 5px; right: 5px; background: gray; border: 1px solid gray; border-radius: 50px; padding: 5px; text-align: center;">
-                                                        <span th:text="${#lists.size(review.photoList) + '개'}" style="font-size: 11px; font-weight: 600; color: white;"></span>
-                                                    </div>
-                                                </div>
-                                                <div th:each="reviewPhoto, iterStat : ${review.photoList}">
-                                                    <div class="modal fade" th:id="'exampleModal' + ${iterStat.index}" tabindex="-1" aria-labelledby="reviewModalLabel" aria-hidden="true">
-                                                        <div class="modal-dialog modal-lg">
-                                                            <div class="modal-content">
-                                                                <div class="modal-header">
-                                                                    <h1 class="modal-title fs-5" id="reviewModalLabel" th:if="${review.author != null}" th:text="${review.author.nickname + '의 음식 list'}"></h1>
-                                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                                </div>
-                                                                <div class="modal-body">
-                                                                    <div id="carouselExample" class="carousel slide" data-bs-ride="carousel">
-                                                                        <div class="carousel-inner">
-                                                                            <div th:each="photo : ${review.photoList}" class="carousel-item" th:classappend="${photo == reviewPhoto} ? 'active'">
-                                                                                <img th:src="@{|/photo/${photo.fileName}|}" class="d-block w-100" style="object-fit: cover; width: 100%; height: 100%;">
-                                                                            </div>
-                                                                        </div>
-                                                                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
-                                                                            <span class="carousel-control-prev-icon" aria-hidden="true" style="filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(200%);}"></span>
-                                                                            <span class="visually-hidden">Previous</span>
-                                                                        </button>
-                                                                        <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
-                                                                            <span class="carousel-control-next-icon" aria-hidden="true" style="filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(200%);}"></span>
-                                                                            <span class="visually-hidden">Next</span>
-                                                                        </button>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="row" style="margin-top:3%;">
-                                                    <div th:each="reviewTag, iterationStat : ${review.reviewTagList}" class="col-3" style="padding-left: 5px;padding-right: 5px;">
-                                                        <div class="text-dark fw-bold"
-                                                             style="text-align:center; font-size:12px; padding:5px; margin:5px; border-radius:10px; box-shadow:0 4px 8px rgba(0, 0, 0, 0.4); background-color: #ffffff;"
-                                                             th:text="${reviewTag.tag.tagName}"></div>
-                                                        <!-- 매 4번째 태그마다 행을 바꿉니다 -->
-                                                        <div th:if="${iterationStat.index % 4 == 3}" class="w-100"></div>
-                                                    </div>
-                                                </div>
-                                                <div class="my-3 d-flex justify-content-around">
-                                                    <a th:href="@{|/review/modify/${review.id}|}" class="btn btn-sm btn-outline-secondary" style="flex:1; margin-right:10px;"
-                                                       sec:authorize="isAuthenticated()"
-                                                       th:if="${review.author != null and #authentication.getPrincipal().getUsername() == review.author.userId}"
-                                                       th:text="수정"></a>
-                                                    <a href="javascript:void(0);" th:data-uri="@{|/review/delete/${review.id}|}" style="flex:1; margin-left:10px;"
-                                                       class="delete btn btn-sm btn-outline-secondary" sec:authorize="isAuthenticated()"
-                                                       th:if="${review.author != null and #authentication.getPrincipal().getUsername() == review.author.userId}"
-                                                       th:text="삭제"></a>
-                                                </div>
-                                                <!-- 질문 댓글 Start -->
-                                                <div class="cord mt-3" style="margin-bottom: 20px; border-top: 2px solid black;" th:if="${not #lists.isEmpty(review.commentList)}">
-                                                    <div class="card" style="width:100%;margin-top: 20px;">
-                                                        <div class="card-body comment py-2 text-muted d-flex flex-column" th:each="comment,index : ${review.commentList}">
-                                                            <h3 th:text="${comment.author.nickname} + ' 사장님'"></h3>
-                                                            <span style="white-space: pre-line; margin-top: 10px;" th:text="${comment.content}"></span>
-                                                            <div class="d-flex justify-content-end" style="margin-top: 10px;">
-                                                                <div class="badge bg-light text-dark p-2 text-start mx-3">
-                                                                    <div th:if="${comment.modifyDate != null}">
-                                                                        <span th:text="${#temporals.format(comment.modifyDate, 'yyyy-MM-dd HH:mm')} + ' (수정)'"></span>
-                                                                    </div>
-                                                                    <div th:if="${comment.modifyDate == null}">
-                                                                        <span th:text="${#temporals.format(comment.createDate, 'yyyy-MM-dd HH:mm')}"></span>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="d-flex" style="border-radius: 10px; margin-top:20px;">
-                                                                <a style="flex:1; margin-right:10px;" sec:authorize="isAuthenticated()" th:if="${#authentication.getPrincipal().getUsername() == comment.author.userId}"
-                                                                   th:href="@{|/comment/modify/${comment.id}|}" class="btn btn-sm btn-outline-secondary">수정</a>
-                                                                <a style="flex:1; margin-left:10px;" sec:authorize="isAuthenticated()" th:if="${#authentication.getPrincipal().getUsername() == comment.author.userId}"
-                                                                   href="javascript:void(0);" class="delete btn btn-sm btn-outline-secondary" th:data-uri="@{|/comment/delete/${comment.id}|}">삭제</a>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div th:if="${#authorization.expression('isAuthenticated()')}">
-                                                    <div th:if="${#authentication.principal.username == store.author.userId}">
-                                                        <a th:href="@{|/comment/create/review/${review.id}|}" class="btn btn-sm btn-outline-secondary btn-block"
-                                                           th:text="사장답글작성" style="width:100%;"></a>
-                                                    </div>
-                                                </div>
-                                                <!-- 질문 댓글 End -->
+                <div style="height:30%; margin-top:20px;">
+                    <div id="map" style="width:100%;height:100%;"></div>
+                </div>
+            </div>
+        </div>
+        <div style="width:35%;height:100%;">
+            <div style="width: 98%; height: 100%; border: 1px solid gray; margin-top: 20px; overflow-y: auto;">
+                <div class="d-flex flex-column">
+                    <div style="height:10%; padding:10px; border-bottom:2px solid black;">
+                        <div class="d-flex align-items-center">
+                            <h5 class="fw-bold" style="flex:4;margin: 0 10px 0 10px;" th:text="|${#lists.size(store.reviewList)}개의 답변이 있습니다.|"></h5>
+                            <a th:href="@{|/review/create/${store.id}|}"
+                               sec:authorize="isAuthenticated() and hasRole('USER')"
+                               class="btn btn-sm btn-dark" style="flex:1;">평가하기</a>
+                        </div>
+                    </div>
+                    <div style="height: 90%; overflow-y: auto;">
+                        <div th:each="review : ${reviewList}">
+                            <div class="card" style="margin:10px; width:95%;height:100%;">
+                                <div class="card-body d-flex flex-column" style="width:100%; height:100%;">
+                                    <div class="d-flex justify-content-between align-items-center m-2">
+                                        <h3 class="w-50" style="margin:0;" th:if="${review.author != null}" th:text="${review.author.nickname}"></h3>
+                                        <div class="d-flex" style="margin:0; justify-content:end; align-items: center;">
+                                            <a href="javascript:void(0);" class="recommend" th:data-uri="@{|/review/vote/${review.id}|}">
+                                                <svg width="15" height="15" viewBox="0 0 24 24" style="margin-right: 5px">
+                                                    <path fill="currentColor" d="M18 1l-6 4-6-4-6 5v7l12 10 12-10v-7z"></path>
+                                                </svg>
+                                            </a>
+                                            <span style="margin-right: 5px" th:classappend="${#lists.size(review.voter) == 0} ? 'likes' : ''" th:text="${#lists.size(review.voter)}"></span>
+                                            <svg width="20" height="20" viewBox="0 0 24 24" style="margin-right: 5px">
+                                                <path fill="currentColor" d="M12 2l1.598 5.196H20.75l-4.791 3.699L17.402 22 12 17.49 6.598 22l1.791-11.105L3.25 7.196h6.152z"></path>
+                                            </svg>
+                                            <span th:text="${review.rating}"></span>
+                                        </div>
+                                    </div>
+                                    <p class="card-title" style="border: 1px solid gray; border-radius: 10px; padding: 8px; margin-bottom: 5%;" th:text="${review.content}"></p>
+                                    <div class="d-flex flex-column">
+                                        <div th:each="reviewPhoto, iterStat : ${review.photoList}" style="position: relative; display: inline-block; padding-left: 5px; padding-right: 5px;">
+                                            <a data-bs-toggle="modal" th:data-bs-target="'#exampleModal' + ${iterStat.index}" style="display: block;">
+                                                <img th:if="${iterStat.index == 0}" onerror="this.style.visibility='hidden'" th:src="@{|/photo/${reviewPhoto.fileName}|}" class="img-fluid" style="object-fit: cover; width: 100%;">
+                                            </a>
+                                            <div th:if="${#lists.size(review.photoList) > 0}" style="position: absolute; bottom: 5px; right: 5px; background: gray; border: 1px solid gray; border-radius: 50px; padding: 5px; text-align: center;">
+                                                <span th:text="${#lists.size(review.photoList) + '개'}" style="font-size: 11px; font-weight: 600; color: white;"></span>
                                             </div>
                                         </div>
+                                        <div th:each="reviewPhoto, iterStat : ${review.photoList}">
+                                            <div class="modal fade" th:id="'exampleModal' + ${iterStat.index}" tabindex="-1" aria-labelledby="reviewModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog modal-lg">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h1 class="modal-title fs-5" id="reviewModalLabel" th:if="${review.author != null}" th:text="${review.author.nickname + '의 음식 list'}"></h1>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div id="carouselExample" class="carousel slide" data-bs-ride="carousel">
+                                                                <div class="carousel-inner">
+                                                                    <div th:each="photo : ${review.photoList}" class="carousel-item" th:classappend="${photo == reviewPhoto} ? 'active'">
+                                                                        <img th:src="@{|/photo/${photo.fileName}|}" class="d-block w-100" style="object-fit: cover; width: 100%; height: 100%;">
+                                                                    </div>
+                                                                </div>
+                                                                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+                                                                    <span class="carousel-control-prev-icon" aria-hidden="true" style="filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(200%);}"></span>
+                                                                    <span class="visually-hidden">Previous</span>
+                                                                </button>
+                                                                <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+                                                                    <span class="carousel-control-next-icon" aria-hidden="true" style="filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(200%);}"></span>
+                                                                    <span class="visually-hidden">Next</span>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="margin-top:3%;">
+                                            <div th:each="reviewTag, iterationStat : ${review.reviewTagList}" class="col-3" style="padding-left: 5px;padding-right: 5px;">
+                                                <div class="text-dark fw-bold"
+                                                     style="text-align:center; font-size:12px; padding:5px; margin:5px; border-radius:10px; box-shadow:0 4px 8px rgba(0, 0, 0, 0.4); background-color: #ffffff;"
+                                                     th:text="${reviewTag.tag.tagName}"></div>
+                                                <!-- 매 4번째 태그마다 행을 바꿉니다 -->
+                                                <div th:if="${iterationStat.index % 4 == 3}" class="w-100"></div>
+                                            </div>
+                                        </div>
+                                        <div class="my-3 d-flex justify-content-around">
+                                            <a th:href="@{|/review/modify/${review.id}|}" class="btn btn-sm btn-outline-secondary" style="flex:1; margin-right:10px;"
+                                               sec:authorize="isAuthenticated()"
+                                               th:if="${review.author != null and #authentication.getPrincipal().getUsername() == review.author.userId}"
+                                               th:text="수정"></a>
+                                            <a href="javascript:void(0);" th:data-uri="@{|/review/delete/${review.id}|}" style="flex:1; margin-left:10px;"
+                                               class="delete btn btn-sm btn-outline-secondary" sec:authorize="isAuthenticated()"
+                                               th:if="${review.author != null and #authentication.getPrincipal().getUsername() == review.author.userId}"
+                                               th:text="삭제"></a>
+                                        </div>
+                                        <!-- 질문 댓글 Start -->
+                                        <div class="cord mt-3" style="margin-bottom: 20px; border-top: 2px solid black;" th:if="${not #lists.isEmpty(review.commentList)}">
+                                            <div class="card" style="width:100%;margin-top: 20px;">
+                                                <div class="card-body comment py-2 text-muted d-flex flex-column" th:each="comment,index : ${review.commentList}">
+                                                    <h3 th:text="${comment.author.nickname} + ' 사장님'"></h3>
+                                                    <span style="white-space: pre-line; margin-top: 10px;" th:text="${comment.content}"></span>
+                                                    <div class="d-flex justify-content-end" style="margin-top: 10px;">
+                                                        <div class="badge bg-light text-dark p-2 text-start mx-3">
+                                                            <div th:if="${comment.modifyDate != null}">
+                                                                <span th:text="${#temporals.format(comment.modifyDate, 'yyyy-MM-dd HH:mm')} + ' (수정)'"></span>
+                                                            </div>
+                                                            <div th:if="${comment.modifyDate == null}">
+                                                                <span th:text="${#temporals.format(comment.createDate, 'yyyy-MM-dd HH:mm')}"></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="d-flex" style="border-radius: 10px; margin-top:20px;">
+                                                        <a style="flex:1; margin-right:10px;" sec:authorize="isAuthenticated()" th:if="${#authentication.getPrincipal().getUsername() == comment.author.userId}"
+                                                           th:href="@{|/comment/modify/${comment.id}|}" class="btn btn-sm btn-outline-secondary">수정</a>
+                                                        <a style="flex:1; margin-left:10px;" sec:authorize="isAuthenticated()" th:if="${#authentication.getPrincipal().getUsername() == comment.author.userId}"
+                                                           href="javascript:void(0);" class="delete btn btn-sm btn-outline-secondary" th:data-uri="@{|/comment/delete/${comment.id}|}">삭제</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div th:if="${#authorization.expression('isAuthenticated()')}">
+                                            <div th:if="${#authentication.principal.username == store.author.userId}">
+                                                <a th:href="@{|/comment/create/review/${review.id}|}" class="btn btn-sm btn-outline-secondary btn-block"
+                                                   th:text="사장답글작성" style="width:100%;"></a>
+                                            </div>
+                                        </div>
+                                        <!-- 질문 댓글 End -->
                                     </div>
                                 </div>
                             </div>
@@ -263,65 +245,61 @@
                 </div>
             </div>
         </div>
-        <div style="height:5%;">
-            <!--            아무것도 아님-->
-        </div>
     </div>
-</div>
-<script layout:fragment="script" type='text/javascript'>
-    const delete_elements = document.getElementsByClassName("delete");
-    Array.from(delete_elements).forEach(function(element) {
-        element.addEventListener('click', function() {
-            if(confirm("정말로 삭제하시겠습니까?")) {
-                location.href = this.dataset.uri;
-            };
-        });
-    });
-    const recommend_elements = document.getElementsByClassName("recommend");
-    Array.from(recommend_elements).forEach(function(element) {
-        element.addEventListener('click', function() {
-            if(confirm("정말로 추천하시겠습니까?")) {
-                location.href = this.dataset.uri;
-            };
-        });
-    });
-
-    var addressInputs = document.querySelectorAll(".address");
-    console.log(addressInputs);
-
-    addressInputs.forEach(function(addressInput) {
-        var address = addressInput.textContent.trim();
-        console.log(address);
-
-        var mapContainer = document.getElementById('map'); // 지도를 표시할 div
-        var mapOption = {
-            center: new kakao.maps.LatLng(37.566826, 126.978656), // 서울 중심좌표
-            level: 3 // 지도의 확대 레벨
-        };
-
-        // 지도를 생성합니다
-        var map = new kakao.maps.Map(mapContainer, mapOption);
-
-        // 주소-좌표 변환 객체를 생성합니다
-        var geocoder = new kakao.maps.services.Geocoder();
-
-        // 주소로 좌표를 검색합니다
-        geocoder.addressSearch(address, function(result, status) {
-            // 정상적으로 검색이 완료됐으면
-            if (status === kakao.maps.services.Status.OK) {
-                var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
-
-                // 결과값으로 받은 위치를 마커로 표시합니다
-                var marker = new kakao.maps.Marker({
-                    map: map,
-                    position: coords
+    <div>
+        <script layout:fragment="script" type='text/javascript'>
+            const delete_elements = document.getElementsByClassName("delete");
+            Array.from(delete_elements).forEach(function(element) {
+                element.addEventListener('click', function() {
+                    if(confirm("정말로 삭제하시겠습니까?")) {
+                        location.href = this.dataset.uri;
+                    };
                 });
+            });
+            const recommend_elements = document.getElementsByClassName("recommend");
+            Array.from(recommend_elements).forEach(function(element) {
+                element.addEventListener('click', function() {
+                    if(confirm("정말로 추천하시겠습니까?")) {
+                        location.href = this.dataset.uri;
+                    };
+                });
+            });
 
-                // 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
-                map.setCenter(coords);
-            }
-        });
-    });
-</script>
+            var addressInputs = document.querySelectorAll(".address");
+            console.log(addressInputs);
+
+            addressInputs.forEach(function(addressInput) {
+                var address = addressInput.textContent.trim();
+                console.log(address);
+
+                var mapContainer = document.getElementById('map'); // 지도를 표시할 div
+                var mapOption = {
+                    center: new kakao.maps.LatLng(37.566826, 126.978656), // 서울 중심좌표
+                    level: 3 // 지도의 확대 레벨
+                };
+
+                // 지도를 생성합니다
+                var map = new kakao.maps.Map(mapContainer, mapOption);
+
+                // 주소-좌표 변환 객체를 생성합니다
+                var geocoder = new kakao.maps.services.Geocoder();
+
+                // 주소로 좌표를 검색합니다
+                geocoder.addressSearch(address, function(result, status) {
+                    // 정상적으로 검색이 완료됐으면
+                    if (status === kakao.maps.services.Status.OK) {
+                        var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+
+                        // 결과값으로 받은 위치를 마커로 표시합니다
+                        var marker = new kakao.maps.Marker({
+                            map: map,
+                            position: coords
+                        });
+
+                        // 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
+                        map.setCenter(coords);
+                    }
+                });
+            });
+        </script>
 </html>
-
