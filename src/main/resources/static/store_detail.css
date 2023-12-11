@@ -58,3 +58,7 @@ section.container {
 .menubox > div:nth-child(n+3) {
     display: none;
 }
+
+ @media(max-width:600px){
+
+ }
