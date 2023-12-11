@@ -53,46 +53,42 @@
                     </div>
 
                     <!-- 페이징처리 시작 -->
-                    <div th:if="${!paging.isEmpty()}" style="display:flex; margin-botton:50px;">
-                        <ul class="pagination justify-content-center">
-                            <li class="page-item" th:classappend="${!paging.hasPrevious} ? 'disabled'">
-                                <a class="page-link"
-                                   th:href="@{|?page=${paging.number-1}|}">
-                                    <span>&laquo;</span>
-                                </a>
-                            </li>
+                    <div style="display:flex;">
+                        <div th:if="${!paging.isEmpty()}" style="width:100%; margin-bottom:200px; margin-top:30px;" >
+                            <ul class="pagination justify-content-center">
+                                <li class="page-item" th:classappend="${!paging.hasPrevious} ? 'disabled'">
+                                    <a class="page-link"
+                                       th:href="@{|?page=${paging.number-1}|}">
+                                        <span>&laquo;</span>
+                                    </a>
+                                </li>
 
 
-                            <!--수정한 코드--><!--태원님 페이징처리 ui수정 부탁-->
-                            <li th:each="page: ${#numbers.sequence((paging.number <= 5 ? 0 : (paging.number - 5)),
+                                <!--수정한 코드--><!--태원님 페이징처리 ui수정 부탁-->
+                                <li th:each="page: ${#numbers.sequence((paging.number <= 5 ? 0 : (paging.number - 5)),
                                  (paging.number <= 5 ? 10 : (paging.number + 5 < paging.totalPages ? paging.number + 4 : paging.totalPages))
                                   )}" th:classappend="${page == paging.number} ? 'active'" class="page-item">
-                                <a th:text="${page}" class="page-link" th:href="@{|?page=${page}|}"></a>
-                            </li>
-                            <!--        (paging.number <= 5 ? 1 : (paging.number - 5))
-                                        : 시작 범위를 결정하는 부분입니다.  현재 페이지 번호(paging.number)가 5 이하이면 1부터 시작하고, 그렇지 않으면 현재 페이지에서 5를 뺀 값으로 시작합니다.  -->
+                                    <a th:text="${page}" class="page-link" th:href="@{|?page=${page}|}"></a>
+                                </li>
+                                <!--        (paging.number <= 5 ? 1 : (paging.number - 5))
+                                            : 시작 범위를 결정하는 부분입니다.  현재 페이지 번호(paging.number)가 5 이하이면 1부터 시작하고, 그렇지 않으면 현재 페이지에서 5를 뺀 값으로 시작합니다.  -->
 
-                            <!--        (paging.number <= 5 ? 10 : (paging.number + 5 < paging.totalPages ? paging.number + 5 : paging.totalPages))
-                                        : 현재 페이지 번호(paging.number)가 5 이하이면 10까지 표시하고, 그렇지 않으면 현재 페이지에서 5를 더한 값으로 끝내거나,
-                                          총 페이지 수를 넘어가면 총 페이지 수까지만 표시합니다. -->
+                                <!--        (paging.number <= 5 ? 10 : (paging.number + 5 < paging.totalPages ? paging.number + 5 : paging.totalPages))
+                                            : 현재 페이지 번호(paging.number)가 5 이하이면 10까지 표시하고, 그렇지 않으면 현재 페이지에서 5를 더한 값으로 끝내거나,
+                                              총 페이지 수를 넘어가면 총 페이지 수까지만 표시합니다. -->
 
-                            <!-- 여기까지--><!--태원님 페이징처리 ui수정 부탁 끝         -->
+                                <!-- 여기까지--><!--태원님 페이징처리 ui수정 부탁 끝         -->
 
-                            <!--                    <li th:each="page: ${#numbers.sequence(0, paging.totalPages-1)}" th:if="${page >= paging.number-5 and page <= paging.number+5}"-->
-                            <!--                        th:classappend="${page == paging.number} ? 'active'"-->
-                            <!--                        class="page-item">-->
-                            <!--                        <a th:text="${page}" class="page-link" th:href="@{|?page=${page}|}"></a>-->
-                            <!--                    </li>-->
+                                <li class="page-item" th:classappend="${!paging.hasNext} ? 'disabled'">
+                                    <a class="page-link" th:href="@{|?page=${paging.number+1}|}">
+                                        <span>&raquo;</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
 
-                            <li class="page-item" th:classappend="${!paging.hasNext} ? 'disabled'">
-                                <a class="page-link" th:href="@{|?page=${paging.number+1}|}">
-                                    <span>&raquo;</span>
-                                </a>
-                            </li>
-                        </ul>
                     </div>
                     <!-- 페이징처리 끝 -->
-
 
                 </div>
             </div>
