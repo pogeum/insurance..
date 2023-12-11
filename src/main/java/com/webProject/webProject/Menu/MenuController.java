@@ -4,13 +4,22 @@ import com.webProject.webProject.Photo.PhotoService;
 import com.webProject.webProject.Store.Store;
 import com.webProject.webProject.Store.StoreService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @RequestMapping("/menu")
 @RequiredArgsConstructor
@@ -19,6 +28,8 @@ public class MenuController {
     private final MenuService menuService;
     private final StoreService storeService;
     private final PhotoService photoService;
+    @Value("${ImgLocation}")
+    public String imgLocation;
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/addmenu")
     public String addmenu(Integer storeid) {
@@ -32,7 +43,7 @@ public class MenuController {
         Menu menu = menuService.findMenu(menuid);
         if (menuName == null || menuName.isEmpty()) {
             menu.setMenuName("--MENU--");
-        } else {
+        }else {
             menu.setMenuName(menuName);
         }
 
@@ -41,7 +52,6 @@ public class MenuController {
         } else {
             menu.setPrice(Integer.valueOf(pricestring));
         }
-
         if (fileList == null || fileList.isEmpty() || fileList.stream().allMatch(file -> file.isEmpty())) {
             System.out.println("-------------------------------" + fileList);
             photoService.savedefaultImgsForMenu(menu, fileList); // fileList가 비어있을 때 실행될 내용
