@@ -196,7 +196,7 @@ public class StoreController {
 //        int anchor = id-1;
         Store store = this.storeService.getStore(id);
         storeService.deleteStore(store);
-        return "redirect:/store/owner/list/";
+        return "redirect:/store/owner/list";
 //        return String.format("redirect:/store/owner/list/#%s", anchor);
     }
 
