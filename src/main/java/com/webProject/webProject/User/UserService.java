@@ -33,6 +33,7 @@ public class UserService {
 
     public User create(String userId, String email, String password, String nickname, String role, MultipartFile file) throws Exception {
         String projectPath = imgLocation; // 파일 저장 위치 = projectPath
+        //C:/Users/admin/Desktop/web_project/src/main/resources/static/img/
         UUID uuid = UUID.randomUUID(); // 식별자. 랜덤으로 이름 생성
         String fileName;
 
