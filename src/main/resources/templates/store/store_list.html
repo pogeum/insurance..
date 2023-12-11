@@ -1,16 +1,16 @@
 <html layout:decorate="~{layout}" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:layout="http://www.w3.org/1999/xhtml">
 <div layout:fragment="content" class="content-area" style="height:93.8%;">
     <div class="d-flex flex-column" style="height:100%;background:gray;">
-        <div class="d-flex justify-content-start align-items-center" style="height: 10%; margin:10px;">
+        <div class="d-flex justify-content-start align-items-center" style="height:43.234px; margin:10px;">
             <form th:action="@{|/store/search_list|}" method="post" class="d-flex" style="margin-right:20px;">
                 <div class="input-group">
-                    <input type="text" name="keyword" id="keyword" placeholder="가게이름" class="form-control">
+                    <input type="text" placeholder="가게이름" class="form-control">
                     <button class="btn btn-light" type="submit">검색</button>
                 </div>
             </form>
             <form th:action="@{|/store/search_list_menu|}" method="post" class="d-flex">
                 <div class="input-group">
-                    <input type="text" name="keyword" placeholder="메뉴이름" class="form-control">
+                    <input type="text" placeholder="메뉴이름" class="form-control">
                     <button class="btn btn-light" type="submit">검색</button>
                 </div>
             </form>
@@ -56,7 +56,7 @@
                 var mapContainer = document.getElementById('map');
                 var mapOption = {
                     center: new kakao.maps.LatLng(latitude, longitude),
-                    level: 3// 지도의 확대 레벨
+                    level: 7// 지도의 확대 레벨
                 };
 
                 var map = new kakao.maps.Map(mapContainer, mapOption);
@@ -105,10 +105,6 @@
                     });
                 });
             }
-        });
-        // 페이지가 다시 로드될 때 새로 고침
-        window.addEventListener('load', function() {
-            location.reload();
         });
     });
 </script>
