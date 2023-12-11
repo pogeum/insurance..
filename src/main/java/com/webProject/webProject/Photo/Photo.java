@@ -21,7 +21,7 @@ public class Photo {
     @ManyToOne
     private Store store;
 
-    @ManyToOne
+    @OneToOne
     private Menu menu;
 
     @Column(columnDefinition = "TEXT NOT NULL")

@@ -25,6 +25,6 @@ public class Menu {
     @ManyToOne
     private Store store;
 
-    @OneToMany(mappedBy = "menu", cascade = CascadeType.REMOVE)
-    private List<Photo> photoList;
+    @OneToOne(mappedBy = "menu", cascade = CascadeType.REMOVE)
+    private Photo photo;
 }

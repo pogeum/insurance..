@@ -4,11 +4,14 @@ import com.webProject.webProject.Store.Store;
 import com.webProject.webProject.Photo.Photo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -53,18 +56,17 @@ public class MenuService {
 
     public void deleteMenu(Menu menu) {
         // Menu 객체에서 Photo 리스트를 가져옴
-        List<Photo> photoList = menu.getPhotoList();
+        Photo photo = menu.getPhoto();
 
         // 각 Photo 객체에 대해 파일 삭제 수행
-        for (Photo photo : photoList) {
-            // Photo 클래스에 파일 경로를 가져올 수 있는 메서드가 있다고 가정
-            String filePath = photo.getFilePath();
+        // Photo 클래스에 파일 경로를 가져올 수 있는 메서드가 있다고 가정
+        String filePath = photo.getFilePath();
 
-            // 파일 경로가 있다면 파일을 삭제
-            if (filePath != null && !filePath.isEmpty()) {
-                deleteExistingFile(filePath);
-            }
+        // 파일 경로가 있다면 파일을 삭제
+        if (filePath != null && !filePath.isEmpty()) {
+            deleteExistingFile(filePath);
         }
+
         this.menuRepository.delete(menu);
     }
 
@@ -83,6 +85,16 @@ public class MenuService {
         return false;
     }
 
+    public String uploadFile(MultipartFile file, String projectPath) throws IOException {
+        if (file != null && !file.isEmpty()) {
+            UUID uuid = UUID.randomUUID();
+            String fileName = uuid + "_" + file.getOriginalFilename();
+            File saveFile = new File(projectPath, fileName);
+            file.transferTo(saveFile);
+            return fileName;
+        }
+        return null;
+    }
 
 
 }

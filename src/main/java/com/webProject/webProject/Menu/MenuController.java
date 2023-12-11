@@ -41,8 +41,12 @@ public class MenuController {
     @PostMapping("/update")
     public String update(Integer menuid, String menuName, String pricestring, List<MultipartFile> fileList) throws Exception {
         Menu menu = menuService.findMenu(menuid);
+
+//        String existingImagePath = imgLocation +
+//        boolean isDeleted = this.menuService.deleteExistingFile(existingImagePath);
+
         if (menuName == null || menuName.isEmpty()) {
-            menu.setMenuName("--MENU--");
+            menu.setMenuName("메뉴이름");
         } else {
             menu.setMenuName(menuName);
         }
