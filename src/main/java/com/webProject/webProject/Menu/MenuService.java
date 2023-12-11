@@ -1,9 +1,11 @@
 package com.webProject.webProject.Menu;
 
 import com.webProject.webProject.Store.Store;
+import com.webProject.webProject.Photo.Photo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -50,12 +52,37 @@ public class MenuService {
     }
 
     public void deleteMenu(Menu menu) {
+        // Menu 객체에서 Photo 리스트를 가져옴
+        List<Photo> photoList = menu.getPhotoList();
+
+        // 각 Photo 객체에 대해 파일 삭제 수행
+        for (Photo photo : photoList) {
+            // Photo 클래스에 파일 경로를 가져올 수 있는 메서드가 있다고 가정
+            String filePath = photo.getFilePath();
+
+            // 파일 경로가 있다면 파일을 삭제
+            if (filePath != null && !filePath.isEmpty()) {
+                deleteExistingFile(filePath);
+            }
+        }
         this.menuRepository.delete(menu);
     }
 
     public List<Menu> searchedmenu_storelist(String keyword) {
         return this.menuRepository.findMenusByKeyword(keyword);
     }
+
+    public boolean deleteExistingFile(String existingFilePath) {
+        if (existingFilePath != null && !existingFilePath.isEmpty()) {
+            File existingFile = new File(existingFilePath);
+            if (existingFile.exists()) {
+                // 파일 삭제 작업이 성공하면 true 반환
+                return existingFile.delete();
+            }
+        }
+        return false;
+    }
+
 
 
 }
