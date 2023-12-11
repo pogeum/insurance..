@@ -1,6 +1,7 @@
 package com.webProject.webProject.Store;
 
 import com.webProject.webProject.DataNotFoundException;
+import com.webProject.webProject.Photo.Photo;
 import com.webProject.webProject.User.User;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.awt.print.PageFormat;
+import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -80,6 +82,19 @@ public class StoreService {
     }
 
     public void deleteStore(Store store) {
+        // Menu 객체에서 Photo 리스트를 가져옴
+        List<Photo> photoList = store.getPhotoList();
+
+        // 각 Photo 객체에 대해 파일 삭제 수행
+        for (Photo photo : photoList) {
+            // Photo 클래스에 파일 경로를 가져올 수 있는 메서드가 있다고 가정
+            String filePath = photo.getFilePath();
+
+            // 파일 경로가 있다면 파일을 삭제
+            if (filePath != null && !filePath.isEmpty()) {
+                deleteExistingFile(filePath);
+            }
+        }
         this.storeRepository.delete(store);
     }
 
@@ -120,6 +135,18 @@ public class StoreService {
 
     public List<Store> searchStoreList(String keyword) {
         return this.storeRepository.findStoresByKeyword(keyword);
+    }
+
+
+    public boolean deleteExistingFile(String existingFilePath) {
+        if (existingFilePath != null && !existingFilePath.isEmpty()) {
+            File existingFile = new File(existingFilePath);
+            if (existingFile.exists()) {
+                // 파일 삭제 작업이 성공하면 true 반환
+                return existingFile.delete();
+            }
+        }
+        return false;
     }
 
 

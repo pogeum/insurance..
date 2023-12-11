@@ -2,6 +2,8 @@
 <div layout:fragment="content">
     <div class="container my-3">
         <a class="btn btn-sm btn-light" th:href="@{|/store/owner/list|}">뒤로가기</a>
+        <br>
+        <a class="btn btn-sm btn-light" th:href="@{|/store/detail/${store.id}|}">가게보기</a>
         <form th:action="@{|/menu/addmenu|}" method="post">
             <input type="hidden" name="storeid" th:value="${store.id}">
             <input class="btn btn-sm btn-light" type="submit" value="메뉴추가하기">
