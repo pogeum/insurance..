@@ -27,24 +27,30 @@ public class MenuController {
         return "redirect:/store/menuList/"+ store.getId();
     }
 
-    @PreAuthorize("isAuthenticated()")
     @PostMapping("/update")
     public String update(Integer menuid, String menuName, String pricestring, List<MultipartFile> fileList) throws Exception {
         Menu menu = menuService.findMenu(menuid);
         if (menuName == null || menuName.isEmpty()) {
             menu.setMenuName("--MENU--");
-        }else {
+        } else {
             menu.setMenuName(menuName);
         }
 
         if (pricestring == null || pricestring.isEmpty()) {
             menu.setPrice(0);
-        }else {
+        } else {
             menu.setPrice(Integer.valueOf(pricestring));
         }
-        photoService.saveImgsForMenu(menu, fileList);
+
+        if (fileList == null || fileList.isEmpty() || fileList.stream().allMatch(file -> file.isEmpty())) {
+            System.out.println("-------------------------------" + fileList);
+            photoService.savedefaultImgsForMenu(menu, fileList); // fileList가 비어있을 때 실행될 내용
+        } else {
+            System.out.println("++++++++++++++++++++++++++++++++++" + fileList);
+            photoService.saveImgsForMenu(menu, fileList); // fileList가 비어있지 않을 때 실행될 내용
+        }
         menuService.setMenu(menu);
-        return "redirect:/store/menuList/"+ menu.getStore().getId();
+        return "redirect:/store/menuList/" + menu.getStore().getId();
     }
 
     @PreAuthorize("isAuthenticated()")
