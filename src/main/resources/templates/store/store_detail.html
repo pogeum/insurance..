@@ -6,15 +6,31 @@
             <div class="d-flex" style="width:100%;height:100%;">
                 <div style="width:65%;height:100%;padding: 20px 20px 0 20px;">
                     <div class="d-flex flex-column" style="width:100%;height:100%;">
-                        <section class="container">
-                            <div class="carousel-container">
-                                <div class="carousel">
-                                    <div th:each="photo : ${store.photoList}">
-                                        <img th:src="@{|/photo/${photo.fileName}|}" class="img-fluid"
-                                             style="object-fit: cover; width: 170px; height: 170px; border: solid 1px; overflow: hidden;">
+                        <div style="height: 45%;">
+                            <div id="carouselExampleIndicators" class="carousel slide d-flex align-items-center justify-content-center" style="width: 100%; height: 100%;" data-bs-ride="carousel">
+                                <div class="carousel-inner" style="width: 100%; height: 100%;">
+                                    <div th:each="photo, iterStat : ${store.photoList}" th:if="${iterStat.index % 3 == 0}" class="carousel-item" th:classappend="${iterStat.index == 0} ? 'active'">
+                                        <div class="row">
+                                            <div class="col d-flex justify-content-center" style="padding:0;">
+                                                <img th:src="@{|/photo/${photo.fileName}|}" style="object-fit: cover; width: 100%; height: 350.625px;" />
+                                            </div>
+                                            <div class="col d-flex justify-content-center" th:if="${iterStat.index + 1 lt store.photoList.size()}" style="padding:0;">
+                                                <img th:src="@{|/photo/${store.photoList[iterStat.index + 1].fileName}|}" style="object-fit: cover; width: 100%; height: 350.625px;" />
+                                            </div>
+                                            <div class="col d-flex justify-content-center" th:if="${iterStat.index + 2 lt store.photoList.size()}" style="padding:0;">
+                                                <img th:src="@{|/photo/${store.photoList[iterStat.index + 2].fileName}|}" style="object-fit: cover; width: 100%; height: 350.625px;" />
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true" style="filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(200%);}"></span>
+                                    <span class="visually-hidden">Previous</span>
+                                </button>
+                                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true" style="filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(200%);}"></span>
+                                    <span class="visually-hidden">Next</span>
+                                </button>
                             <div class="left">&lt;</div>
                             <div class="right">&gt;</div>
                         </section>
@@ -83,63 +99,6 @@
                                 <div class="more-button" style="align-self: flex-end; margin-left:auto;">
                                     <button type="button" class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#exampleModal" >더보기</button>
                                 </div>
-
-                                <!-- 모달 -->
-<!--
-                                                      <div style="height: 30%; border: 1px solid gray; border-radius: 10px; margin-bottom: 10px; display: flex;">-->
-<!--                            <div class="card-group" th:each="photo : ${store.photoList}">-->
-<!--                                <div class="card">-->
-<!--                                    <img th:if="${photo==null}" th:src="@{|/static/no_img.jpg|}" class="img-thumbnail" alt="...">-->
-<!--                                    <img th:unless="${photo==null}" th:src="@{|/photo/${photo.fileName}|}" class="rounded mx-auto d-block" style="object-fit: contain;" alt="...">-->
-<!--                                </div>-->
-<!--&lt;!&ndash;                                <div class="card">&ndash;&gt;-->
-<!--&lt;!&ndash;                                    <img src="..." class="card-img-top" alt="...">&ndash;&gt;-->
-<!--&lt;!&ndash;                                </div>&ndash;&gt;-->
-<!--&lt;!&ndash;                                <div class="card">&ndash;&gt;-->
-<!--&lt;!&ndash;                                    <img src="..." class="card-img-top" alt="...">&ndash;&gt;-->
-<!--&lt;!&ndash;                                </div>&ndash;&gt;-->
-<!--                            </div>-->
-
-
-<!--&lt;!&ndash;                            <div th:each="photo : ${store.photoList}">&ndash;&gt;-->
-<!--&lt;!&ndash;                                <img th:src="@{|/photo/${photo.fileName}|}" class="img-fluid" style="object-fit: cover; width: 70%; height: 70%;">&ndash;&gt;-->
-<!--&lt;!&ndash;                            </div>&ndash;&gt;-->
-<!--                        </div>-->
-<!--                        <div class="d-flex flex-column" style="height:20%;">-->
-<!--                            <div class="d-flex align-items-end">-->
-<!--                                <h3 class="title" style="margin:0 40px 0 0;" th:text="${store.name}"></h3>-->
-<!--                                <span class="text-secondary small align-items-end" th:text="${store.category}"></span>-->
-<!--                            </div>-->
-<!--                            <div style="width:100%; height:100%; display: flex;">-->
-
-<!--                                <div class="card">-->
-<!--                                    <div class="card-body">-->
-<!--                                        <span class="text-secondary small address align-items-end" th:text="${store.roadAddress}"></span>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                                <div class="menubox" th:each="menu : ${menuList}" style="position:relative; margin-left:10px; ">-->
-<!--                                &lt;!&ndash;부트스트랩카드&ndash;&gt;-->
-<!--                                    <div class="card" style="width: 18rem;">-->
-<!--                                        <div th:each="photo : ${menu.photoList}" style="width:100%; height:50%;">-->
-<!--                                            <div style="object-fit:cover;">-->
-<!--                                                <img class="card-img-top" th:src="@{|/photo/${photo.fileName}|}" alt="Menu Photo" style="object-fit: cover; width: 50%; height: 30%;"/>-->
-<!--                                            </div>-->
-<!--                                        </div>-->
-<!--                                        <div class="card-body" style="display:flex; flex-direction: column;">-->
-<!--                                            <p th:text="${menu.menuName}" style="display:block; "></p>-->
-<!--                                            &lt;!&ndash;                                        <h5 class="card-title">Card title</h5>&ndash;&gt;-->
-<!--                                            <div style="display: flex; align-items: baseline;">-->
-<!--                                                <p th:text="${menu.price}" style="font-weight: bold; margin-right: 4px;"></p>-->
-<!--                                                <span>원</span>-->
-<!--                                            </div>-->
-<!--                                        </div>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                                &lt;!&ndash;-&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45; &ndash;&gt;-->
-
-<!--                                &lt;!&ndash; 모달버튼 &ndash;&gt;-->
-<!--                                <button type="button" class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#exampleModal">더보기</button>-->
-<!--                                &lt;!&ndash; 모달 &ndash;&gt;-->
                                 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                     <div class="modal-dialog modal-dialog-scrollable"> <!--스크롤왜적용이안됨?-->
                                         <div class="modal-content">
@@ -170,16 +129,16 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-                                                <button type="button" class="btn btn-primary">먹어보고싶어요/장바구니같은..</button>
-                                            </div>
                                         </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                                        <button type="button" class="btn btn-primary">먹어보고싶어요/장바구니같은..</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div style="height:50%; margin-top:20px;">
+                        <div style="height:30%; margin-top:20px;">
                             <div id="map" style="width:100%;height:100%;"></div>
                         </div>
                     </div>
