@@ -38,56 +38,29 @@ public class MenuController {
         return "redirect:/store/menuList/"+ store.getId();
     }
 
-    @PreAuthorize("isAuthenticated()")
     @PostMapping("/update")
     public String update(Integer menuid, String menuName, String pricestring, List<MultipartFile> fileList) throws Exception {
         Menu menu = menuService.findMenu(menuid);
         if (menuName == null || menuName.isEmpty()) {
-            menu.setMenuName("이름없음");
+            menu.setMenuName("--MENU--");
         }else {
             menu.setMenuName(menuName);
         }
 
         if (pricestring == null || pricestring.isEmpty()) {
             menu.setPrice(0);
-        }else {
+        } else {
             menu.setPrice(Integer.valueOf(pricestring));
         }
-
-//        String projectPath = imgLocation; // 파일 저장 위치 = projectPath
-//        //C:/Users/admin/Desktop/web_project/src/main/resources/static/img/
-//        UUID uuid = UUID.randomUUID(); // 식별자. 랜덤으로 이름 생성
-//        String fileName;
-//
-//        if (fileList != null && !fileList.isEmpty() && fileList.get(0).getSize() > 0) {
-//            // 실제로 파일이 선택되었을 때만 추가
-//            photoService.saveImgsForMenu(menu, fileList);
-//        } else {
-//            fileName = "no_img.jpg"; // 기본 이미지 파일명
-//            File defaultImageFile = new File(projectPath, fileName);
-//
-//            // 기본 이미지를 static 폴더에서 복사
-//            ClassPathResource defaultImageResource = new ClassPathResource("static/no_img.jpg");
-//            Files.copy(defaultImageResource.getInputStream(), defaultImageFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-//
-//
-//            // 디폴트 이미지를 fileList에 추가
-//            MultipartFile defaultImageMultipartFile = new YourCustomMultipartFile(
-//                    Files.readAllBytes(defaultImageFile.toPath()), // 파일을 byte 배열로 읽어옴
-//                    fileName
-//            );
-//
-//            // fileList를 생성하고 디폴트 이미지를 추가
-//            fileList = new ArrayList<>();
-//            fileList.add(defaultImageMultipartFile);
-//
-//            // photoService.saveImgsForMenu 메서드 호출
-//            photoService.saveImgsForMenu(menu, fileList);
-//        }
-
-        photoService.saveImgsForMenu(menu, fileList);
+        if (fileList == null || fileList.isEmpty() || fileList.stream().allMatch(file -> file.isEmpty())) {
+            System.out.println("-------------------------------" + fileList);
+            photoService.savedefaultImgsForMenu(menu, fileList); // fileList가 비어있을 때 실행될 내용
+        } else {
+            System.out.println("++++++++++++++++++++++++++++++++++" + fileList);
+            photoService.saveImgsForMenu(menu, fileList); // fileList가 비어있지 않을 때 실행될 내용
+        }
         menuService.setMenu(menu);
-        return "redirect:/store/menuList/"+ menu.getStore().getId();
+        return "redirect:/store/menuList/" + menu.getStore().getId();
     }
 
     @PreAuthorize("isAuthenticated()")

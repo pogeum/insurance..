@@ -14,6 +14,10 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -126,4 +130,24 @@ public class PhotoService {
             }
         }
     }
+
+    public void savedefaultImgsForMenu(Menu menu, List<MultipartFile> files) throws IOException {
+        String projectPath = imgLocation;
+        String fileName = "no_img.jpg";
+
+        if (menu != null && (files == null || files.isEmpty())) {
+            File defaultImageFile = new File(projectPath, fileName);
+            ClassPathResource defaultImageResource = new ClassPathResource("static/no_img.jpg");
+            Files.copy(defaultImageResource.getInputStream(), defaultImageFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            String filePath = Paths.get(projectPath, fileName).toString();
+
+            Photo defaultPhoto = new Photo();
+            defaultPhoto.setFileName(fileName);
+            defaultPhoto.setFilePath(filePath);
+            defaultPhoto.setMenu(menu);
+
+            this.photoRepository.save(defaultPhoto);
+        }
+    }
+
 }
