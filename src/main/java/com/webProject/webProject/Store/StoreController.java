@@ -265,13 +265,6 @@ public class StoreController {
             newstoreList.add(storeService.findstoreById(id));
         }
 
-
-
-
-
-
-//        List<Store> storeList  = this.storeService.getAddressList(jibunAddress);
-//        System.out.println(jibunAddress);
         model.addAttribute("location", "대전");
         model.addAttribute("storeList", newstoreList);
         return "store/store_list";

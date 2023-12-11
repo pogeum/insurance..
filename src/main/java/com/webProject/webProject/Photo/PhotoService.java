@@ -135,18 +135,24 @@ public class PhotoService {
         String projectPath = imgLocation;
         String fileName = "no_img.jpg";
 
-        if (menu != null && (files == null || files.isEmpty())) {
+        if (files == null || files.isEmpty() || (files.size() == 1 && files.get(0).getOriginalFilename().isEmpty())) {
             File defaultImageFile = new File(projectPath, fileName);
-            ClassPathResource defaultImageResource = new ClassPathResource("static/no_img.jpg");
-            Files.copy(defaultImageResource.getInputStream(), defaultImageFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+
+            if (!defaultImageFile.exists()) {
+                ClassPathResource defaultImageResource = new ClassPathResource("static/no_img.jpg");
+                Files.copy(defaultImageResource.getInputStream(), defaultImageFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            }
+
             String filePath = Paths.get(projectPath, fileName).toString();
 
-            Photo defaultPhoto = new Photo();
-            defaultPhoto.setFileName(fileName);
-            defaultPhoto.setFilePath(filePath);
-            defaultPhoto.setMenu(menu);
+            if (defaultImageFile.exists()) {
+                Photo defaultPhoto = new Photo();
+                defaultPhoto.setFileName(fileName);
+                defaultPhoto.setFilePath(filePath);
+                defaultPhoto.setMenu(menu);
 
-            this.photoRepository.save(defaultPhoto);
+                this.photoRepository.save(defaultPhoto);
+            }
         }
     }
 

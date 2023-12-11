@@ -43,7 +43,7 @@ public class MenuController {
         Menu menu = menuService.findMenu(menuid);
         if (menuName == null || menuName.isEmpty()) {
             menu.setMenuName("--MENU--");
-        }else {
+        } else {
             menu.setMenuName(menuName);
         }
 
@@ -52,16 +52,16 @@ public class MenuController {
         } else {
             menu.setPrice(Integer.valueOf(pricestring));
         }
-        if (fileList == null || fileList.isEmpty() || fileList.stream().allMatch(file -> file.isEmpty())) {
-            System.out.println("-------------------------------" + fileList);
-            photoService.savedefaultImgsForMenu(menu, fileList); // fileList가 비어있을 때 실행될 내용
+        boolean filesSelected = fileList.stream().anyMatch(file -> !file.isEmpty());    // false -> true
+        if (!filesSelected) {   //false
+            photoService.savedefaultImgsForMenu(menu, fileList);
         } else {
-            System.out.println("++++++++++++++++++++++++++++++++++" + fileList);
-            photoService.saveImgsForMenu(menu, fileList); // fileList가 비어있지 않을 때 실행될 내용
+            photoService.saveImgsForMenu(menu, fileList);
         }
         menuService.setMenu(menu);
         return "redirect:/store/menuList/" + menu.getStore().getId();
     }
+
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/delete")
