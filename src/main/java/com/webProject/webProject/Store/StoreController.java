@@ -99,19 +99,6 @@ public class StoreController {
         model.addAttribute("store", store);
         return "store/store_detail";
     }
-
-    @PostMapping("/mylocation") // POST 요청을 처리하기 위한 애노테이션 추가
-    public String getMyLocation(Model model, @RequestParam("latitude") String latitude, @RequestParam("longitude") String longitude) {
-        // 클라이언트의 위치 정보를 가져오는 메서드 호출 (이 부분은 getLocationFromCoordinates 메서드를 호출하는 것으로 가정)
-        String location = this.storeService.getLocationFromCoordinates(latitude, longitude);
-
-        List<Store> storeList = this.storeRepository.findAll();
-        model.addAttribute("storeList", storeList);
-        model.addAttribute("location", location);
-
-        return "store/store_list";
-    }
-
     //------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
     @PreAuthorize("isAuthenticated()")
@@ -253,7 +240,7 @@ public class StoreController {
         List<Store> storeList = this.storeService.searchStoreList(keyword);
 //        List<Store> storeList  = this.storeService.getAddressList(jibunAddress);
 //        System.out.println(jibunAddress);
-        model.addAttribute("location", "location");
+        model.addAttribute("location", "대전");
         model.addAttribute("storeList", storeList);
         return "store/store_list";
     }
@@ -268,7 +255,7 @@ public class StoreController {
         }
 //        List<Store> storeList  = this.storeService.getAddressList(jibunAddress);
 //        System.out.println(jibunAddress);
-        model.addAttribute("location", "location");
+        model.addAttribute("location", "대전");
         model.addAttribute("storeList", storeList);
         return "store/store_list";
     }
