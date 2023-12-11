@@ -2,21 +2,19 @@
       xmlns:sec="http://www.w3.org/1999/xhtml">
 <div layout:fragment="content" class="content-area" style="height:93.8%;">
     <div class="d-flex" style="width:100%;height:93.8%;">
+        <!-- 좌측 컨텐츠 -->
         <div style="width:65%;height:100%; margin: 20px 20px 0 20px;">
             <div class="d-flex flex-column" style="width:100%;height:100%;">
+                <!-- 카루셀 -->
                 <div style="height: 35%;">
                     <div id="carouselExampleIndicators" class="carousel slide d-flex align-items-center justify-content-center" style="width: 100%; height: 100%;" data-bs-ride="carousel">
                         <div class="carousel-inner" style="width: 100%; height: 100%;">
-                            <div th:each="photo, iterStat : ${store.photoList}" th:if="${iterStat.index % 3 == 0}" class="carousel-item" th:classappend="${iterStat.index == 0} ? 'active'">
+                            <div th:each="photo, iterStat : ${store.photoList}" class="carousel-item" th:classappend="${iterStat.index == 0} ? 'active'">
                                 <div class="row">
-                                    <div class="col d-flex justify-content-center" style="padding:0;">
-                                        <img th:src="@{|/photo/${photo.fileName}|}" style="object-fit: cover; width: 100%; height: 350.625px;" />
-                                    </div>
-                                    <div class="col d-flex justify-content-center" th:if="${iterStat.index + 1 lt store.photoList.size()}" style="padding:0;">
-                                        <img th:src="@{|/photo/${store.photoList[iterStat.index + 1].fileName}|}" style="object-fit: cover; width: 100%; height: 350.625px;" />
-                                    </div>
-                                    <div class="col d-flex justify-content-center" th:if="${iterStat.index + 2 lt store.photoList.size()}" style="padding:0;">
-                                        <img th:src="@{|/photo/${store.photoList[iterStat.index + 2].fileName}|}" style="object-fit: cover; width: 100%; height: 350.625px;" />
+                                    <div class="col d-flex justify-content-center" style="padding: 0;">
+                                        <div style="width: 96%; height: 290px; border: 1px solid black; border-radius: 10px; overflow: hidden;">
+                                            <img th:src="@{/photo/{fileName}(fileName=${photo.fileName})}" style="object-fit: cover; width: 100%; height: 100%;" />
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -31,74 +29,68 @@
                         </button>
                     </div>
                 </div>
-                <div class="d-flex flex-column" style="height:45%;">
+                <!-- 매장 정보 -->
+                <div class="d-flex flex-column" style="height:30%; margin:20px 0 20px 0;">
                     <div class="d-flex justify-content-start align-items-center" style="height:20%;">
                         <div class="store-name">
                             <h3 class="title" style="margin: 0 40px 0 0; font-weight: bold; display: flex; align-items: center;">
                                 <span th:text="${store.name}"></span>
                             </h3>
                         </div>
-                        <div class="d-flex flex-column" style="align-self: flex-end;" >
+                        <div class="d-flex flex-column" style="align-self: flex-end;">
                             <div class="d-flex">
-                                <span class="text-secondary small">카테고리 : </span> &nbsp;
+                                <span class="text-secondary small">카테고리 : </span>&nbsp;
                                 <span class="text-secondary small align-items-end" th:text="${store.category}"></span>
                             </div>
                             <div class="d-flex">
-                                <span class="text-secondary small">주소 : </span> &nbsp;
-                                <span class="text-secondary small address align-items-end" th:text="${store.roadAddress}" ></span>
+                                <span class="text-secondary small">주소 : </span>&nbsp;
+                                <span class="text-secondary small address align-items-end" th:text="${store.roadAddress}"></span>
                             </div>
                         </div>
                     </div>
-                    <div class="menu-box" style="width:100%; height:80%; display: flex;">
-                        <div class="menu-card" th:each="menu : ${menuList}" style="position:relative; margin-left:10px; margin-bottom:10px;">
-                            <!--부트스트랩카드-->
-                            <div  style="width: 11rem;">
-                                <div th:each="photo : ${menu.photoList}" style="width:100%; height:50%; margin-top:10px;">
-                                    <img class="card-img-top" th:if="${photo.fileName != null}" th:src="@{|/photo/${photo.fileName}|}" alt="Menu Photo" style="object-fit: cover; width: 170px; height: 170px; border-radius:10px;    "/>
-                                    <img class="card-img-top" th:if="${photo.fileName == null or #strings.isEmpty(photo.fileName)}" src="/static/no_img.jpg" alt="No Image">
-                                    <!--                                            <span th:unless="${photo.fileName != null}">이미지 없음</span>-->
+                    <!-- 메뉴 -->
+                    <div class="menu-box d-flex" style="width:100%; height:80%;">
+                        <!-- 메뉴 카드 -->
+                        <div class="menu-card" th:each="menu, iterStat : ${menuList}" th:if="${iterStat.index lt 6}">
+                            <!-- 부트스트랩 카드 -->
+                            <div class="d-flex flex-column" style="width: 100%; height:100%; margin:5px;">
+                                <!-- 최대 6개 이미지만 출력 -->
+                                <div th:each="photo : ${menu.photoList}" style="width:90%; height:80%;">
+                                    <img class="card-img-top" th:if="${photo.fileName != null}" th:src="@{|/photo/${photo.fileName}|}" alt="Menu Photo" style="object-fit: cover; width: 100%; height: 100%; border-radius:10px;"/>
                                 </div>
-                                <div style="display:flex; flex-direction: column; ">
-                                    <div style="display: flex; align-items: baseline; height: 20px; margin-top:5px;">
-                                        <p th:text="${menu.menuName}" style="display:block; "></p>
-                                    </div>
-                                    <div style="display: flex; align-items: baseline;">
-                                        <p th:text="${menu.price}" style="font-weight: bold; margin-right: 4px;"></p>
-                                        <span>원</span>
-                                    </div>
+                                <div style="width:100%; height:10%;">
+                                    <p class="text-dark small" th:text="${menu.menuName}" style="margin:0;"></p>
+                                </div>
+                                <div style="width:100%; height:10%;">
+                                    <p class="text-dark small" th:text="${menu.price} + ' 원'" style="font-weight: bold; margin:0;"></p>
                                 </div>
                             </div>
                         </div>
-                        <!----------------------------------- -->
-                        <!-- 모달버튼 -->
-                        <div class="more-button" style="align-self: flex-end; margin-left:auto;">
-                            <button type="button" class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#exampleModal" >더보기</button>
-                        </div>
-                        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-scrollable"> <!--스크롤왜적용이안됨?-->
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="exampleModalLabel">메뉴</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body" >
-                                        <div th:each="menu : ${menuList}">
-                                            <div class="card mb-3" style="max-width: 540px;">
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                                    <label class="form-check-label" for="flexCheckDefault">
-                                                        담기
-                                                    </label>
-                                                </div>
-                                                <div class="row g-0">
-                                                    <div class="col-md-4" th:each="photo : ${menu.photoList}">
-                                                        <img th:src="@{'/img/' + ${photo.fileName}}" alt="Menu Photo" style="border-radius: 10px; width:100%; height:100%; "/>
-                                                    </div>
-                                                    <div class="col-md-8">
-                                                        <div class="card-body">
-                                                            <h5 class="card-title" th:text="${menu.menuName}"></h5>
-                                                            <p class="card-text" th:text="${menu.price} + '원' "></p>
-                                                        </div>
+                    </div>
+                </div>
+                <!-- 더보기 버튼 및 모달 -->
+                <div style="width:100%; height:5%; margin-bottom:20px;">
+                    <div class="more-button">
+                        <button type="button" class="btn btn-sm btn-dark" style="width:100%" data-bs-toggle="modal" data-bs-target="#exampleModal">더보기</button>
+                    </div>
+                </div>
+                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-scrollable">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">메뉴</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body" style="max-height: 70vh; overflow-y: auto;"> <!-- Set a max-height and enable vertical scrolling -->
+                                <div class="row row-cols-1 row-cols-md-3">
+                                    <div th:each="menu : ${menuList}">
+                                        <div th:each="photo : ${menu.photoList}">
+                                            <div class="col mb-4">
+                                                <div class="card">
+                                                    <img th:src="@{'/img/' + ${photo.fileName}}" alt="Menu Photo" style="object-fit: cover; width:100%; height:200px;">
+                                                    <div class="card-body">
+                                                        <h5 class="card-title text-dark small" th:text="${menu.menuName}"></h5>
+                                                        <p class="card-text text-dark small" th:text="${menu.price} + '원'"></p>
                                                     </div>
                                                 </div>
                                             </div>
@@ -106,19 +98,18 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-                                <button type="button" class="btn btn-primary">먹어보고싶어요/장바구니같은..</button>
-                            </div>
                         </div>
                     </div>
                 </div>
-                <div style="height:30%; margin-top:20px;">
-                    <div id="map" style="width:100%;height:100%;"></div>
+                <!-- 지도 -->
+                <div style="height:30%;">
+                    <div id="map" style="width:100%;height:100%;border:1px solid black; border-radius:10px;"></div>
                 </div>
             </div>
         </div>
+        <!-- 우측 컨텐츠 -->
         <div style="width:35%;height:100%;">
+            <!-- 리뷰 -->
             <div style="width: 98%; height: 100%; border: 1px solid gray; margin-top: 20px; overflow-y: auto;">
                 <div class="d-flex flex-column">
                     <div style="height:10%; padding:10px; border-bottom:2px solid black;">
@@ -152,7 +143,7 @@
                                     <div class="d-flex flex-column">
                                         <div th:each="reviewPhoto, iterStat : ${review.photoList}" style="position: relative; display: inline-block; padding-left: 5px; padding-right: 5px;">
                                             <a data-bs-toggle="modal" th:data-bs-target="'#exampleModal' + ${iterStat.index}" style="display: block;">
-                                                <img th:if="${iterStat.index == 0}" onerror="this.style.visibility='hidden'" th:src="@{|/photo/${reviewPhoto.fileName}|}" class="img-fluid" style="object-fit: cover; width: 100%;">
+                                                <img th:if="${iterStat.index == 0}" onerror="this.style.visibility='hidden'" th:src="@{|/photo/${reviewPhoto.fileName}|}" class="img-fluid" style="object-fit: cover; width: 100%; border:1px solid gray; border-radius:10px;">
                                             </a>
                                             <div th:if="${#lists.size(review.photoList) > 0}" style="position: absolute; bottom: 5px; right: 5px; background: gray; border: 1px solid gray; border-radius: 50px; padding: 5px; text-align: center;">
                                                 <span th:text="${#lists.size(review.photoList) + '개'}" style="font-size: 11px; font-weight: 600; color: white;"></span>
@@ -247,7 +238,7 @@
             </div>
         </div>
     </div>
-<div>
+</div>
 <script layout:fragment="script" type='text/javascript'>
     const delete_elements = document.getElementsByClassName("delete");
     Array.from(delete_elements).forEach(function(element) {
