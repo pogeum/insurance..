@@ -112,14 +112,22 @@ public class PhotoService {
 
     public void saveImgsForMenu(Menu menu, List<MultipartFile> files) throws Exception {
         if (menu != null && files != null && !files.isEmpty()) {
+            String projectPath = imgLocation;
+
             for (MultipartFile file : files) {
                 if (!file.isEmpty()) {
-                    String projectPath = imgLocation;
                     UUID uuid = UUID.randomUUID();
                     String fileName = uuid + "_" + file.getOriginalFilename();
                     File saveFile = new File(projectPath, fileName);
+
+                    if (saveFile.exists() && saveFile.isFile()) {
+                        saveFile.delete();
+                    }
+
+                    // Transfer the new file to the specified path
                     file.transferTo(saveFile);
 
+                    // Save the information to the database
                     Photo photo = new Photo();
                     photo.setFileName(fileName);
                     photo.setFilePath(saveFile.getAbsolutePath());
@@ -130,6 +138,7 @@ public class PhotoService {
             }
         }
     }
+
 
     public void savedefaultImgsForMenu(Menu menu, List<MultipartFile> files) throws IOException {
         String projectPath = imgLocation;
